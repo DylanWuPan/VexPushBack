@@ -63,7 +63,6 @@
 #include "pros/screen.h"
 #include "pros/vision.h"
 #include "lemlib/api.hpp"
-#include "autonSelector/autonSelector.h"
 
 #ifdef __cplusplus
 #include "pros/adi.hpp"

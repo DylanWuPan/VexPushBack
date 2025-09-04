@@ -75,9 +75,6 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 
 
 // Helper Functions ------------------------------------------------------------
-void helperFunction(){
-  ...
-}
 
 // Main Functions --------------------------------------------------------------
 void initialize() {
@@ -102,7 +99,7 @@ void competition_initialize() {}
 
 void autonomous() {
   // sampleAuto1()
-  sampleAuto2()
+  sampleAuto2();
 }
 
 void opcontrol() {
@@ -113,7 +110,6 @@ void opcontrol() {
     chassis.tank(LeftY, RightY);
 
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
-      ...
     }
 
     pros::delay(20);

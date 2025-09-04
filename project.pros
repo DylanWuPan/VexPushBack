@@ -1,7 +1,7 @@
 {
   "py/object": "pros.conductor.project.Project",
   "py/state": {
-    "project_name": "robot x 25600",
+    "project_name": "blackbird x 25600Y",
     "target": "v5",
     "templates": {
       "LemLib": {
