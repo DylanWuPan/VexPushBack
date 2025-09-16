@@ -12,5 +12,8 @@ extern pros::Rotation horizontal_tracking;
 extern pros::Controller controller;
 extern pros::IMU inertial; 
 extern lemlib::Chassis chassis;
+extern pros::Motor intake;
+extern pros::Motor hopper;
+extern pros::Motor topscore;
 
 #endif

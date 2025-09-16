@@ -109,7 +109,25 @@ void opcontrol() {
     float RightY = DRIVERS_SPEED * controller.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
     chassis.tank(LeftY, RightY);
 
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_X)) {
+    //INTAKE
+    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+      intake.move_velocity(200);
+      hopper.move_velocity(200);
+    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+      intake.move_velocity(-200);
+      hopper.move_velocity(-200);
+    } else {
+      intake.move_velocity(0);
+      hopper.move_velocity(0);
+    }
+
+    //TOP SCORE
+    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+      topscore.move_velocity(200);
+    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+      topscore.move_velocity(-200);
+    } else {
+      topscore.move_velocity(0);
     }
 
     pros::delay(20);
