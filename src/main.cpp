@@ -4,6 +4,10 @@
 
 // Constants -------------------------------------------------------------------
 float DRIVERS_SPEED = 1;
+int INTAKE_VELOCITY = 600;
+int HOPPER_VELOCITY = 200;
+int TOPSCORE_VELOCITY = 200;
+
   
 //LEMLIB ----------------------------------------------------------------
 lemlib::Drivetrain drivetrain(&left_drivetrain, // left motor group
@@ -111,11 +115,11 @@ void opcontrol() {
 
     //INTAKE
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-      intake.move_velocity(200);
-      hopper.move_velocity(200);
+      intake.move_velocity(INTAKE_VELOCITY);
+      hopper.move_velocity(HOPPER_VELOCITY);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
-      intake.move_velocity(-200);
-      hopper.move_velocity(-200);
+      intake.move_velocity(-INTAKE_VELOCITY);
+      hopper.move_velocity(-HOPPER_VELOCITY);
     } else {
       intake.move_velocity(0);
       hopper.move_velocity(0);
@@ -123,13 +127,13 @@ void opcontrol() {
 
     //TOP SCORE
     if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-      topscore.move_velocity(200);
-      intake.move_velocity(200);
-      hopper.move_velocity(-200);
+      topscore.move_velocity(TOPSCORE_VELOCITY);
+      intake.move_velocity(INTAKE_VELOCITY);
+      hopper.move_velocity(-HOPPER_VELOCITY);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-      topscore.move_velocity(-200);
-      intake.move_velocity(-200);
-      hopper.move_velocity(200);
+      topscore.move_velocity(-TOPSCORE_VELOCITY);
+      intake.move_velocity(-INTAKE_VELOCITY);
+      hopper.move_velocity(HOPPER_VELOCITY);
     } else {
       topscore.move_velocity(0);
     }
