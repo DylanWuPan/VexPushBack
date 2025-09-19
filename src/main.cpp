@@ -132,8 +132,8 @@ void opcontrol() {
       hopper.move_velocity(-HOPPER_VELOCITY);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
       topscore.move_velocity(-TOPSCORE_VELOCITY);
-      intake.move_velocity(-INTAKE_VELOCITY);
-      hopper.move_velocity(HOPPER_VELOCITY);
+      intake.move_velocity(INTAKE_VELOCITY);
+      hopper.move_velocity(-HOPPER_VELOCITY);
     } else {
       topscore.move_velocity(0);
     }
