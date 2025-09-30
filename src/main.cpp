@@ -107,6 +107,9 @@ void autonomous() {
 }
 
 void opcontrol() {
+
+  bool MATCHLOADER_STATE = false;
+
   while (true) {
     // DRIVE ----------------------------------------------------------------
     float LeftY = DRIVERS_SPEED * controller.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
@@ -117,7 +120,7 @@ void opcontrol() {
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
       intake.move_velocity(INTAKE_VELOCITY);
       hopper.move_velocity(HOPPER_VELOCITY);
-    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_UP)) {
+    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
       intake.move_velocity(-INTAKE_VELOCITY);
       hopper.move_velocity(-HOPPER_VELOCITY);
     } else {
@@ -125,17 +128,26 @@ void opcontrol() {
       hopper.move_velocity(0);
     }
 
-    //TOP SCORE
-    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+    //MID SCORE
+    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
       topscore.move_velocity(TOPSCORE_VELOCITY);
-      intake.move_velocity(INTAKE_VELOCITY);
-      hopper.move_velocity(-HOPPER_VELOCITY);
-    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-      topscore.move_velocity(-TOPSCORE_VELOCITY);
       intake.move_velocity(INTAKE_VELOCITY);
       hopper.move_velocity(-HOPPER_VELOCITY);
     } else {
       topscore.move_velocity(0);
+    }
+
+    //TOP SCORE
+    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+      topscore.move_velocity(-TOPSCORE_VELOCITY);
+      intake.move_velocity(INTAKE_VELOCITY);
+      hopper.move_velocity(-HOPPER_VELOCITY);
+    }
+
+    //MATCH LOADER
+    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+      MATCHLOADER_STATE = !MATCHLOADER_STATE;
+      matchloader.set_value(MATCHLOADER_STATE);
     }
 
 

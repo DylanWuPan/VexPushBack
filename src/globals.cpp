@@ -6,8 +6,10 @@ pros::Rotation vertical_tracking(13);
 pros::Rotation horizontal_tracking(-17);
 pros::Imu inertial(20);
 
-pros::Motor intake(11, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+pros::Motor intake(-11, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
 pros::Motor hopper(-21, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
 pros::Motor topscore(-13, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
 
 pros::Controller controller(CONTROLLER_MASTER);
+
+pros::ADIDigitalOut matchloader('H');
