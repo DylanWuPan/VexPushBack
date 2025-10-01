@@ -120,28 +120,33 @@ void opcontrol() {
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
       intake.move_velocity(INTAKE_VELOCITY);
       hopper.move_velocity(HOPPER_VELOCITY);
+      hopper2.move_velocity(HOPPER_VELOCITY);
     } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
       intake.move_velocity(-INTAKE_VELOCITY);
       hopper.move_velocity(-HOPPER_VELOCITY);
+      hopper2.move_velocity(-HOPPER_VELOCITY);
     } else {
       intake.move_velocity(0);
       hopper.move_velocity(0);
+      hopper2.move_velocity(0);
     }
 
     //MID SCORE
     if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-      topscore.move_velocity(TOPSCORE_VELOCITY);
+      topscore.move_velocity(TOPSCORE_VELOCITY/3);
       intake.move_velocity(INTAKE_VELOCITY);
       hopper.move_velocity(-HOPPER_VELOCITY);
+      hopper2.move_velocity(-HOPPER_VELOCITY);
     } else {
       topscore.move_velocity(0);
     }
 
     //TOP SCORE
     if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-      topscore.move_velocity(-TOPSCORE_VELOCITY);
+      topscore.move_velocity(-TOPSCORE_VELOCITY/1.5);
       intake.move_velocity(INTAKE_VELOCITY);
       hopper.move_velocity(-HOPPER_VELOCITY);
+      hopper2.move_velocity(-HOPPER_VELOCITY);
     }
 
     //MATCH LOADER
