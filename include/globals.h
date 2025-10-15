@@ -17,5 +17,6 @@ extern pros::Motor hopper;
 extern pros::Motor hopper2;
 extern pros::Motor topscore;
 extern pros::ADIDigitalOut matchloader;
+extern pros::ADIDigitalOut topaligner;
 
 #endif

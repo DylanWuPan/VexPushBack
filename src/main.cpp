@@ -109,6 +109,7 @@ void autonomous() {
 void opcontrol() {
 
   bool MATCHLOADER_STATE = false;
+  bool TOPALIGNER_STATE = false;
 
   while (true) {
     // DRIVE ----------------------------------------------------------------
@@ -133,7 +134,7 @@ void opcontrol() {
 
     //MID SCORE
     if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-      topscore.move_velocity(TOPSCORE_VELOCITY/3);
+      topscore.move_velocity(TOPSCORE_VELOCITY);
       intake.move_velocity(INTAKE_VELOCITY);
       hopper.move_velocity(-HOPPER_VELOCITY);
       hopper2.move_velocity(-HOPPER_VELOCITY);
@@ -143,7 +144,7 @@ void opcontrol() {
 
     //TOP SCORE
     if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-      topscore.move_velocity(-TOPSCORE_VELOCITY/1.5);
+      topscore.move_velocity(-TOPSCORE_VELOCITY);
       intake.move_velocity(INTAKE_VELOCITY);
       hopper.move_velocity(-HOPPER_VELOCITY);
       hopper2.move_velocity(-HOPPER_VELOCITY);
@@ -153,6 +154,12 @@ void opcontrol() {
     if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
       MATCHLOADER_STATE = !MATCHLOADER_STATE;
       matchloader.set_value(MATCHLOADER_STATE);
+    }
+
+    //TOP ALIGNER
+    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+      TOPALIGNER_STATE = !TOPALIGNER_STATE;
+      topaligner.set_value(TOPALIGNER_STATE);
     }
 
 
