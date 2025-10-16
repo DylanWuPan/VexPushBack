@@ -114,8 +114,8 @@ void opcontrol() {
   while (true) {
     // DRIVE ----------------------------------------------------------------
     float LeftY = DRIVERS_SPEED * controller.get_analog(E_CONTROLLER_ANALOG_LEFT_Y);
-    float RightY = DRIVERS_SPEED * controller.get_analog(E_CONTROLLER_ANALOG_RIGHT_Y);
-    chassis.tank(LeftY, RightY);
+    float RightY = DRIVERS_SPEED * controller.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
+    chassis.arcade(LeftY, RightY);
 
     //INTAKE
     if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
