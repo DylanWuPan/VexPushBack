@@ -8,6 +8,13 @@ int INTAKE_VELOCITY = 600;
 int HOPPER_VELOCITY = 200;
 int TOPSCORE_VELOCITY = 200;
 
+bool IS_SKIPPING = false;
+bool ROGUE_BALL = false;
+
+Alliance ALLIANCE = RED;
+int DEFAULT_HUE = 50;
+int BLUE_HUE = DEFAULT_HUE + 20;
+int RED_HUE = DEFAULT_HUE - 20;
   
 //LEMLIB ----------------------------------------------------------------
 lemlib::Drivetrain drivetrain(&left_drivetrain, // left motor group
@@ -79,12 +86,35 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 
 
 // Helper Functions ------------------------------------------------------------
+void colorSort() {
+  switch(ALLIANCE) {
+    case RED: ROGUE_BALL = colorsensor.get_hue() > BLUE_HUE; break;
+    case BLUE: ROGUE_BALL = colorsensor.get_hue() < RED_HUE; break;
+  }
+  if(ROGUE_BALL && intake.get_voltage() > 0){
+    discardBall();
+  }
+}
+
+void discardBall() {
+  if(!IS_SKIPPING){
+    IS_SKIPPING = true;
+    hopper.move_velocity(-HOPPER_VELOCITY);
+    topscore.move_velocity(TOPSCORE_VELOCITY);
+    pros::delay(50);
+    hopper.move_velocity(HOPPER_VELOCITY);
+
+    ROGUE_BALL = false;
+    IS_SKIPPING = false;
+  }
+}
 
 // Main Functions --------------------------------------------------------------
 void initialize() {
   pros::lcd::initialize();
   chassis.calibrate();
   chassis.setPose(0, 0, 0);
+  // colorsensor.set_led_pwm(100);
 
   // Brain Screen Readouts
   pros::Task screen_task([] {
@@ -92,7 +122,17 @@ void initialize() {
       lemlib::Pose robotPos = chassis.getPose();
       pros::lcd::print(0, "X: %f", robotPos.x);
       pros::lcd::print(1, "Y: %f", robotPos.y);
+      pros::lcd::print(2, "COLOR SENSOR: %f", colorsensor.get_hue());
+      pros::lcd::print(3, "ROGUE BALL: %s", ROGUE_BALL ? "TRUE" : "FALSE");
       pros::delay(20);
+    }
+  });
+
+  // Color Sort Task
+  pros::Task ColorSortTask([] {
+    while (true) {
+      colorSort();
+      pros::delay(5);
     }
   });
 }
@@ -103,7 +143,7 @@ void competition_initialize() {}
 
 void autonomous() {
   // sampleAuto1()
-  sampleAuto2();
+  // sampleAuto2();
 }
 
 void opcontrol() {
@@ -117,49 +157,52 @@ void opcontrol() {
     float RightY = DRIVERS_SPEED * controller.get_analog(E_CONTROLLER_ANALOG_RIGHT_X);
     chassis.arcade(LeftY, RightY);
 
-    //INTAKE
-    if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-      intake.move_velocity(INTAKE_VELOCITY);
-      hopper.move_velocity(HOPPER_VELOCITY);
-      hopper2.move_velocity(HOPPER_VELOCITY);
-    } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-      intake.move_velocity(-INTAKE_VELOCITY);
-      hopper.move_velocity(-HOPPER_VELOCITY);
-      hopper2.move_velocity(-HOPPER_VELOCITY);
-    } else {
-      intake.move_velocity(0);
-      hopper.move_velocity(0);
-      hopper2.move_velocity(0);
-    }
+    if(!IS_SKIPPING) {
+    
+      //INTAKE
+      if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
+        intake.move_velocity(INTAKE_VELOCITY);
+        hopper.move_velocity(HOPPER_VELOCITY);
+        hopper2.move_velocity(HOPPER_VELOCITY);
+        topscore.move_velocity(TOPSCORE_VELOCITY);
+      } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
+        intake.move_velocity(-INTAKE_VELOCITY);
+        hopper.move_velocity(-HOPPER_VELOCITY);
+        hopper2.move_velocity(-HOPPER_VELOCITY);
+      } else {
+        intake.move_velocity(0);
+        hopper.move_velocity(0);
+        hopper2.move_velocity(0);
+        topscore.move_velocity(0);
+      }
 
-    //MID SCORE
-    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-      topscore.move_velocity(TOPSCORE_VELOCITY);
-      intake.move_velocity(INTAKE_VELOCITY);
-      hopper.move_velocity(-HOPPER_VELOCITY);
-      hopper2.move_velocity(-HOPPER_VELOCITY);
-    } else {
-      topscore.move_velocity(0);
-    }
+      //MID SCORE
+      if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
+        topscore.move_velocity(TOPSCORE_VELOCITY);
+        intake.move_velocity(INTAKE_VELOCITY);
+        hopper.move_velocity(-HOPPER_VELOCITY);
+        hopper2.move_velocity(-HOPPER_VELOCITY);
+      }
 
-    //TOP SCORE
-    if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-      topscore.move_velocity(-TOPSCORE_VELOCITY);
-      intake.move_velocity(INTAKE_VELOCITY);
-      hopper.move_velocity(-HOPPER_VELOCITY);
-      hopper2.move_velocity(-HOPPER_VELOCITY);
-    }
+      //TOP SCORE
+      if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
+        topscore.move_velocity(-TOPSCORE_VELOCITY/2);
+        intake.move_velocity(INTAKE_VELOCITY);
+        hopper.move_velocity(-HOPPER_VELOCITY);
+        hopper2.move_velocity(-HOPPER_VELOCITY);
+      }
 
-    //MATCH LOADER
-    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
-      MATCHLOADER_STATE = !MATCHLOADER_STATE;
-      matchloader.set_value(MATCHLOADER_STATE);
-    }
+      //MATCH LOADER
+      if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+        MATCHLOADER_STATE = !MATCHLOADER_STATE;
+        matchloader.set_value(MATCHLOADER_STATE);
+      }
 
-    //TOP ALIGNER
-    if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-      TOPALIGNER_STATE = !TOPALIGNER_STATE;
-      topaligner.set_value(TOPALIGNER_STATE);
+      //TOP ALIGNER
+      if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+        TOPALIGNER_STATE = !TOPALIGNER_STATE;
+        topaligner.set_value(TOPALIGNER_STATE);
+      }
     }
 
 
