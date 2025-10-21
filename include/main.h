@@ -62,17 +62,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-<<<<<<< HEAD
-
-void setLBState(int state);
-void nextLBState(void);
-void prevLBState(void);
-void moveLB(float velocity);
-void LBControl(void);
-void colorSort(void);
-void discardBall(void);
-=======
->>>>>>> 5bf8ef0 (reorganized tasks)
 void autonomous(void);
 void initialize(void);
 void disabled(void);
