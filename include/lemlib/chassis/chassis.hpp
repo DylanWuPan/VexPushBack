@@ -121,8 +121,8 @@ class Drivetrain {
          * The constants are stored in a class so that they can be easily passed to the chassis class
          * Set a constant to 0 and it will be ignored
          *
-         * @param leftMotors pointer to the left motors
-         * @param rightMotors pointer to the right motors
+         * @param leftDrive pointer to the left motors
+         * @param rightDrive pointer to the right motors
          * @param trackWidth the track width of the robot, in inches. This is the distance from the left wheels to the
          * right wheels
          * @param wheelDiameter the diameter of the wheel used on the drivetrain, in inches
@@ -141,21 +141,21 @@ class Drivetrain {
          * pros::Motor rB(7, pros::E_MOTOR_GEARSET_06); // right back motor. port 7
          *
          * // motor groups
-         * pros::MotorGroup leftMotors({lF, lM, lB}); // left motor group
-         * pros::MotorGroup rightMotors({rF, rM, rB}); // right motor group
+         * pros::MotorGroup leftDrive({lF, lM, lB}); // left motor group
+         * pros::MotorGroup rightDrive({rF, rM, rB}); // right motor group
          *
-         * lemlib::Drivetrain drivetrain(&leftMotors, // left motor group
-         *                               &rightMotors, // right motor group
+         * lemlib::Drivetrain drivetrain(&leftDrive, // left motor group
+         *                               &rightDrive, // right motor group
          *                               10, // 10 inch track width
          *                               lemlib::Omniwheel::NEW_4, // using new 4" omnis
          *                               360, // drivetrain rpm is 360
          *                               2); // horizontalDrift is 2. If we had traction wheels, it would have been 8
          * @endcode
          */
-        Drivetrain(pros::MotorGroup* leftMotors, pros::MotorGroup* rightMotors, float trackWidth, float wheelDiameter,
+        Drivetrain(pros::MotorGroup* leftDrive, pros::MotorGroup* rightDrive, float trackWidth, float wheelDiameter,
                    float rpm, float horizontalDrift);
-        pros::MotorGroup* leftMotors;
-        pros::MotorGroup* rightMotors;
+        pros::MotorGroup* leftDrive;
+        pros::MotorGroup* rightDrive;
         float trackWidth;
         float wheelDiameter;
         float rpm;

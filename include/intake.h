@@ -1,0 +1,34 @@
+#pragma once
+#include "main.h"
+#include "globals.h"
+#include "auton.h"
+#include "periodic-task.h"
+
+namespace intakeController {
+    using namespace devices;
+
+    // ---------- Variables ----------
+    constexpr int DELAY = 5;
+
+    // constexpr char* TASK_NAME = "Intake Task";
+    // extern bool enableFlag;
+    // extern uint32_t time;
+    // extern std::optional<pros::Task> task;
+
+    extern bool isSkipping;
+    extern bool rogueBall;
+
+    extern bool isRedAlliance;
+    constexpr int BLUE_HUE = 230;
+    constexpr int RED_HUE = 350;
+	constexpr int INTAKE_VELOCITY = 600;
+	constexpr int HOPPER_VELOCITY = 200;
+	constexpr int TOPSCORE_VELOCITY = 200;
+    
+    void discardBall();
+
+    void start();
+    void update();
+    // void loop();
+    extern PeriodicTask periodicTask;
+}

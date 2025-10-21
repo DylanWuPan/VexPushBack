@@ -108,14 +108,14 @@ class TrackingWheel {
          * pros::Motor lM(4, pros::E_MOTOR_GEARSET_06); // left middle motor. port 4
          * pros::Motor lB(-3, pros::E_MOTOR_GEARSET_06); // left back motor. port 3, reversed
          * // create a motor group for the left side of the drivetrain
-         * pros::MotorGroup leftMotors({lF, lM, lB});
+         * pros::MotorGroup leftDrive({lF, lM, lB});
          * // Create a new tracking wheel using the left motor group
          * // it's using an old 4 inch wheel
          * // and its distance is half the track width of the drivetrain
          * // distance is also negative because the left drive side is to the left of the tracking center
          * // if it was to the right of the tracking center, we would use a positive distance
          * // the rpm is 360
-         * lemlib::TrackingWheel leftTrackingWheel(&leftMotors, lemlib::Omniwheel::OLD_4, -5, 360);
+         * lemlib::TrackingWheel leftTrackingWheel(&leftDrive, lemlib::Omniwheel::OLD_4, -5, 360);
          * @endcode
          */
         TrackingWheel(pros::MotorGroup* motors, float wheelDiameter, float distance, float rpm);
