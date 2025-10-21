@@ -11,8 +11,7 @@ namespace intakeController {
         if(!isSkipping){
             isSkipping = true;
             hopper.move_velocity(-HOPPER_VELOCITY);
-            topScore.move_velocity(TOPSCORE_VELOCITY);
-            pros::delay(50);
+            pros::delay(70);
             hopper.move_velocity(HOPPER_VELOCITY);
 
             rogueBall = false;
@@ -28,12 +27,8 @@ namespace intakeController {
 
     void update() {
         switch(isRedAlliance) {
-            case true:
-                rogueBall = colorSensor.get_hue() < BLUE_HUE;
-                break;
-            case false:
-                rogueBall = colorSensor.get_hue() > RED_HUE;
-                break;
+            case true: rogueBall = abs(colorSensor.get_hue() - BLUE_HUE) < 20; break;
+            case false: rogueBall = abs(colorSensor.get_hue() - RED_HUE) < 20; break;
         }
         if(rogueBall && intake.get_voltage() > 0){
             discardBall();

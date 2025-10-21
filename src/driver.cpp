@@ -30,8 +30,8 @@ namespace driverControl {
 		// leftDrive.move_voltage(driveCurve::driveMap(leftStickVal));   // Sets left motor voltage
 		// rightDrive.move_voltage(driveCurve::driveMap(rightStickVal)); // Sets right motor voltage
 		float LeftY = DRIVERS_SPEED * controller.get_analog(ANALOG_LEFT_Y);
-    	float RightY = DRIVERS_SPEED * controller.get_analog(ANALOG_RIGHT_Y);
-   		chassis.arcade(LeftY, RightY);
+    	float RightX = DRIVERS_SPEED * controller.get_analog(ANALOG_RIGHT_X);
+   		chassis.arcade(LeftY, RightX);
 
     }
 
@@ -53,29 +53,30 @@ namespace driverControl {
 	// Called to control the robot intake during the driver control period
     void opcontrolIntake() {
 		if (isSkipping) return;
-		if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) { // INTAKE
+		//INTAKE
+		if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			intake.move_velocity(INTAKE_VELOCITY);
 			hopper.move_velocity(HOPPER_VELOCITY);
-		} else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // OUTTAKE
+			topScore.move_velocity(TOPSCORE_VELOCITY);
+		} else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
 			intake.move_velocity(-INTAKE_VELOCITY);
 			hopper.move_velocity(-HOPPER_VELOCITY);
 		} else {
 			intake.move_velocity(0);
 			hopper.move_velocity(0);
+			topScore.move_velocity(0);
 		}
 
 		//MID SCORE
 		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-			topScore.move_velocity(TOPSCORE_VELOCITY/3);
+			topScore.move_velocity(TOPSCORE_VELOCITY);
 			intake.move_velocity(INTAKE_VELOCITY);
 			hopper.move_velocity(-HOPPER_VELOCITY);
-		} else {
-			topScore.move_velocity(0);
 		}
 
 		//TOP SCORE
 		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-			topScore.move_velocity(-TOPSCORE_VELOCITY/1.5);
+			topScore.move_velocity(-TOPSCORE_VELOCITY/2);
 			intake.move_velocity(INTAKE_VELOCITY);
 			hopper.move_velocity(-HOPPER_VELOCITY);
 		}
