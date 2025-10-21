@@ -12,9 +12,9 @@ bool IS_SKIPPING = false;
 bool ROGUE_BALL = false;
 
 Alliance ALLIANCE = RED;
-int DEFAULT_HUE = 50;
-int BLUE_HUE = DEFAULT_HUE + 20;
-int RED_HUE = DEFAULT_HUE - 20;
+// int DEFAULT_HUE = 340;
+int BLUE_HUE = 230;
+int RED_HUE = 350;
   
 //LEMLIB ----------------------------------------------------------------
 lemlib::Drivetrain drivetrain(&left_drivetrain, // left motor group
@@ -88,8 +88,8 @@ lemlib::Chassis chassis(drivetrain, // drivetrain settings
 // Helper Functions ------------------------------------------------------------
 void colorSort() {
   switch(ALLIANCE) {
-    case RED: ROGUE_BALL = colorsensor.get_hue() > BLUE_HUE; break;
-    case BLUE: ROGUE_BALL = colorsensor.get_hue() < RED_HUE; break;
+    case RED: ROGUE_BALL = abs(colorsensor.get_hue() - BLUE_HUE) < 20; break;
+    case BLUE: ROGUE_BALL = abs(colorsensor.get_hue() - RED_HUE) < 20; break;
   }
   if(ROGUE_BALL && intake.get_voltage() > 0){
     discardBall();
@@ -100,8 +100,8 @@ void discardBall() {
   if(!IS_SKIPPING){
     IS_SKIPPING = true;
     hopper.move_velocity(-HOPPER_VELOCITY);
-    topscore.move_velocity(TOPSCORE_VELOCITY);
-    pros::delay(50);
+    // topscore.move_velocity(TOPSCORE_VELOCITY);
+    pros::delay(70);
     hopper.move_velocity(HOPPER_VELOCITY);
 
     ROGUE_BALL = false;
@@ -114,7 +114,7 @@ void initialize() {
   pros::lcd::initialize();
   chassis.calibrate();
   chassis.setPose(0, 0, 0);
-  // colorsensor.set_led_pwm(100);
+  colorsensor.set_led_pwm(100);
 
   // Brain Screen Readouts
   pros::Task screen_task([] {
