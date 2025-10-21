@@ -15,7 +15,7 @@ namespace driverControl {
 		int driveMap(int val);
 	}
 
-	// constexpr float DRIVERS_SPEED = 1;
+	constexpr float DRIVERS_SPEED = 1;
 
   	extern bool matchLoaderDown;
 

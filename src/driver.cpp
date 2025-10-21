@@ -25,13 +25,13 @@ namespace driverControl {
 
 	// Called to control the robot driving during the driver control period
     void opcontrolDrive() {
-        int leftStickVal = controller.get_analog(ANALOG_LEFT_Y);      // Gets amount forward/backward from left joystick
-        int rightStickVal = controller.get_analog(ANALOG_RIGHT_Y);    // Gets the turn left/right from right joystick
-		leftDrive.move_voltage(driveCurve::driveMap(leftStickVal));   // Sets left motor voltage
-		rightDrive.move_voltage(driveCurve::driveMap(rightStickVal)); // Sets right motor voltage
-		// float LeftY = DRIVERS_SPEED * controller.get_analog(ANALOG_LEFT_Y);
-    	// float RightY = DRIVERS_SPEED * controller.get_analog(ANALOG_RIGHT_Y);
-   		// chassis.arcade(LeftY, RightY);
+        // int leftStickVal = controller.get_analog(ANALOG_LEFT_Y);      // Gets amount forward/backward from left joystick
+        // int rightStickVal = controller.get_analog(ANALOG_RIGHT_Y);    // Gets the turn left/right from right joystick
+		// leftDrive.move_voltage(driveCurve::driveMap(leftStickVal));   // Sets left motor voltage
+		// rightDrive.move_voltage(driveCurve::driveMap(rightStickVal)); // Sets right motor voltage
+		float LeftY = DRIVERS_SPEED * controller.get_analog(ANALOG_LEFT_Y);
+    	float RightY = DRIVERS_SPEED * controller.get_analog(ANALOG_RIGHT_Y);
+   		chassis.arcade(LeftY, RightY);
 
     }
 

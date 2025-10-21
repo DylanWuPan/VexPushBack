@@ -14,7 +14,7 @@ void PeriodicTask::loop() {
         if (!enableFlag) return;
         update();
 
-        // time += taskDelay;
+        // TODO: Use no-drift timing
         task->delay(taskDelay);
     }
 }

@@ -10,11 +10,6 @@ namespace intakeController {
     // ---------- Variables ----------
     constexpr int DELAY = 5;
 
-    // constexpr char* TASK_NAME = "Intake Task";
-    // extern bool enableFlag;
-    // extern uint32_t time;
-    // extern std::optional<pros::Task> task;
-
     extern bool isSkipping;
     extern bool rogueBall;
 
@@ -29,6 +24,5 @@ namespace intakeController {
 
     void start();
     void update();
-    // void loop();
     extern PeriodicTask periodicTask;
 }

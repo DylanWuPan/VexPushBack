@@ -18,8 +18,6 @@ void initialize() {
 	
 	chassis.calibrate();
 	chassis.setPose(0, 0, 0);
-
-	// pros::lcd::initialize();
 	
 	screenController::start();
 	intakeController::start();

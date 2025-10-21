@@ -13,12 +13,6 @@ namespace screenController {
 
     void start();
     void update();
-    // void loop();
-
-    // constexpr char* TASK_NAME = "Screen Task";
-    // extern bool enableFlag;
-    // extern uint32_t time;
-    // extern std::optional<pros::Task> task;
     extern PeriodicTask periodicTask;
 
     // ---------- Functions ----------

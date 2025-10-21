@@ -5,9 +5,6 @@ namespace intakeController {
     bool rogueBall = false;
     bool isRedAlliance = true;
 
-    // bool enableFlag = false;
-    // uint32_t time;
-    // std::optional<pros::Task> task;
     PeriodicTask periodicTask{update, DELAY, "Intake Task"};
 
     void discardBall() {
@@ -26,23 +23,8 @@ namespace intakeController {
     void start() {
         colorSensor.set_led_pwm(100);
 
-        // enableFlag = true;
-        // time = pros::millis();
-        // if (!task.has_value()) {
-        //     task.emplace(loop, TASK_NAME);
-        // }
         periodicTask.start();
     }
-
-    // void loop() {
-    //     while (true) {
-    //         if (!enableFlag) return;
-    //         update();
-
-    //         // time += taskDelay;
-    //         task->delay(DELAY);
-    //     }
-    // }
 
     void update() {
         switch(isRedAlliance) {
