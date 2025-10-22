@@ -2,9 +2,9 @@
 #include "main.h"
 
 namespace devices {
-	pros::Imu inertial{20}; // Inertial Sensor
-	pros::Rotation latTracker{13};
-	pros::Rotation vertTracker{-17};
+	pros::Imu inertial{21}; // Inertial Sensor
+	pros::Rotation latTracker{4};
+	pros::Rotation vertTracker{-19};
 
 	pros::Controller controller{pros::E_CONTROLLER_MASTER};
 
@@ -13,13 +13,13 @@ namespace devices {
 	pros::MotorGroup rightDrive({8, 9, 10}, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);  // Right Motors, declared back-middle-front
 
 	pros::Motor intake(-11, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
-	pros::Motor hopper(-21, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
+	pros::Motor hopper(-20, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
 	pros::Motor topScore(13, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
 
 	pros::adi::DigitalOut matchLoader{'H', false};
 	pros::adi::DigitalOut topAligner('G', false);
 
-	pros::Optical colorSensor(18);
+	pros::Optical colorSensor(17);
 
 	// TODO: Ports
 	// pros::Distance frontDistance{0};
@@ -31,13 +31,13 @@ namespace devices {
 	lemlib::Drivetrain drivetrain(
 		&leftDrive, // left motor group
 		&rightDrive, // right motor group
-		10.625, // track width
+		12, // track width
 		lemlib::Omniwheel::NEW_325, //wheels
 		450, //drivetrain rpm
 		2 // horizontal drift
 	);
-	lemlib::TrackingWheel horizontalTrackingWheel(&latTracker, lemlib::Omniwheel::NEW_2, -2.25);
-	lemlib::TrackingWheel verticalTrackingWheel(&vertTracker, lemlib::Omniwheel::NEW_2, 0.25);
+	lemlib::TrackingWheel horizontalTrackingWheel(&latTracker, lemlib::Omniwheel::NEW_2, -1.75);
+	lemlib::TrackingWheel verticalTrackingWheel(&vertTracker, lemlib::Omniwheel::NEW_2, -0.125);
 
 	lemlib::OdomSensors sensors(
 		&verticalTrackingWheel, // vertical tracking wheel 1, set to null
@@ -60,9 +60,9 @@ namespace devices {
 	);
 
 	lemlib::ControllerSettings angularController(
-		4, // proportional gain (kP)
+		7, // proportional gain (kP)
 		0, // integral gain (kI)
-		25, // derivative gain (kD)
+		60, // derivative gain (kD)
 		3, // anti windup
 		1, // small error range, in degrees
 		100, // small error range timeout, in milliseconds
