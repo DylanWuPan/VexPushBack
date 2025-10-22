@@ -21,6 +21,8 @@ void initialize() {
 	
 	screenController::start();
 	intakeController::start();
+
+  chassis.moveToPoint(0, 48, 40000);
 }
 
 /**
