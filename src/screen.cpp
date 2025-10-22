@@ -6,11 +6,12 @@ namespace screenController {
 
     int printMode = 0;
 
-    PeriodicTask periodicTask{update, DELAY, "Screen Task"};
+    PeriodicTask periodicTask{update, DELAYS[printMode], "Screen Task"};
 
     // ---------- Functions ----------
     void onCenterButton() {
         if (++printMode > MAX_PRINT_MODE) printMode = 0;
+        periodicTask.setDelay(DELAYS[printMode]);
         update();
     }
     void onLeftButton() {
@@ -39,9 +40,10 @@ namespace screenController {
         switch (printMode) {
             case 0:
                 auton::autonSelect::printAutonMode(0);
-                pros::lcd::print(2, "LB: %g, LM: %g, LF: %g\n", devices::leftDrive.get_temperature(0), devices::leftDrive.get_temperature(1), devices::leftDrive.get_temperature(2));
-                pros::lcd::print(3, "RB: %g, RM: %g, RF: %g\n", devices::rightDrive.get_temperature(0), devices::rightDrive.get_temperature(1), devices::rightDrive.get_temperature(2));
-                pros::lcd::print(5, "Brain: %g, Cntrlr: %i\n", pros::battery::get_capacity(), devices::controller.get_battery_level());
+                pros::lcd::print(2, "LB: %g, LM: %g, LF: %g\n", leftDrive.get_temperature(0), leftDrive.get_temperature(1), leftDrive.get_temperature(2));
+                pros::lcd::print(3, "RB: %g, RM: %g, RF: %g\n", rightDrive.get_temperature(0), rightDrive.get_temperature(1), rightDrive.get_temperature(2));
+                pros::lcd::print(4, "Int: %g, Hop: %g, Top: %g\n", intake.get_temperature(), hopper.get_temperature(), topScore.get_temperature());
+                pros::lcd::print(5, "Brain: %g, Cntrlr: %i\n", pros::battery::get_capacity(), controller.get_battery_level());
                 break;
             case 1:
                 auton::autonSelect::printAutonMode(0);

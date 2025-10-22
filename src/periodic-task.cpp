@@ -31,3 +31,12 @@ void PeriodicTask::start() {
 void PeriodicTask::end() {
     enableFlag = false;
 }
+
+
+uint32_t PeriodicTask::getTimeSinceLastUpdate() {
+    return time;
+}
+
+void PeriodicTask::setDelay(int delay) {
+    taskDelay = delay;
+}

@@ -9,7 +9,7 @@ namespace screenController {
     // ---------- Variables ----------
     extern int printMode;
     constexpr int MAX_PRINT_MODE = 1;
-    constexpr int DELAY = 1000;
+    constexpr int DELAYS[] = {1000, 20};
 
     void start();
     void update();

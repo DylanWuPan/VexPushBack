@@ -7,7 +7,8 @@ class PeriodicTask {
         void loop();
         void start();
         void end();
-        uint32_t getTimeSinceLastUpdate() { return time; }
+        uint32_t getTimeSinceLastUpdate();
+        void setDelay(int delay);
 
     private:
         // For initializing the task (not the cleanest)
