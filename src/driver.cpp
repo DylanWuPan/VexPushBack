@@ -57,7 +57,7 @@ namespace driverControl {
 		if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			intake.move_velocity(INTAKE_VELOCITY);
 			hopper.move_velocity(HOPPER_VELOCITY);
-			topScore.move_velocity(TOPSCORE_VELOCITY);
+			topScore.move_velocity(-TOPSCORE_VELOCITY);
 		} else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
 			intake.move_velocity(-INTAKE_VELOCITY);
 			hopper.move_velocity(-HOPPER_VELOCITY);
@@ -69,14 +69,14 @@ namespace driverControl {
 
 		//MID SCORE
 		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-			topScore.move_velocity(TOPSCORE_VELOCITY);
+			topScore.move_velocity(-TOPSCORE_VELOCITY);
 			intake.move_velocity(INTAKE_VELOCITY);
 			hopper.move_velocity(-HOPPER_VELOCITY);
 		}
 
 		//TOP SCORE
 		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-			topScore.move_velocity(-TOPSCORE_VELOCITY/2);
+			topScore.move_velocity(TOPSCORE_VELOCITY/2);
 			intake.move_velocity(INTAKE_VELOCITY);
 			hopper.move_velocity(-HOPPER_VELOCITY);
 		}

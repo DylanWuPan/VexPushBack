@@ -14,7 +14,7 @@ namespace devices {
 
 	pros::Motor intake(-11, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
 	pros::Motor hopper(-20, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
-	pros::Motor topScore(13, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
+	pros::Motor topScore(-13, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
 
 	pros::adi::DigitalOut matchLoader{'H', false};
 	pros::adi::DigitalOut topAligner('G', false);
@@ -60,9 +60,9 @@ namespace devices {
 	);
 
 	lemlib::ControllerSettings angularController(
-		7, // proportional gain (kP)
+		4, // proportional gain (kP)
 		0, // integral gain (kI)
-		60, // derivative gain (kD)
+		25, // derivative gain (kD)
 		3, // anti windup
 		1, // small error range, in degrees
 		100, // small error range timeout, in milliseconds

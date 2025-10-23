@@ -300,7 +300,8 @@
     "upload_options": {
       "slot": 1,
       "icon": "pros",
-      "after": "run"
+      "after": "run",
+      "description": "blackbird x 25600Y"
     },
     "use_early_access": false
   }
