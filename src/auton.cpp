@@ -44,25 +44,47 @@ namespace auton {
 		intakeController::isRedAlliance = true;
 
 		chassis.setPose(88.5, 22, 90);
-
+		
+		// Match load
 		chassis.moveToPoint(120, 22, 4000, {.maxSpeed = 80});
 		pros::delay(1000);
 		chassis.turnToHeading(180, 1000, {.maxSpeed = 80});
-		pros::delay(500);
+		pros::delay(550);
 		matchLoader.set_value(true);
 		runIntakeNoHopper();
-		chassis.moveToPoint(121, 11.5, 1400, {.maxSpeed = 80});
+		chassis.moveToPoint(121, 11.75, 1400, {.maxSpeed = 80});
 		pros::delay(1400);
+
+		// Long goal
 		chassis.moveToPoint(120, 24, 2000, {.forwards = false});
 		pros::delay(500);
 		chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
+		pros::delay(300);
+		stopIntake();
+		pros::delay(200);
 		matchLoader.set_value(false);
-
 		topAligner.set_value(true);
-		chassis.moveToPoint(122, 40, 3000, {.maxSpeed = 80});
+		chassis.moveToPoint(122, 39, 3000, {.maxSpeed = 80});
+		pros::delay(500);
 		runTopScore();
+		pros::delay(3000);
 
-		pros::delay(50000);
+		// Three balls
+		chassis.moveToPoint(120, 24, 2000, {.forwards = false, .maxSpeed=80});
+		pros::delay(1000);
+		chassis.turnToPoint(96, 48, 2000, {.maxSpeed = 80});
+		pros::delay(700);
+		runIntake();
+		// Added 6 inches in y direction to what it should be
+		chassis.moveToPoint(106, 44, 2000, {.maxSpeed = 80});
+		pros::delay(400);
+		chassis.moveToPoint(86, 64, 2000, {.maxSpeed = 50});
+		pros::delay(2500);
+		outtake();
+		chassis.moveToPoint(83, 67, 2000, {.maxSpeed = 50});
+		pros::delay(5000);
+
+
 	}
 
 	void autonRedLeft() {

@@ -48,9 +48,10 @@ namespace screenController {
             case 1:
                 auton::autonSelect::printAutonMode(0);
                 lemlib::Pose robotPos = chassis.getPose();
-                pros::lcd::print(2, "X: %f, Y: %f", robotPos.x, robotPos.y);
+                pros::lcd::print(2, "Angle: %g, X: %f, Y: %f", robotPos.theta, robotPos.x, robotPos.y);
                 pros::lcd::print(3, "COLOR SENSOR: %f", colorSensor.get_hue());
                 pros::lcd::print(4, "ROGUE BALL: %s", intakeController::rogueBall ? "TRUE" : "FALSE");
+                pros::lcd::print(5, "Lat: %g, Vert: %g", latTracker.get_position() * 0.01, vertTracker.get_position() * 0.01);
                 break;
         }
     }
