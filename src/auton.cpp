@@ -8,7 +8,6 @@ namespace auton {
 	void runIntake() {
 		intake.move_velocity(intakeController::INTAKE_VELOCITY);
 		hopper.move_velocity(intakeController::HOPPER_VELOCITY);
-		topScore.move_velocity(intakeController::TOPSCORE_VELOCITY/2);
 	}
 
 	void stopIntake(){
@@ -19,8 +18,8 @@ namespace auton {
 
 	void runIntakeNoHopper() {
 		intake.move_velocity(intakeController::INTAKE_VELOCITY);
-		hopper.move_velocity(0);
-		topScore.move_velocity(intakeController::TOPSCORE_VELOCITY/10);
+		hopper.move_velocity(intakeController::HOPPER_VELOCITY/10);
+		topScore.move_velocity(intakeController::TOPSCORE_VELOCITY/20);
 	}
 
 	void outtake(){
@@ -46,45 +45,48 @@ namespace auton {
 		chassis.setPose(88.5, 22, 90);
 		
 		// Match load
-		chassis.moveToPoint(120, 22, 4000, {.maxSpeed = 80});
+		chassis.moveToPoint(121, 22, 4000, {.maxSpeed = 80});
 		pros::delay(1000);
 		chassis.turnToHeading(180, 1000, {.maxSpeed = 80});
-		pros::delay(550);
 		matchLoader.set_value(true);
-		runIntakeNoHopper();
-		chassis.moveToPoint(121, 11.75, 1400, {.maxSpeed = 80});
-		pros::delay(1400);
+		runIntake();
+		chassis.moveToPose(122, 11.75, 180, 1500, {.maxSpeed = 50});
+		pros::delay(1700);
 
-		// Long goal
-		chassis.moveToPoint(120, 24, 2000, {.forwards = false});
-		pros::delay(500);
-		chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
-		pros::delay(300);
-		stopIntake();
-		pros::delay(200);
-		matchLoader.set_value(false);
+		// // Long goal
+		chassis.moveToPoint(122, 24, 2000, {.forwards = false});
+		chassis.moveToPose(124, 43, 0, 3000, {.maxSpeed = 80});
+		pros::delay(800);
 		topAligner.set_value(true);
-		chassis.moveToPoint(122, 39, 3000, {.maxSpeed = 80});
-		pros::delay(500);
+		matchLoader.set_value(false);
 		runTopScore();
 		pros::delay(3000);
+		// pros::delay(500);
+		// chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
+		// pros::delay(300);
+		// stopIntake();
+		// pros::delay(200);
+		// matchLoader.set_value(false);
+		// topAligner.set_value(true);
+		// chassis.moveToPoint(122, 39, 3000, {.maxSpeed = 80});
+		// pros::delay(500);
+		// runTopScore();
+		// pros::delay(3000);
 
 		// Three balls
-		chassis.moveToPoint(120, 24, 2000, {.forwards = false});
-		pros::delay(1000);
-		chassis.turnToPoint(96, 48, 2000, {.maxSpeed = 80});
-		pros::delay(700);
-		runIntake();
-		chassis.moveToPoint(106, 38, 2000, {.maxSpeed = 80});
-		pros::delay(400);
-		chassis.moveToPoint(92, 52, 2000, {.maxSpeed = 50});
-		pros::delay(2500);
-		chassis.moveToPose(85, 59, -45, 2000, {.maxSpeed = 50}); // tried pose here to see if it would be better
-		pros::delay(1000);
-		outtake();
-		pros::delay(5000);
-
-
+		// chassis.moveToPoint(120, 24, 2000, {.forwards = false});
+		// pros::delay(1000);
+		// chassis.turnToPoint(96, 48, 2000, {.maxSpeed = 80});
+		// pros::delay(700);
+		// runIntake();
+		// chassis.moveToPoint(106, 38, 2000, {.maxSpeed = 80});
+		// pros::delay(400);
+		// chassis.moveToPoint(92, 52, 2000, {.maxSpeed = 50});
+		// pros::delay(2500);
+		// chassis.moveToPose(85, 59, -45, 2000, {.maxSpeed = 50}); // tried pose here to see if it would be better
+		// pros::delay(1000);
+		// outtake();
+		// pros::delay(5000);
 	}
 
 	void autonRedLeft() {
