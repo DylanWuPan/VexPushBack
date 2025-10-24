@@ -22,7 +22,7 @@ void initialize() {
 	screenController::start();
 	intakeController::start();
 
-	auton::autonRedRight();
+	// auton::autonRedRight();
 }
 
 /**

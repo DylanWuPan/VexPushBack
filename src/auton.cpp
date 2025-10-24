@@ -70,18 +70,18 @@ namespace auton {
 		pros::delay(3000);
 
 		// Three balls
-		chassis.moveToPoint(120, 24, 2000, {.forwards = false, .maxSpeed=80});
+		chassis.moveToPoint(120, 24, 2000, {.forwards = false});
 		pros::delay(1000);
 		chassis.turnToPoint(96, 48, 2000, {.maxSpeed = 80});
 		pros::delay(700);
 		runIntake();
-		// Added 6 inches in y direction to what it should be
-		chassis.moveToPoint(106, 44, 2000, {.maxSpeed = 80});
+		chassis.moveToPoint(106, 38, 2000, {.maxSpeed = 80});
 		pros::delay(400);
-		chassis.moveToPoint(86, 64, 2000, {.maxSpeed = 50});
+		chassis.moveToPoint(92, 52, 2000, {.maxSpeed = 50});
 		pros::delay(2500);
+		chassis.moveToPose(85, 59, -45, 2000, {.maxSpeed = 50}); // tried pose here to see if it would be better
+		pros::delay(1000);
 		outtake();
-		chassis.moveToPoint(83, 67, 2000, {.maxSpeed = 50});
 		pros::delay(5000);
 
 
