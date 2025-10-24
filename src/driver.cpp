@@ -52,7 +52,7 @@ namespace driverControl {
 
 	// Called to control the robot intake during the driver control period
     void opcontrolIntake() {
-		if (isSkipping) return;
+		if (isSkipping || isJamming) return;
 		//INTAKE
 		if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
 			intake.move_velocity(INTAKE_VELOCITY);

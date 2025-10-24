@@ -12,10 +12,8 @@ namespace intakeController {
         if(!isSkipping) {
             isSkipping = true;
             hopper.move_velocity(-HOPPER_VELOCITY);
-            topScore.move_velocity(-TOPSCORE_VELOCITY);
             pros::delay(70);
             hopper.move_velocity(HOPPER_VELOCITY);
-            topScore.move_velocity(0);
 
             rogueBall = false;
             isSkipping = false;
@@ -36,11 +34,17 @@ namespace intakeController {
         if(rogueBall && intake.get_voltage() > 0){
             discardBall();
         }
-        if(intake.get_actual_velocity() < 10 && intake.get_voltage() > 0){
+        if(abs(hopper.get_actual_velocity()) == 0 && abs(hopper.get_target_velocity()) > 0){
             isJamming = true;
-            intake.move_velocity(-INTAKE_VELOCITY);
-            pros::delay(50);
-            intake.move_velocity(INTAKE_VELOCITY);
+            if(hopper.get_target_velocity() > 0){
+                hopper.move_velocity(-HOPPER_VELOCITY);
+                pros::delay(100);
+                hopper.move_velocity(HOPPER_VELOCITY);
+            } else{
+                hopper.move_velocity(HOPPER_VELOCITY);
+                pros::delay(100);
+                hopper.move_velocity(-HOPPER_VELOCITY);
+            }
             isJamming = false;
         }
     }

@@ -11,6 +11,7 @@ namespace intakeController {
     constexpr int DELAY = 5;
 
     extern bool isSkipping;
+    extern bool isJamming;
     extern bool rogueBall;
 
     extern bool isRedAlliance;
