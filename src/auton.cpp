@@ -95,7 +95,7 @@ namespace auton {
 
 		// Long goal
 		chassis.moveToPoint(22, 24, 2000, {.forwards = false});
-		chassis.moveToPose(23, 40.5, 360, 3000, {.maxSpeed = 80});
+		chassis.moveToPose(23, 40.5, 1, 3000, {.maxSpeed = 80});
 		pros::delay(500);
 		topAligner.set_value(true);
 		pros::delay(300);
@@ -106,11 +106,14 @@ namespace auton {
 
 		// MidGoal
 		chassis.moveToPoint(21, 24, 2000, {.forwards = false});
-		chassis.turnToHeading(407, 500, {.maxSpeed = 80});
+		// chassis.turnToHeading(407, 500, {.maxSpeed = 80});
+		chassis.turnToPoint(48, 48, 1000, {.maxSpeed = 80});
 		topAligner.set_value(false);
 		runIntake();
 		chassis.moveToPoint(42, 42.5, 3000, {.maxSpeed = 80});
-		chassis.moveToPose(57.5, 57, 46, 3000, {.maxSpeed = 30});
+		chassis.turnToPoint(58, 58, 1000, {.maxSpeed = 80});
+		pros::delay(100);
+		chassis.moveToPose(58, 58, 46, 3000, {.maxSpeed = 30});
 		pros::delay(2000);
 		runMiddleScore();
 		pros::delay(2000);
@@ -119,8 +122,20 @@ namespace auton {
 		chassis.moveToPoint(48, 48.5, 3000, {.forwards = false, .maxSpeed = 80});
 		chassis.moveToPose(81, 47, 90, 4000, {.maxSpeed = 80});
 		chassis.moveToPoint(96, 47, 3000, {.maxSpeed = 30});
-		pros::delay(10000);
-		
+		pros::delay(5000);
+
+		// Right now just going straight to goal
+		chassis.turnToHeading(135, 1000, {.maxSpeed = 80});
+		pros::delay(100);
+		chassis.moveToPoint(123, 24, 1000, {.maxSpeed = 80});
+		pros::delay(200);
+		chassis.turnToHeading(1, 1000, {.maxSpeed = 80});
+		topAligner.set_value(true);
+		pros::delay(100);
+		chassis.moveToPoint(123, 40.5, 3000, {.maxSpeed = 80});
+		pros::delay(300);
+		runTopScore();
+		pros::delay(2000);
 	}
 
 	void autonRedLeft() {
