@@ -5,6 +5,8 @@ namespace intakeController {
     bool isJamming = false;
     bool rogueBall = false;
     bool isRedAlliance = true;
+    bool isColorSorting = false;
+    bool isAntiJamming = true;
 
     PeriodicTask periodicTask{update, DELAY, "Intake Task"};
 
@@ -27,25 +29,29 @@ namespace intakeController {
     }
 
     void update() {
-        switch(isRedAlliance) {
-            case true: rogueBall = abs(colorSensor.get_hue() - BLUE_HUE) < 20; break;
-            case false: rogueBall = abs(colorSensor.get_hue() - RED_HUE) < 20; break;
-        }
-        if(rogueBall && intake.get_voltage() > 0){
-            discardBall();
-        }
-        if(abs(hopper.get_actual_velocity()) == 0 && abs(hopper.get_target_velocity()) > 0){
-            isJamming = true;
-            if(hopper.get_target_velocity() > 0){
-                hopper.move_velocity(-HOPPER_VELOCITY);
-                pros::delay(100);
-                hopper.move_velocity(HOPPER_VELOCITY);
-            } else{
-                hopper.move_velocity(HOPPER_VELOCITY);
-                pros::delay(100);
-                hopper.move_velocity(-HOPPER_VELOCITY);
+        if(isColorSorting){
+            switch(isRedAlliance) {
+                case true: rogueBall = abs(colorSensor.get_hue() - BLUE_HUE) < 20; break;
+                case false: rogueBall = abs(colorSensor.get_hue() - RED_HUE) < 20; break;
             }
-            isJamming = false;
+            if(rogueBall && intake.get_voltage() > 0){
+                discardBall();
+            }
+        }
+        if(isAntiJamming){
+            if(abs(hopper.get_actual_velocity()) == 0 && abs(hopper.get_target_velocity()) > 0){
+                isJamming = true;
+                if(hopper.get_target_velocity() > 0){
+                    hopper.move_velocity(-HOPPER_VELOCITY);
+                    pros::delay(100);
+                    hopper.move_velocity(HOPPER_VELOCITY);
+                } else{
+                    hopper.move_velocity(HOPPER_VELOCITY);
+                    pros::delay(100);
+                    hopper.move_velocity(-HOPPER_VELOCITY);
+                }
+                isJamming = false;
+            }
         }
     }
 }

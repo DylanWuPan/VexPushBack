@@ -69,7 +69,7 @@ namespace driverControl {
 
 		//MID SCORE
 		if(controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-			topScore.move_velocity(-TOPSCORE_VELOCITY);
+			topScore.move_velocity(-TOPSCORE_VELOCITY/3);
 			intake.move_velocity(INTAKE_VELOCITY);
 			hopper.move_velocity(-HOPPER_VELOCITY);
 		}
