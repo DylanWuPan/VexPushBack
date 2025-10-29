@@ -59,7 +59,7 @@ namespace driverControl {
 			hopper.move_velocity(HOPPER_VELOCITY);
 			topScore.move_velocity(-TOPSCORE_VELOCITY);
 		} else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-			intake.move_velocity(-INTAKE_VELOCITY);
+			intake.move_velocity(-INTAKE_VELOCITY/3);
 			hopper.move_velocity(-HOPPER_VELOCITY);
 		} else {
 			intake.move_velocity(0);
