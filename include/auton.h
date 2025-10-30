@@ -6,11 +6,9 @@
 constexpr int TURN_SPEED = 80;
 
 namespace auton {
-	void runIntake();
-	void outtake();
-	void runTopScore();
 	// Auton Functions
 	void autonSkills();
+	void autonSAWP();
 	void autonBlueRight();
 	void autonBlueLeft();
 	void autonRedRight();

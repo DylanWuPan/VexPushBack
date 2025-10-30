@@ -13,16 +13,12 @@ using namespace devices;
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() {
-	inertial.reset(true);
-	
+void initialize() {	
 	chassis.calibrate();
-	chassis.setPose(0, 0, 0);
+	// chassis.setPose(0, 0, 0);
 	
 	screenController::start();
 	intakeController::start();
-
-	auton::autonRedRight();
 }
 
 /**
@@ -55,23 +51,24 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	switch (auton::autonSelect::getAutonMode()) {
-		case auton::autonSelect::autonMode::BLUE_LEFT:
-			auton::autonBlueLeft();
-			break;
-		case auton::autonSelect::autonMode::BLUE_RIGHT:
-			auton::autonBlueRight();
-			break; 
-		case auton::autonSelect::autonMode::RED_LEFT:
-			auton::autonRedLeft();
-			break;
-		case auton::autonSelect::autonMode::RED_RIGHT:
-			auton::autonRedRight();
-			break;
-		case auton::autonSelect::autonMode::SKILLS:
-			auton::autonSkills();
-			break;
-	}
+	auton::autonSAWP();
+	// switch (auton::autonSelect::getAutonMode()) {
+	// 	case auton::autonSelect::autonMode::BLUE_LEFT:
+	// 		auton::autonBlueLeft();
+	// 		break;
+	// 	case auton::autonSelect::autonMode::BLUE_RIGHT:
+	// 		auton::autonBlueRight();
+	// 		break; 
+	// 	case auton::autonSelect::autonMode::RED_LEFT:
+	// 		auton::autonRedLeft();
+	// 		break;
+	// 	case auton::autonSelect::autonMode::RED_RIGHT:
+	// 		auton::autonRedRight();
+	// 		break;
+	// 	case auton::autonSelect::autonMode::SKILLS:
+	// 		auton::autonSkills();
+	// 		break;
+	// }
 }
 
 /**
