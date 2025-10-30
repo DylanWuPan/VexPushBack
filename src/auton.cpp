@@ -103,12 +103,12 @@ namespace auton {
 
 		// MidGoal
 		chassis.moveToPoint(21, 24, 4000, {.forwards = false});
-		chassis.moveToPoint(52.5, 61, 4000, {.maxSpeed = 80, .earlyExitRange = 40});
+		chassis.moveToPoint(32.5, 41, 4000, {.maxSpeed = 80, .minSpeed = 50, .earlyExitRange = 2});
 		topAligner.set_value(false);
-		chassis.moveToPoint(52.5, 61, 4000, {.maxSpeed = 30, .earlyExitRange = 20});
-		pros::delay(500);
+		chassis.moveToPoint(47.5, 56, 4000, {.maxSpeed = 30, .minSpeed = 20, .earlyExitRange = 2});
 		matchLoader.set_value(true);
 		chassis.moveToPose(52.5, 61, 46, 4000, {.maxSpeed = 80});
+		pros::delay(500);
 		runMiddleScore();
 		pros::delay(3000);
 		runIntake();
