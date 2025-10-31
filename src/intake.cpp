@@ -6,7 +6,7 @@ namespace intakeController {
     bool rogueBall = false;
     bool isRedAlliance = true;
     bool isColorSorting = false;
-    bool isAntiJamming = true;
+    bool isAntiJamming = false;
 
     PeriodicTask periodicTask{update, DELAY, "Intake Task"};
 
@@ -43,11 +43,11 @@ namespace intakeController {
                 isJamming = true;
                 if(hopper.get_target_velocity() > 0){
                     hopper.move_velocity(-HOPPER_VELOCITY);
-                    pros::delay(100);
+                    pros::delay(50);
                     hopper.move_velocity(HOPPER_VELOCITY);
                 } else{
                     hopper.move_velocity(HOPPER_VELOCITY);
-                    pros::delay(100);
+                    pros::delay(50);
                     hopper.move_velocity(-HOPPER_VELOCITY);
                 }
                 isJamming = false;
