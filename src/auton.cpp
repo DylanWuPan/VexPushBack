@@ -36,9 +36,9 @@ namespace auton {
 	}
 
 	void runMiddleScore(){
-		topScore.move_velocity(-intakeController::TOPSCORE_VELOCITY);
-		hopper.move_velocity(-intakeController::HOPPER_VELOCITY);
-		intake.move_velocity(intakeController::INTAKE_VELOCITY);
+		topScore.move_velocity(-0.67 * intakeController::TOPSCORE_VELOCITY);
+		hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY);
+		intake.move_velocity((0.67) * intakeController::INTAKE_VELOCITY);
 	}
 
 	// Auton Functions
@@ -96,37 +96,78 @@ namespace auton {
 		pros::delay(500);
 		topAligner.set_value(true);
 		matchLoader.set_value(false);
-		pros::delay(500);
+		pros::delay(200);
 		runTopScore();
 		pros::delay(2000);
 		runIntake();
 
 		// MidGoal
 		chassis.moveToPoint(19.5, 24, 4000, {.forwards = false});
-		chassis.moveToPose(54.5, 62.5, 46, 4000, {.maxSpeed = 80});
+		chassis.moveToPose(54.5, 62.5, 46, 3000, {.maxSpeed = 80});
 		topAligner.set_value(false);
-		pros::delay(1100);
+		pros::delay(800);
 		matchLoader.set_value(true);
 		runMiddleScore();
-		pros::delay(1000);
+		pros::delay(500);
 		runIntake();
 
-		chassis.moveToPoint(48, 48, 4000, {.forwards = false});
+		chassis.moveToPoint(48, 48, 4000, {.forwards = false, .minSpeed = 60, .earlyExitRange = 5});
 		matchLoader.set_value(false);
 
-		chassis.moveToPoint(96, 54, 4000);
+		chassis.moveToPoint(96, 54, 4000, {.minSpeed = 40, .earlyExitRange = 5});
 		pros::delay(1000);
 		matchLoader.set_value(true);
 
 		//SECOND LONG GOAL
-		chassis.moveToPoint(120, 36, 4000);
+		chassis.moveToPoint(120, 36, 4000, {.minSpeed = 40, .earlyExitRange = 5});
 		matchLoader.set_value(false);
-		chassis.moveToPose(124, 45, 0, 5000, {.maxSpeed = 80});
+		chassis.moveToPose(122, 45, 0, 5000, {.maxSpeed = 80});
 		pros::delay(500);
 		topAligner.set_value(true);
 		pros::delay(500);
 		runTopScore();
 		
+		pros::delay(5000);
+	}
+
+	void autonLongMiddleLeft(){
+		intakeController::isRedAlliance = true;
+
+		chassis.setPose(55.5, 22, 270);
+
+		// Match load
+		chassis.moveToPoint(23, 22, 4000, {.maxSpeed = 80});
+		chassis.turnToHeading(180, 500, {.maxSpeed = 80});
+		matchLoader.set_value(true);
+		runIntake();
+		chassis.moveToPose(22, 8, 180, 3000, {.minSpeed = 60});
+		pros::delay(1090);
+
+		// Long goal
+		chassis.moveToPoint(22, 24, 2000, {.forwards = false});
+		chassis.moveToPose(20, 40.5, 1, 3000);
+		pros::delay(500);
+		topAligner.set_value(true);
+		pros::delay(100);
+		matchLoader.set_value(false);
+		pros::delay(400);
+		runTopScore();
+		pros::delay(2000);
+		chassis.moveToPoint(20, 42, 500);
+
+		// DESCORE
+		chassis.moveToPoint(20, 30, 4000, {.forwards = false, .maxSpeed = 80});
+		pros::delay(200);
+		topAligner.set_value(false);
+		chassis.moveToPoint(20, 40.5, 2000, {.minSpeed = 120});
+
+		// MidGoal
+		chassis.moveToPoint(20, 24, 4000, {.forwards = false});
+		runIntake();
+		chassis.moveToPose(54, 60.5, 45, 6000, {.maxSpeed = 40});
+		pros::delay(3200);
+		runMiddleScore();
+
 		pros::delay(5000);
 	}
 

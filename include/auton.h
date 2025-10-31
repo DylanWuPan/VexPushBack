@@ -9,6 +9,7 @@ namespace auton {
 	// Auton Functions
 	void autonSkills();
 	void autonSAWP();
+	void autonLongMiddleLeft();
 	void autonBlueRight();
 	void autonBlueLeft();
 	void autonRedRight();

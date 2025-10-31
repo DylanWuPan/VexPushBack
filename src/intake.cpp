@@ -5,18 +5,23 @@ namespace intakeController {
     bool isJamming = false;
     bool rogueBall = false;
     bool isRedAlliance = true;
-    bool isColorSorting = false;
-    bool isAntiJamming = false;
+    bool isColorSorting = true;
+    bool isAntiJamming = true;
 
     PeriodicTask periodicTask{update, DELAY, "Intake Task"};
 
     void discardBall() {
         if(!isSkipping) {
             isSkipping = true;
-            hopper.move_velocity(-HOPPER_VELOCITY);
-            pros::delay(70);
-            hopper.move_velocity(HOPPER_VELOCITY);
-
+            if(hopper.get_target_velocity() > 0){
+                hopper.move_velocity(-HOPPER_VELOCITY);
+                pros::delay(70);
+                hopper.move_velocity(HOPPER_VELOCITY);
+            } else{
+                hopper.move_velocity(HOPPER_VELOCITY);
+                pros::delay(70);
+                hopper.move_velocity(-HOPPER_VELOCITY);
+            }
             rogueBall = false;
             isSkipping = false;
         }
@@ -34,7 +39,7 @@ namespace intakeController {
                 case true: rogueBall = abs(colorSensor.get_hue() - BLUE_HUE) < 20; break;
                 case false: rogueBall = abs(colorSensor.get_hue() - RED_HUE) < 20; break;
             }
-            if(rogueBall && intake.get_voltage() > 0){
+            if(rogueBall && abs(intake.get_voltage()) > 0){
                 discardBall();
             }
         }
@@ -43,12 +48,26 @@ namespace intakeController {
                 isJamming = true;
                 if(hopper.get_target_velocity() > 0){
                     hopper.move_velocity(-HOPPER_VELOCITY);
-                    pros::delay(50);
+                    pros::delay(30);
                     hopper.move_velocity(HOPPER_VELOCITY);
                 } else{
                     hopper.move_velocity(HOPPER_VELOCITY);
-                    pros::delay(50);
+                    pros::delay(30);
                     hopper.move_velocity(-HOPPER_VELOCITY);
+                }
+                isJamming = false;
+            }
+
+            if(abs(intake.get_actual_velocity()) == 0 && abs(intake.get_target_velocity()) > 0){
+                isJamming = true;
+                if(intake.get_target_velocity() > 0){
+                    intake.move_velocity(-INTAKE_VELOCITY);
+                    pros::delay(30);
+                    intake.move_velocity(INTAKE_VELOCITY);
+                } else{
+                    intake.move_velocity(INTAKE_VELOCITY);
+                    pros::delay(30);
+                    intake.move_velocity(-INTAKE_VELOCITY);
                 }
                 isJamming = false;
             }
