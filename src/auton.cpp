@@ -43,7 +43,60 @@ namespace auton {
 
 	// Auton Functions
 	void autonSkills() {
-		// intakeController::periodicTask.end();
+		intakeController::periodicTask.end();
+
+		chassis.setPose(55.75, 22.75, 0);
+
+		// 3 BALLS
+		chassis.moveToPoint(46, 55, 4000, {.maxSpeed = 40});
+		runIntake();
+		pros::delay(1400);
+		matchLoader.set_value(true);
+
+		// FIRST LOADER
+		chassis.moveToPoint(22, 22, 4000, {.maxSpeed = 80});
+		chassis.turnToHeading(180, 500, {.maxSpeed = 80});
+		chassis.moveToPoint(21, 12, 2000, {.maxSpeed = 80});
+		pros::delay(2500);
+
+		// LONG GOAL
+		chassis.moveToPoint(21, 24, 4000, {.forwards = false, .maxSpeed = 80});
+		chassis.moveToPose(20, 43, 0, 4000, {.maxSpeed = 80});
+		pros::delay(500);
+		topAligner.set_value(true);
+		pros::delay(100);
+		matchLoader.set_value(false);
+		pros::delay(400);
+		runTopScore();
+		pros::delay(4000);
+		chassis.moveToPoint(20, 45, 500);
+
+		//SECOND LOADER
+		chassis.moveToPoint(20, 36, 4000, {.forwards = false, .maxSpeed = 80});
+		runIntake();
+		topAligner.set_value(false);
+		chassis.turnToHeading(90, 1000, {.maxSpeed = 80});
+
+		chassis.moveToPoint(123, 36, 4000, {.maxSpeed = 80});
+		chassis.turnToHeading(180, 1000, {.maxSpeed = 80});
+		matchLoader.set_value(true);
+		chassis.moveToPoint(123, 12, 3000, {.maxSpeed = 80});
+		pros::delay(2500);
+
+		// SECOND LONG GOAL
+		chassis.moveToPoint(123, 24, 4000, {.forwards = false, .maxSpeed = 80});
+		chassis.moveToPose(123, 44, 0, 4000, {.maxSpeed = 80});
+		pros::delay(500);
+		topAligner.set_value(true);
+		pros::delay(100);
+		matchLoader.set_value(false);
+		pros::delay(400);
+		runTopScore();
+		pros::delay(4000);
+		chassis.moveToPoint(123, 46, 500);
+
+		pros::delay(5000);
+
 	}
 
 	void autonSAWP(){
