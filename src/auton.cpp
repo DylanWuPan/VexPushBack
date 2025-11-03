@@ -38,7 +38,7 @@ namespace auton {
 	void runMiddleScore(){
 		topScore.move_velocity(-0.67 * intakeController::TOPSCORE_VELOCITY);
 		hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY);
-		intake.move_velocity((0.67) * intakeController::INTAKE_VELOCITY);
+		intake.move_velocity(0.67 * intakeController::INTAKE_VELOCITY);
 	}
 
 	// Auton Functions
@@ -77,10 +77,10 @@ namespace auton {
 		topAligner.set_value(false);
 		chassis.turnToHeading(90, 1000, {.maxSpeed = 80});
 
-		chassis.moveToPoint(123, 36, 4000, {.maxSpeed = 80});
+		chassis.moveToPoint(122.5, 36, 4000, {.maxSpeed = 80});
 		chassis.turnToHeading(180, 1000, {.maxSpeed = 80});
 		matchLoader.set_value(true);
-		chassis.moveToPoint(123, 12, 3000, {.maxSpeed = 80});
+		chassis.moveToPoint(122.5, 13, 3000, {.maxSpeed = 70});
 		pros::delay(2500);
 
 		// SECOND LONG GOAL
@@ -94,8 +94,21 @@ namespace auton {
 		runTopScore();
 		pros::delay(4000);
 		chassis.moveToPoint(123, 46, 500);
+		// pros::delay(5000);
 
-		pros::delay(5000);
+		// 3 balls
+		runIntake();
+		chassis.moveToPoint(123, 24, 4000, {.forwards = false, .maxSpeed = 80});
+		pros::delay(500);
+		chassis.moveToPoint(99, 48, 4000, {.maxSpeed = 80});
+		pros::delay(900);
+		matchLoader.set_value(true);
+		
+		// other 3 balls
+		chassis.moveToPoint(98, 103, 4000, {.maxSpeed = 80});
+		pros::delay(700);
+		matchLoader.set_value(false);
+
 
 	}
 
