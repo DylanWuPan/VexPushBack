@@ -48,11 +48,11 @@ namespace intakeController {
                 isJamming = true;
                 if(hopper.get_target_velocity() > 0){
                     hopper.move_velocity(-HOPPER_VELOCITY);
-                    pros::delay(30);
+                    pros::delay(50);
                     hopper.move_velocity(HOPPER_VELOCITY);
                 } else{
                     hopper.move_velocity(HOPPER_VELOCITY);
-                    pros::delay(30);
+                    pros::delay(50);
                     hopper.move_velocity(-HOPPER_VELOCITY);
                 }
                 isJamming = false;
@@ -62,11 +62,11 @@ namespace intakeController {
                 isJamming = true;
                 if(intake.get_target_velocity() > 0){
                     intake.move_velocity(-INTAKE_VELOCITY);
-                    pros::delay(30);
+                    pros::delay(50);
                     intake.move_velocity(INTAKE_VELOCITY);
                 } else{
                     intake.move_velocity(INTAKE_VELOCITY);
-                    pros::delay(30);
+                    pros::delay(50);
                     intake.move_velocity(-INTAKE_VELOCITY);
                 }
                 isJamming = false;

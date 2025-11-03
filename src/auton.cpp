@@ -172,7 +172,42 @@ namespace auton {
 	}
 
 	void autonLeft7Long(){
+		intakeController::isRedAlliance = true;
 
+		chassis.setPose(55.75, 22.75, 0);
+
+		// 3 BALLS
+		chassis.moveToPoint(46, 55, 4000, {.maxSpeed = 40});
+		runIntake();
+		pros::delay(1400);
+		matchLoader.set_value(true);
+
+		// MATCHLOAD
+		chassis.moveToPoint(22, 22, 4000, {.maxSpeed = 80});
+		chassis.turnToHeading(180, 500, {.maxSpeed = 80});
+		chassis.moveToPoint(21, 12, 2000, {.maxSpeed = 80});
+		pros::delay(1090);
+
+		// LONG GOAL
+		chassis.moveToPoint(21, 24, 4000, {.forwards = false, .maxSpeed = 80});
+		chassis.moveToPose(20, 43, 0, 4000, {.maxSpeed = 80});
+		pros::delay(500);
+		topAligner.set_value(true);
+		pros::delay(100);
+		matchLoader.set_value(false);
+		pros::delay(400);
+		runTopScore();
+		pros::delay(3200);
+		chassis.moveToPoint(20, 45, 500);
+
+		// WINGS
+		chassis.moveToPoint(34, 32, 4000, {.forwards = false, .maxSpeed = 80});
+		runIntake();
+		topAligner.set_value(false);
+		chassis.turnToHeading(-5, 500, {.maxSpeed = 80});
+		chassis.moveToPoint(32.5, 67, 10000, {.maxSpeed = 60});
+
+		pros::delay(5000);
 	}
 
 	void autonRedRight() {
