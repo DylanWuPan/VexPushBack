@@ -6,6 +6,12 @@ namespace devices {
 	pros::Rotation latTracker{4};
 	pros::Rotation vertTracker{-19};
 
+	pros::Distance distanceRight{16};
+	pros::Distance distanceLeft{12};
+	pros::Distance distanceFront{7};
+	pros::Distance distanceBack{18};
+
+
 	pros::Controller controller{pros::E_CONTROLLER_MASTER};
 
 	// TODO: Check port order

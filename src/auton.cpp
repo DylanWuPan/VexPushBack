@@ -59,20 +59,24 @@ namespace auton {
 		pros::delay(1500);
 		// chassis.setPose(25, 12.75, chassis.getPose().theta);
 		pros::delay(500);
-		chassis.moveToPoint(21, 10, 500, {.maxSpeed = 80});
+		chassis.moveToPoint(21, 9, 500, {.maxSpeed = 20});
+		pros::delay(500);
 
 		// LONG GOAL
 		chassis.moveToPoint(21, 24, 4000, {.forwards = false, .maxSpeed = 80});
 		chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
 		topAligner.set_value(true);
 		matchLoader.set_value(false);
-		chassis.moveToPoint(22, 42, 4000, {.maxSpeed = 80});
+		chassis.moveToPoint(22, 42, 2000, {.maxSpeed = 60});
 		pros::delay(500);
 		runTopScore();
-		pros::delay(3500);
-		chassis.setPose(24, 39, 0);
+		pros::delay(2000);
+		chassis.moveToPoint(22, 45, 500, {.maxSpeed = 20});
 		pros::delay(500);
-		chassis.moveToPoint(24, 42, 500);
+		chassis.setPose(24, 39, chassis.getPose().theta);
+		pros::delay(500);
+		chassis.moveToPoint(24, 42, 500, {.maxSpeed = 20});
+		pros::delay(500);
 
 		//SECOND LOADER
 		chassis.moveToPoint(24, 30, 4000, {.forwards = false, .maxSpeed = 80});
@@ -80,27 +84,29 @@ namespace auton {
 		topAligner.set_value(false);
 		chassis.turnToHeading(90, 1000, {.maxSpeed = 80});
 
-		chassis.moveToPoint(126, 30, 5000, {.maxSpeed = 80});
+		chassis.moveToPoint(124, 30, 5000, {.maxSpeed = 80});
 		chassis.turnToHeading(180, 1000, {.maxSpeed = 80});
 		matchLoader.set_value(true);
-		chassis.moveToPoint(126, 12, 4000, {.maxSpeed = 80});
-		pros::delay(2000);
-		// chassis.setPose(120, 12.75, 180);
+		chassis.moveToPoint(124, 8, 4000, {.maxSpeed = 80});
+		pros::delay(2500);
+		chassis.moveToPoint(124, 6, 500, {.maxSpeed = 20});
 		pros::delay(500);
-		chassis.moveToPoint(126, 10, 500, {.maxSpeed = 80});
 
 		// SECOND LONG GOAL
-		chassis.moveToPoint(126, 24, 4000, {.forwards = false, .maxSpeed = 80});
+		chassis.moveToPoint(124, 24, 4000, {.forwards = false, .maxSpeed = 80});
 		chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
 		topAligner.set_value(true);
 		matchLoader.set_value(false);
-		chassis.moveToPoint(126, 42, 4000, {.maxSpeed = 80});
+		chassis.moveToPoint(124, 38, 2000, {.maxSpeed = 60});
 		pros::delay(500);
 		runTopScore();
 		pros::delay(2000);
-		chassis.setPose(120, 39, 0);
+		chassis.moveToPoint(124, 42, 500, {.maxSpeed = 20});
 		pros::delay(500);
-		chassis.moveToPoint(120, 42, 500);
+		chassis.setPose(120, 39, chassis.getPose().theta);
+		pros::delay(500);
+		chassis.moveToPoint(120, 42, 500, {.maxSpeed = 20});
+		pros::delay(500);
 
 		// MIDDLE BALLS
 		chassis.moveToPoint(120, 24, 4000, {.forwards = false, .maxSpeed = 80});
@@ -113,23 +119,55 @@ namespace auton {
 		chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
 		matchLoader.set_value(true);
 		chassis.moveToPoint(118, 136, 4000, {.maxSpeed = 80});
-		pros::delay(2000);
-		// chassis.setPose(120, 131.25, 0);
+		pros::delay(2500);
+		chassis.moveToPoint(118, 138, 500, {.maxSpeed = 20});
 		pros::delay(500);
-		chassis.moveToPoint(118, 134, 1000, {.maxSpeed = 80});
 
 		//THIRD GOAL
 		chassis.moveToPoint(118, 120, 4000, {.forwards = false, .maxSpeed = 80});
 		chassis.turnToHeading(180, 1000, {.maxSpeed = 80});
 		topAligner.set_value(true);
 		matchLoader.set_value(false);
-		chassis.moveToPoint(116, 98, 4000, {.maxSpeed = 80});
+		chassis.moveToPoint(120, 103, 2000, {.maxSpeed = 60});
+		pros::delay(500);
+		runTopScore();
+		pros::delay(1500);
+		chassis.moveToPoint(120, 100, 500, {.maxSpeed = 20});
+		pros::delay(500);
+		chassis.setPose(120, 105, chassis.getPose().theta);
+		pros::delay(500);
+		chassis.moveToPoint(120, 102, 500, {.maxSpeed = 20});
+		pros::delay(500);
+
+		// FOURTH LOADER
+		chassis.moveToPoint(120, 114, 4000, {.forwards = false, .maxSpeed = 80});
+		runIntake();
+		topAligner.set_value(false);
+		chassis.turnToHeading(-90, 1000, {.maxSpeed = 80});
+
+		chassis.moveToPoint(18, 114, 5000, {.maxSpeed = 80});
+		chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
+		matchLoader.set_value(true);
+		chassis.moveToPoint(18, 136, 4000, {.maxSpeed = 80});
+		pros::delay(2500);
+		chassis.moveToPoint(18, 138, 500, {.maxSpeed = 20});
+		pros::delay(500);
+
+		// FOURTH LONG GOAL
+		chassis.moveToPoint(18, 120, 4000, {.forwards = false, .maxSpeed = 80});
+		chassis.turnToHeading(180, 1000, {.maxSpeed = 80});
+		topAligner.set_value(true);
+		matchLoader.set_value(false);
+		chassis.moveToPoint(18, 102, 2000, {.maxSpeed = 60});
 		pros::delay(500);
 		runTopScore();
 		pros::delay(2000);
-		chassis.setPose(120, 101, 180);
+		chassis.moveToPoint(18, 100, 500, {.maxSpeed = 20});
 		pros::delay(500);
-		chassis.moveToPoint(120, 98, 500);
+		chassis.setPose(120, 102, chassis.getPose().theta);
+		pros::delay(500);
+		chassis.moveToPoint(120, 105, 500, {.maxSpeed = 20});
+		pros::delay(500);
 
 		pros::delay(5000);
 	}

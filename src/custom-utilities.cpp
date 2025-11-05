@@ -2,6 +2,48 @@
 #include "globals.h"
 
 namespace utilities {
+
+    //DISTANCE SENSORS
+
+    double getDistance(int sensorNum){
+        switch (sensorNum) {
+            case 1: {
+                double sum = 0;
+                for (int i = 0; i < 10; i++) {
+                    sum += devices::distanceFront.get_distance();
+                    // pros::delay(10);
+                }
+                return 7 + std::round(sum / 10 * MM_TO_INCHES * 100.0) / 100.0;
+            }
+            case 2: {
+                double sum = 0;
+                for (int i = 0; i < 10; i++) {
+                    sum += devices::distanceRight.get_distance();
+                    // pros::delay(10);
+                }
+                return 6.5 + std::round(sum / 10 * MM_TO_INCHES * 100.0) / 100.0;
+            }
+            case 3: {
+                double sum = 0;
+                for (int i = 0; i < 10; i++) {
+                    sum += devices::distanceBack.get_distance();
+                    // pros::delay(10);
+                }
+                return 7.5 + std::round(sum / 10 * MM_TO_INCHES * 100.0) / 100.0;
+            }
+            case 4: {
+                double sum = 0;
+                for (int i = 0; i < 10; i++) {
+                    sum += devices::distanceLeft.get_distance();
+                    // pros::delay(10);
+                }
+                return 6.5 + std::round(sum / 10 * MM_TO_INCHES * 100.0) / 100.0;
+            }
+            default: {
+                return -1;
+            }
+        }
+    }
     // ---------- Math ----------
     // ----- Quadratics -----
     

@@ -1,5 +1,6 @@
 #include "screen.h"
 #include "intake.h"
+#include "custom-utilities.h"
 
 namespace screenController {
     using namespace devices;
@@ -38,21 +39,24 @@ namespace screenController {
             pros::lcd::clear_line(i); // for some reason pros::lcd::clear makes it crash
         }
         switch (printMode) {
-            case 0:
+            case 0: {
+                auton::autonSelect::printAutonMode(0);
+                lemlib::Pose robotPos = chassis.getPose();
+                pros::lcd::print(2, "Angle: %g, X: %f, Y: %f", robotPos.theta, robotPos.x, robotPos.y);
+                pros::lcd::print(3, "COLOR SENSOR: %f", colorSensor.get_hue());
+                pros::lcd::print(4, "Lat: %g, Vert: %g", latTracker.get_position() * 0.01, vertTracker.get_position() * 0.01);
+                pros::lcd::print(5, "DIST FRONT: %f  BACK: %f", utilities::getDistance(1), utilities::getDistance(3));
+                pros::lcd::print(6, "DIST RIGHT: %f  LEFT: %f", utilities::getDistance(2), utilities::getDistance(4));
+                break;
+            }
+            case 1: {
                 auton::autonSelect::printAutonMode(0);
                 pros::lcd::print(2, "LB: %g, LM: %g, LF: %g\n", leftDrive.get_temperature(0), leftDrive.get_temperature(1), leftDrive.get_temperature(2));
                 pros::lcd::print(3, "RB: %g, RM: %g, RF: %g\n", rightDrive.get_temperature(0), rightDrive.get_temperature(1), rightDrive.get_temperature(2));
                 pros::lcd::print(4, "Int: %g, Hop: %g, Top: %g\n", intake.get_temperature(), hopper.get_temperature(), topScore.get_temperature());
                 pros::lcd::print(5, "Brain: %g, Cntrlr: %i\n", pros::battery::get_capacity(), controller.get_battery_level());
                 break;
-            case 1:
-                auton::autonSelect::printAutonMode(0);
-                lemlib::Pose robotPos = chassis.getPose();
-                pros::lcd::print(2, "Angle: %g, X: %f, Y: %f", robotPos.theta, robotPos.x, robotPos.y);
-                pros::lcd::print(3, "COLOR SENSOR: %f", colorSensor.get_hue());
-                pros::lcd::print(4, "ROGUE BALL: %s", intakeController::rogueBall ? "TRUE" : "FALSE");
-                pros::lcd::print(5, "Lat: %g, Vert: %g", latTracker.get_position() * 0.01, vertTracker.get_position() * 0.01);
-                break;
+            }
         }
     }
 }

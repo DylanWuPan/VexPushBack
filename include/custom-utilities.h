@@ -18,6 +18,9 @@ namespace utilities {
     constexpr double TWO_PI = 2 * M_PI;
 
     constexpr double FIELD_SIZE = 144.0;
+
+    //DISTANCE SENSORS
+    double getDistance(int sensorNum);
     
     // ---------- Math ----------
     // ----- Quadratics -----

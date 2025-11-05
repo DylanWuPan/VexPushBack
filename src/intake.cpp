@@ -71,6 +71,20 @@ namespace intakeController {
                 }
                 isJamming = false;
             }
+
+            if(abs(topScore.get_actual_velocity()) == 0 && abs(topScore.get_target_velocity()) > 0){
+                isJamming = true;
+                if(topScore.get_target_velocity() > 0){
+                    topScore.move_velocity(-TOPSCORE_VELOCITY);
+                    pros::delay(50);
+                    topScore.move_velocity(TOPSCORE_VELOCITY);
+                } else{
+                    topScore.move_velocity(TOPSCORE_VELOCITY);
+                    pros::delay(50);
+                    topScore.move_velocity(-TOPSCORE_VELOCITY);
+                }
+                isJamming = false;
+            }
         }
     }
 }

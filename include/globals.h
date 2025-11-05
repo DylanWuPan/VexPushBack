@@ -6,6 +6,11 @@ namespace devices {
 	extern pros::Rotation latTracker;
 	extern pros::Rotation vertTracker;
 
+	extern pros::Distance distanceRight;
+	extern pros::Distance distanceLeft;
+	extern pros::Distance distanceFront;
+	extern pros::Distance distanceBack;
+
 	extern pros::Controller controller;
 
 	// TODO: Check port order

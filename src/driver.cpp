@@ -21,7 +21,7 @@ namespace driverControl {
 	}
 
 	bool matchLoaderDown = false;
-	bool topAlignerDown = false;
+	bool topAlignerDown = true;
 
 	// Called to control the robot driving during the driver control period
     void opcontrolDrive() {
@@ -29,25 +29,26 @@ namespace driverControl {
         // int rightStickVal = controller.get_analog(ANALOG_RIGHT_Y);    // Gets the turn left/right from right joystick
 		// leftDrive.move_voltage(driveCurve::driveMap(leftStickVal));   // Sets left motor voltage
 		// rightDrive.move_voltage(driveCurve::driveMap(rightStickVal)); // Sets right motor voltage
-		float LeftY = DRIVERS_SPEED * controller.get_analog(ANALOG_LEFT_Y);
-    	float RightX = DRIVERS_SPEED * controller.get_analog(ANALOG_RIGHT_X);
+			float LeftY = 0.75 * controller.get_analog(ANALOG_LEFT_Y);
+    	float RightX = 0.5 * controller.get_analog(ANALOG_RIGHT_X);
    		chassis.arcade(LeftY, RightX);
-
     }
 
 	// Called to control the pneumatics during the driver control period
     void opcontrolPneumatics() {
-		// MATCH LOADER
-		if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
-			matchLoaderDown = !matchLoaderDown;
-			matchLoader.set_value(matchLoaderDown);
-		}
+			if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
+				topAligner.set_value(false);
+				matchLoader.set_value(false);
+				topAlignerDown = true;
+				matchLoaderDown = false;
+			}
 
-        // TOP ALIGNER
-		if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-			topAlignerDown = !topAlignerDown;
-			topAligner.set_value(topAlignerDown);
-		}
+			if(controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+				topAlignerDown = !topAlignerDown;
+				matchLoaderDown = !matchLoaderDown;
+				matchLoader.set_value(matchLoaderDown);
+				topAligner.set_value(topAlignerDown);
+			}
     }
 
 	// Called to control the robot intake during the driver control period
