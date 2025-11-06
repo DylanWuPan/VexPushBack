@@ -1,49 +1,133 @@
+#include <cmath>
 #include "custom-utilities.h"
 #include "globals.h"
 
 namespace utilities {
 
-    //DISTANCE SENSORS
+    // ---------- Distance Sensors ----------
+    // Gets a pose calibrated with measurements from distance sensors.
+    // Front will override back and right will override left.
+    lemlib::Pose getPoseWithDistance(bool front, bool right, bool back, bool left) {
+        lemlib::Pose pose = devices::chassis.getPose();
+        direction dir;
+        double angleDifference;
 
-    double getDistance(int sensorNum){
-        switch (sensorNum) {
-            case 1: {
-                double sum = 0;
-                for (int i = 0; i < 10; i++) {
-                    sum += devices::distanceFront.get_distance();
-                    // pros::delay(10);
-                }
-                return 7 + std::round(sum / 10 * MM_TO_INCHES * 100.0) / 100.0;
+        if (abs(pose.theta) < resetAngleThreshold) {
+            dir = direction::North;
+            angleDifference = pose.theta;
+        } else if (abs(pose.theta - 270) < resetAngleThreshold) {
+            dir = direction::East;
+            angleDifference = pose.theta - 270;
+        } else if (abs(pose.theta - 180) < resetAngleThreshold) {
+            dir = direction::South;
+            angleDifference = pose.theta - 180;
+        } else if (abs(pose.theta - 90) < resetAngleThreshold) {
+            dir = direction::West;
+            angleDifference = pose.theta - 90;
+        } else {
+            return pose; // at an odd angle, unable to determine position
+        }
+
+        if (front) {
+            double measurement = getDistance(distanceSensor::Front) * std::cos(angleDifference);
+            switch (dir) {
+                case direction::North:
+                    pose.y = 144 - measurement;
+                    break;
+                case direction::East:
+                    pose.x = 144 - measurement;
+                    break;
+                case direction::South:
+                    pose.y = measurement;
+                    break;
+                case direction::West:
+                    pose.x = measurement;
+                    break;
             }
-            case 2: {
-                double sum = 0;
-                for (int i = 0; i < 10; i++) {
-                    sum += devices::distanceRight.get_distance();
-                    // pros::delay(10);
-                }
-                return 6.5 + std::round(sum / 10 * MM_TO_INCHES * 100.0) / 100.0;
-            }
-            case 3: {
-                double sum = 0;
-                for (int i = 0; i < 10; i++) {
-                    sum += devices::distanceBack.get_distance();
-                    // pros::delay(10);
-                }
-                return 7.5 + std::round(sum / 10 * MM_TO_INCHES * 100.0) / 100.0;
-            }
-            case 4: {
-                double sum = 0;
-                for (int i = 0; i < 10; i++) {
-                    sum += devices::distanceLeft.get_distance();
-                    // pros::delay(10);
-                }
-                return 6.5 + std::round(sum / 10 * MM_TO_INCHES * 100.0) / 100.0;
-            }
-            default: {
-                return -1;
+        } else if (back) {
+            double measurement = getDistance(distanceSensor::Back) * std::cos(angleDifference);
+            switch (dir) {
+                case direction::North:
+                    pose.y = measurement;
+                    break;
+                case direction::East:
+                    pose.x = measurement;
+                    break;
+                case direction::South:
+                    pose.y = 144 - measurement;
+                    break;
+                case direction::West:
+                    pose.x = 144 - measurement;
+                    break;
             }
         }
+        if (right) {
+            double measurement = getDistance(distanceSensor::Right) * std::cos(angleDifference);
+            switch (dir) {
+                case direction::North:
+                    pose.x = 144 - measurement;
+                    break;
+                case direction::East:
+                    pose.y = measurement;
+                    break;
+                case direction::South:
+                    pose.x = measurement;
+                    break;
+                case direction::West:
+                    pose.y = 144 - measurement;
+                    break;
+            }
+        } else if (left) {
+            double measurement = getDistance(distanceSensor::Right) * std::cos(angleDifference);
+            switch (dir) {
+                case direction::North:
+                    pose.x = measurement;
+                    break;
+                case direction::East:
+                    pose.y = 144 - measurement;
+                    break;
+                case direction::South:
+                    pose.x = 144 - measurement;
+                    break;
+                case direction::West:
+                    pose.y = measurement;
+                    break;
+            }
+        }
+        return pose;
     }
+
+    double getDistance(distanceSensor sensor) { 
+        pros::Distance* activeSensor = nullptr;
+        double offset;
+
+        switch (sensor) {
+            case distanceSensor::Front:
+                activeSensor = &devices::distanceFront;
+                offset = 7.0;
+                break;
+            case distanceSensor::Right:
+                activeSensor = &devices::distanceRight;
+                offset = 6.5;
+                break;
+            case distanceSensor::Back:
+                activeSensor = &devices::distanceBack;
+                offset = 7.5;
+                break;
+            case distanceSensor::Left:
+                activeSensor = &devices::distanceLeft;
+                offset = 6.5;
+                break;
+        }
+
+        double sum = 0.0;
+        for (int i = 0; i < 10; i++) {
+            sum += activeSensor->get_distance();
+        }
+
+        return offset + std::round(sum / 10 * MM_TO_INCHES * 100.0) / 100.0;
+    }
+
     // ---------- Math ----------
     // ----- Quadratics -----
     

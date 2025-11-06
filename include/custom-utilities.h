@@ -19,8 +19,24 @@ namespace utilities {
 
     constexpr double FIELD_SIZE = 144.0;
 
-    //DISTANCE SENSORS
-    double getDistance(int sensorNum);
+    // ---------- Distance Sensors ----------
+    enum class direction {
+        North,
+        East,
+        South,
+        West
+    };
+
+    enum class distanceSensor {
+        Front,
+        Right,
+        Back,
+        Left
+    };
+
+    constexpr double resetAngleThreshold = 10;
+    lemlib::Pose getPoseWithDistance(bool front, bool right, bool back, bool left);
+    double getDistance(distanceSensor sensor);
     
     // ---------- Math ----------
     // ----- Quadratics -----
