@@ -15,8 +15,8 @@ namespace devices {
 	pros::Controller controller{pros::E_CONTROLLER_MASTER};
 
 	// TODO: Check port order
-	pros::MotorGroup leftDrive({-1, -2, -3}, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees); // Left Motors, declared back-middle-front
-	pros::MotorGroup rightDrive({8, 9, 10}, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);  // Right Motors, declared back-middle-front
+	pros::MotorGroup leftDrive({-3, -2, 1}, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees); // Left Motors, declared back-middle-front
+	pros::MotorGroup rightDrive({10, 9, 8}, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);  // Right Motors, declared back-middle-front
 
 	pros::Motor intake(-11, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
 	pros::Motor hopper(-20, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);

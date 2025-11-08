@@ -6,15 +6,21 @@
 constexpr int TURN_SPEED = 80;
 
 namespace auton {
-	// Auton Functions
+	// Supporting Commands
+	void runIntake();
+	void stopIntake();
+	void runIntakeNoHopper();
+	void outtake();
+	void runTopScore();
+	void runMiddleScore();
+	void runBottomScore();
+	// Auton Routes
 	void autonSkills();
 	void autonSAWP();
 	void autonLongMiddleLeft();
+	void autonLongMiddleRight();
 	void autonLeft7Long();
-	void autonBlueRight();
-	void autonBlueLeft();
-	void autonRedRight();
-	void autonRedLeft();
+	void autonRight7Long();
 } // namespace auton
 
 
@@ -22,10 +28,11 @@ namespace auton {
 namespace auton::autonSelect { 
 	enum class autonMode {
 		SKILLS,
-		BLUE_RIGHT,
-		BLUE_LEFT,
-		RED_RIGHT,
-		RED_LEFT,
+		SAWP,
+		LONG_MIDDLE_LEFT,
+		LONG_MIDDLE_RIGHT,
+		LEFT_7_LONG,
+		RIGHT_7_LONG,
 		END // for incrementation
 	};
 

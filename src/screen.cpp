@@ -4,6 +4,7 @@
 
 namespace screenController {
     using namespace devices;
+    using namespace utilities;
 
     int printMode = 0;
 
@@ -16,7 +17,8 @@ namespace screenController {
         update();
     }
     void onLeftButton() {
-        auton::autonSelect::decrementAutonMode();
+        // auton::autonSelect::decrementAutonMode();
+        intakeController::isRedAlliance = !intakeController::isRedAlliance;
         update();
     }
     void onRightButton() {
@@ -43,10 +45,10 @@ namespace screenController {
                 auton::autonSelect::printAutonMode(0);
                 lemlib::Pose robotPos = chassis.getPose();
                 pros::lcd::print(2, "Angle: %g, X: %f, Y: %f", robotPos.theta, robotPos.x, robotPos.y);
-                pros::lcd::print(3, "COLOR SENSOR: %f", colorSensor.get_hue());
+                pros::lcd::print(3, "Color: %f", colorSensor.get_hue());
                 pros::lcd::print(4, "Lat: %g, Vert: %g", latTracker.get_position() * 0.01, vertTracker.get_position() * 0.01);
-                pros::lcd::print(5, "DIST FRONT: %f  BACK: %f", utilities::getDistance(1), utilities::getDistance(3));
-                pros::lcd::print(6, "DIST RIGHT: %f  LEFT: %f", utilities::getDistance(2), utilities::getDistance(4));
+                pros::lcd::print(5, "DIST FRONT: %f  BACK: %f", getDistance(distanceSensor::Front), getDistance(distanceSensor::Back));
+                pros::lcd::print(6, "DIST RIGHT: %f  LEFT: %f", getDistance(distanceSensor::Right), getDistance(distanceSensor::Left));
                 break;
             }
             case 1: {
