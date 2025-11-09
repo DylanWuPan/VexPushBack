@@ -5,7 +5,6 @@ void PeriodicTask::loopWrapper(void* obj_ptr) {
     instance->loop();
 }
 
-// TODO: better way?
 PeriodicTask::PeriodicTask(std::function<void()> update, int delay, char* name)
 : update{update}, enableFlag{false}, time{0}, name{name}, taskDelay{delay} {}
 

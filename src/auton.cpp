@@ -590,6 +590,7 @@ namespace auton::autonSelect {
 			default:
 				break;
 		}
+		pros::lcd::set_text(line + 1, "Alliance: " + intakeController::isRedAlliance? "RED" : "BLUE");
 	}
 	void incrementAutonMode() {
 		mode = static_cast<autonMode>((static_cast<int>(mode) + 1) % NUM_AUTONS);

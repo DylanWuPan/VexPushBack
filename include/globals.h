@@ -26,12 +26,6 @@ namespace devices {
 
 	extern pros::Optical colorSensor;
 
-	// TODO: Ports
-	// pros::Distance frontDistance;
-	// pros::Distance rightDistance;
-	// pros::Distance leftDistance;
-	// pros::Distance backDistance;
-
 	// -------------------- LEMLIB --------------------
 	extern lemlib::Drivetrain drivetrain;
 	extern lemlib::TrackingWheel horizontalTrackingWheel;

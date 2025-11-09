@@ -1,23 +1,27 @@
 #include "intake.h"
 
 namespace intakeController {
-    bool isSkipping = false;
-    bool isJamming = false;
-    bool rogueBall = false;
     bool isRedAlliance = true;
     bool isColorSorting = true;
     bool isAntiJamming = true;
+    bool isSkipping = false;
+    bool isJamming = false;
+    bool rogueBall = false;
+
+    double jamThreshold = 5;
 
     PeriodicTask periodicTask{update, DELAY, "Intake Task"};
 
     void discardBall() {
-        if(!isSkipping) {
+        if (!isSkipping) {
             isSkipping = true;
-            if(hopper.get_target_velocity() > 0){
+            // TODO: This isn't quite right - I think we want to discard
+            // out the middle no matter which direction the hopper is spinning
+            if (hopper.get_target_velocity() > 0) {
                 hopper.move_velocity(-HOPPER_VELOCITY);
                 pros::delay(70);
                 hopper.move_velocity(HOPPER_VELOCITY);
-            } else{
+            } else {
                 hopper.move_velocity(HOPPER_VELOCITY);
                 pros::delay(70);
                 hopper.move_velocity(-HOPPER_VELOCITY);
@@ -34,55 +38,46 @@ namespace intakeController {
     }
 
     void update() {
-        if(isColorSorting){
+        if (isColorSorting) {
             switch(isRedAlliance) {
-                case true: rogueBall = abs(colorSensor.get_hue() - BLUE_HUE) < 20; break;
-                case false: rogueBall = abs(colorSensor.get_hue() - RED_HUE) < 20; break;
+                case true: rogueBall = fabs(colorSensor.get_hue() - BLUE_HUE) < 20; break;
+                case false: rogueBall = fabs(colorSensor.get_hue() - RED_HUE) < 20; break;
             }
-            if(rogueBall && abs(intake.get_voltage()) > 0){
+            if (rogueBall && abs(intake.get_voltage()) > 0) {
                 discardBall();
             }
         }
-        if(isAntiJamming){
-            if(abs(hopper.get_actual_velocity()) == 0 && abs(hopper.get_target_velocity()) > 0){
+        if (isAntiJamming) {
+            if (fabs(hopper.get_actual_velocity()) < jamThreshold && fabs(hopper.get_target_velocity()) > jamThreshold) {
                 isJamming = true;
-                if(hopper.get_target_velocity() > 0){
-                    hopper.move_velocity(-HOPPER_VELOCITY);
-                    pros::delay(50);
-                    hopper.move_velocity(HOPPER_VELOCITY);
-                } else{
-                    hopper.move_velocity(HOPPER_VELOCITY);
-                    pros::delay(50);
-                    hopper.move_velocity(-HOPPER_VELOCITY);
-                }
+                int targetVelo = hopper.get_target_velocity();
+                hopper.move_voltage(targetVelo > 0? -12000 : 12000);
+                pros::delay(40);
+                hopper.move_voltage(targetVelo > 0? 12000 : -12000);
+                pros::delay(10);
+                hopper.move_velocity(targetVelo);
                 isJamming = false;
             }
 
-            if(abs(intake.get_actual_velocity()) == 0 && abs(intake.get_target_velocity()) > 0){
+            if (fabs(intake.get_actual_velocity()) < jamThreshold && fabs(intake.get_target_velocity()) > jamThreshold) {
                 isJamming = true;
-                if(intake.get_target_velocity() > 0){
-                    intake.move_velocity(-INTAKE_VELOCITY);
-                    pros::delay(50);
-                    intake.move_velocity(INTAKE_VELOCITY);
-                } else{
-                    intake.move_velocity(INTAKE_VELOCITY);
-                    pros::delay(50);
-                    intake.move_velocity(-INTAKE_VELOCITY);
-                }
+                int targetVelo = intake.get_target_velocity();
+                intake.move_voltage(targetVelo > 0? -12000 : 12000);
+                pros::delay(40);
+                intake.move_voltage(targetVelo > 0? 12000 : -12000);
+                pros::delay(10);
+                intake.move_velocity(targetVelo);
                 isJamming = false;
             }
 
-            if(abs(topScore.get_actual_velocity()) == 0 && abs(topScore.get_target_velocity()) > 0){
+            if (fabs(topScore.get_actual_velocity()) < jamThreshold && fabs(topScore.get_target_velocity()) > jamThreshold) {
                 isJamming = true;
-                if(topScore.get_target_velocity() > 0){
-                    topScore.move_velocity(-TOPSCORE_VELOCITY);
-                    pros::delay(50);
-                    topScore.move_velocity(TOPSCORE_VELOCITY);
-                } else{
-                    topScore.move_velocity(TOPSCORE_VELOCITY);
-                    pros::delay(50);
-                    topScore.move_velocity(-TOPSCORE_VELOCITY);
-                }
+                int targetVelo = topScore.get_target_velocity();
+                topScore.move_voltage(targetVelo > 0? -12000 : 12000);
+                pros::delay(40);
+                topScore.move_voltage(targetVelo > 0? 12000 : -12000);
+                pros::delay(10);
+                topScore.move_velocity(targetVelo);
                 isJamming = false;
             }
         }

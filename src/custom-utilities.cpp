@@ -5,6 +5,7 @@
 namespace utilities {
 
     // ---------- Distance Sensors ----------
+
     // Gets a pose calibrated with measurements from distance sensors.
     // Front will override back and right will override left.
     lemlib::Pose getPoseWithDistance(bool front, bool right, bool back, bool left) {
@@ -143,7 +144,7 @@ namespace utilities {
         return (b * b - 4 * a * c < 0);
     }
 
-    // ----- Angles -----
+    // ----- Clamping / Range setting -----
     
     // Bound an angle to [-pi, pi)
     double angleRangePNPi(double angle) {
@@ -161,7 +162,7 @@ namespace utilities {
     double angleRangeZeroTo360(double angle) {
         return angle - std::floor(angle / (360)) * (360);
     }
-    
+
     // ----- Vectors -----
 
     // Gives the distance between two Vectors
@@ -276,7 +277,6 @@ namespace utilities {
         // Top edge (y=height)
         t = (squareSize - y) / dy;
         if (t >= 0 && t < tMin) tMin = t;
-
 
         // tMin is the distance, since dx^2 + dy^2 = cos^2 + sin^2 = 1
         return tMin;

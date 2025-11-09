@@ -11,7 +11,6 @@ namespace devices {
 	pros::Distance distanceFront{7};
 	pros::Distance distanceBack{18};
 
-
 	pros::Controller controller{pros::E_CONTROLLER_MASTER};
 
 	// TODO: Check port order
@@ -26,12 +25,6 @@ namespace devices {
 	pros::adi::DigitalOut topAligner('G', false);
 
 	pros::Optical colorSensor(17);
-
-	// TODO: Ports
-	// pros::Distance frontDistance{0};
-	// pros::Distance rightDistance{0};
-	// pros::Distance leftDistance{0};
-	// pros::Distance backDistance{0};
 
 	// -------------------- LEMLIB --------------------
 	lemlib::Drivetrain drivetrain(
