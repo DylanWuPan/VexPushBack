@@ -6,7 +6,7 @@ namespace screenController {
     using namespace devices;
     using namespace utilities;
 
-    int printMode = 0;
+    int printMode = 2;
 
     PeriodicTask periodicTask{update, DELAYS[printMode], "Screen Task"};
 
@@ -37,11 +37,11 @@ namespace screenController {
     }
 
     void update() {
-        for (int i = 0; i < 7; ++i) {
-            pros::lcd::clear_line(i); // for some reason pros::lcd::clear makes it crash
-        }
         switch (printMode) {
             case 0: {
+                for (int i = 0; i < 7; ++i) {
+                    pros::lcd::clear_line(i); // for some reason pros::lcd::clear makes it crash
+                }
                 auton::autonSelect::printAutonMode(0);
                 lemlib::Pose robotPos = chassis.getPose();
                 pros::lcd::print(2, "Angle: %g, X: %f, Y: %f", robotPos.theta, robotPos.x, robotPos.y);
@@ -52,12 +52,25 @@ namespace screenController {
                 break;
             }
             case 1: {
+                for (int i = 0; i < 7; ++i) {
+                    pros::lcd::clear_line(i); // for some reason pros::lcd::clear makes it crash
+                }
                 auton::autonSelect::printAutonMode(0);
                 pros::lcd::print(2, "LB: %g, LM: %g, LF: %g\n", leftDrive.get_temperature(0), leftDrive.get_temperature(1), leftDrive.get_temperature(2));
                 pros::lcd::print(3, "RB: %g, RM: %g, RF: %g\n", rightDrive.get_temperature(0), rightDrive.get_temperature(1), rightDrive.get_temperature(2));
                 pros::lcd::print(4, "Int: %g, Hop: %g, Top: %g\n", intake.get_temperature(), hopper.get_temperature(), topScore.get_temperature());
                 pros::lcd::print(5, "Brain: %g, Cntrlr: %i\n", pros::battery::get_capacity(), controller.get_battery_level());
                 break;
+            }
+            case 2: {
+                // Blank screen for other prints
+                lemlib::Pose robotPos = chassis.getPose();
+                pros::lcd::clear_line(3); // for some reason pros::lcd::clear makes it crash
+                pros::lcd::clear_line(5); // for some reason pros::lcd::clear makes it crash
+                pros::lcd::clear_line(6); // for some reason pros::lcd::clear makes it crash
+                pros::lcd::print(3, "Angle: %g, X: %f, Y: %f", robotPos.theta, robotPos.x, robotPos.y);
+                pros::lcd::print(5, "DIST FRONT: %f  BACK: %f", getDistance(distanceSensor::Front), getDistance(distanceSensor::Back));
+                pros::lcd::print(6, "DIST RIGHT: %f  LEFT: %f", getDistance(distanceSensor::Right), getDistance(distanceSensor::Left));
             }
         }
     }

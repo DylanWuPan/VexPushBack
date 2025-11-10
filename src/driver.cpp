@@ -8,20 +8,20 @@ using namespace intakeController;
 namespace driverControl {
 	
 	namespace driveCurve {
-		int curve(int val) {
-			int valSquared = val*val;
-			int valCubed = valSquared*val;
-			return DRIVE_CURVE[1] * (1 - 3*val + 3*valSquared - valCubed) +
-				DRIVE_CURVE[2] * (3*val - 6*valSquared + 3*valCubed) +
-				DRIVE_CURVE[3] * (3*valSquared - 3*valCubed) +
-				DRIVE_CURVE[4] * valCubed;
+		double curve(double val) {
+			double valSquared = val*val;
+			double valCubed = valSquared*val;
+			return DRIVE_CURVE[0] * (1 - 3*val + 3*valSquared - valCubed) +
+				DRIVE_CURVE[1] * (3*val - 6*valSquared + 3*valCubed) +
+				DRIVE_CURVE[2] * (3*valSquared - 3*valCubed) +
+				DRIVE_CURVE[3] * valCubed;
 		}
 
-		int driveMap(int val) {
-			if (val > -DEAD_ZONE && val < DEAD_ZONE) {
-				return 0;
-			}
-			return MIN_OUTPUT + (SCALE_OUTPUT - MIN_OUTPUT) * ((val - DEAD_ZONE) / (SCALE_INPUT - DEAD_ZONE));
+		double driveMap(double val) {
+			if (abs(val) - DEAD_ZONE < 0) return 0;
+			int sign = val < 0? -1 : 1;
+			return sign * (MIN_OUTPUT + (SCALE_OUTPUT - MIN_OUTPUT) *
+				curve(static_cast<double>(abs(val) - DEAD_ZONE) / (SCALE_INPUT - DEAD_ZONE)));
 		}
 	}
 

@@ -2,6 +2,7 @@
 #include <cmath>
 #include <random>
 #include "vector.h"
+#include "lemlib/pose.hpp"
 
 namespace utilities {
     // ---------- Constants ----------

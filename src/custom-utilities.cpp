@@ -12,22 +12,32 @@ namespace utilities {
         lemlib::Pose pose = devices::chassis.getPose();
         direction dir;
         double angleDifference;
+        char* text;
+        pros::lcd::print(2, "%g", pose.theta);
+        
+        double boundedAngle = angleRangeZeroTo360(pose.theta);
 
-        if (abs(pose.theta) < resetAngleThreshold) {
+        if (fabs(pose.theta) < resetAngleThreshold) {
             dir = direction::North;
-            angleDifference = pose.theta;
-        } else if (abs(pose.theta - 270) < resetAngleThreshold) {
+            text = "North";
+            angleDifference = boundedAngle;
+        } else if (fabs(boundedAngle - 90) < resetAngleThreshold) {
             dir = direction::East;
-            angleDifference = pose.theta - 270;
-        } else if (abs(pose.theta - 180) < resetAngleThreshold) {
+            text = "East";
+            angleDifference = boundedAngle - 90;
+        } else if (fabs(boundedAngle - 180) < resetAngleThreshold) {
             dir = direction::South;
-            angleDifference = pose.theta - 180;
-        } else if (abs(pose.theta - 90) < resetAngleThreshold) {
+            text = "South";
+            angleDifference = boundedAngle - 180;
+        } else if (fabs(boundedAngle - 270) < resetAngleThreshold) {
             dir = direction::West;
-            angleDifference = pose.theta - 90;
+            text = "West";
+            angleDifference = boundedAngle - 270;
         } else {
+            pros::lcd::print(0, "None");
             return pose; // at an odd angle, unable to determine position
         }
+        pros::lcd::print(0, text);
 
         if (front) {
             double measurement = getDistance(distanceSensor::Front) * std::cos(angleDifference);
@@ -95,6 +105,7 @@ namespace utilities {
                     break;
             }
         }
+        pros::lcd::print(1, "Angle: %g, X: %f, Y: %f", pose.theta, pose.x, pose.y);
         return pose;
     }
 

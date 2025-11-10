@@ -10,11 +10,11 @@ namespace intakeController {
     // ---------- Variables ----------
     constexpr int DELAY = 5;
 
-    bool isColorSorting;
-    bool isAntiJamming;
-    bool isSkipping;
-    bool isJamming;
-    bool rogueBall;
+    extern bool isColorSorting;
+    extern bool isAntiJamming;
+    extern bool isSkipping;
+    extern bool isJamming;
+    extern bool rogueBall;
 
     extern double jamThreshold;
 

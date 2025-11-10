@@ -5,15 +5,15 @@ namespace driverControl {
 
 	namespace driveCurve {
 		constexpr int DEAD_ZONE = 2;
-		constexpr int DRIVE_CURVE[] = {0, 0.55, 0.45, 1};
+		constexpr double DRIVE_CURVE[] = {0, 0.425, 0.575, 1};
 		constexpr int MIN_OUTPUT = 2;
 		constexpr int SCALE_INPUT = 127;
 		constexpr int SCALE_OUTPUT = 127;
 
 		extern const double movementCoeff;
 
-		int curve(int val);
-		int driveMap(int val);
+		double curve(double val);
+		double driveMap(double val);
 	}
 
 	constexpr float DRIVERS_SPEED = 1;
