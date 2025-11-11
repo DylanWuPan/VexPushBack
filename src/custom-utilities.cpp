@@ -133,11 +133,11 @@ namespace utilities {
         }
 
         double sum = 0.0;
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 50; i++) {
             sum += activeSensor->get_distance();
         }
 
-        return offset + std::round(sum / 10 * MM_TO_INCHES * 100.0) / 100.0;
+        return offset + sum / 50 * MM_TO_INCHES;
     }
 
     // ---------- Math ----------

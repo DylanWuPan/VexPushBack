@@ -232,31 +232,33 @@ namespace auton {
 		runIntake();
 		topAligner.set_value(false);
 		chassis.turnToHeading(90, 1000, {.maxSpeed = 80});
-		chassis.moveToPoint(124.5, 30, 5000, {.maxSpeed = 80});
-		pros::delay(1500);
+		chassis.moveToPoint(110, 30, 5000, {.maxSpeed = 80});
+		pros::delay(3000);
 		chassis.setPose(utilities::getPoseWithDistance(true, true, false, false));
+		pros::delay(500);
+		// chassis.moveToPoint(120, 30, 5000, {.maxSpeed = 80});
 		// chassis.turnToHeading(180, 1000, {.maxSpeed = 80});
-		// matchLoader.set_value(true);
-		// chassis.moveToPoint(124.5, 8, 4000, {.maxSpeed = 80});
-		// pros::delay(2000);
-		// chassis.moveToPoint(124.5, 6, 500, {.maxSpeed = 20});
-		// pros::delay(500);
+		matchLoader.set_value(true);
+		chassis.moveToPose(120, 8, 180, 4000, {.maxSpeed = 80});
+		pros::delay(2000);
+		chassis.moveToPoint(120, 6, 500, {.maxSpeed = 20});
+		pros::delay(500);
 
-		// // SECOND LONG GOAL
-		// chassis.moveToPoint(124, 24, 4000, {.forwards = false, .maxSpeed = 80});
-		// chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
-		// topAligner.set_value(true);
-		// matchLoader.set_value(false);
-		// chassis.moveToPoint(124, 38, 2000, {.maxSpeed = 60});
-		// pros::delay(500);
-		// runTopScore();
-		// pros::delay(2000);
-		// chassis.moveToPoint(124, 42, 500, {.maxSpeed = 20});
-		// pros::delay(500);
+		// SECOND LONG GOAL
+		chassis.moveToPoint(120, 24, 4000, {.forwards = false, .maxSpeed = 80});
+		chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
+		topAligner.set_value(true);
+		matchLoader.set_value(false);
+		chassis.moveToPoint(120, 38, 2000, {.maxSpeed = 60});
+		pros::delay(500);
+		runTopScore();
+		pros::delay(2000);
+		chassis.moveToPoint(120, 42, 500, {.maxSpeed = 20});
+		pros::delay(500);
 		// chassis.setPose(120, 39, chassis.getPose().theta);
-		// pros::delay(500);
-		// chassis.moveToPoint(120, 42, 500, {.maxSpeed = 20});
-		// pros::delay(500);
+		pros::delay(500);
+		chassis.moveToPoint(120, 42, 500, {.maxSpeed = 20});
+		pros::delay(500);
 
 		// // MIDDLE BALLS
 		// chassis.moveToPoint(120, 24, 4000, {.forwards = false, .maxSpeed = 80});
