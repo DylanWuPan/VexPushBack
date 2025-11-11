@@ -17,6 +17,7 @@ namespace auton {
 	// Auton Routes
 	void autonSkills();
 	void autonSAWP();
+	void autonSAWP2();
 	void autonLongMiddleLeft();
 	void autonLongMiddleRight();
 	void autonLeft7Long();

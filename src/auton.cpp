@@ -25,8 +25,8 @@ namespace auton {
 		topScore.move_velocity(intakeController::TOPSCORE_VELOCITY/20);
 	}
 
-	void outtake() {
-		intake.move_velocity(-intakeController::INTAKE_VELOCITY);
+	void runOuttake() {
+		intake.move_velocity(-0.5 * intakeController::INTAKE_VELOCITY);
 		hopper.move_velocity(-intakeController::HOPPER_VELOCITY);
 		topScore.move_velocity(-intakeController::TOPSCORE_VELOCITY);
 	}
@@ -38,9 +38,9 @@ namespace auton {
 	}
 
 	void runMiddleScore() {
-		topScore.move_velocity(-0.67 * intakeController::TOPSCORE_VELOCITY);
-		hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY);
-		intake.move_velocity(0.67 * intakeController::INTAKE_VELOCITY);
+		topScore.move_velocity(-0.5 * intakeController::TOPSCORE_VELOCITY);
+		hopper.move_velocity(-1 * intakeController::HOPPER_VELOCITY);
+		intake.move_velocity(0.5 * intakeController::INTAKE_VELOCITY);
 	}
 
 	void runBottomScore() {
@@ -405,6 +405,50 @@ namespace auton {
 		pros::delay(500);
 		runTopScore();
 		
+		pros::delay(5000);
+	}
+
+	void autonSAWP2() {
+		chassis.setPose(55.75, 22.75, 0);
+
+		// 3 BALLS
+		// chassis.moveToPoint(45, 52, 4000, {.maxSpeed = 120});
+		// pros::delay(600);
+		// matchLoader.set_value(true);
+
+		// HIGH MID
+		chassis.moveToPose(56, 61.5, 45.5, 4000);
+		runIntake();
+		pros::delay(2000);
+		runMiddleScore();
+		pros::delay(1000);
+		runIntake();
+
+		// LOW MID
+		chassis.moveToPoint(48, 54, 4000, {.forwards = false, .maxSpeed = 120});
+		matchLoader.set_value(false);
+		chassis.moveToPoint(98, 54, 4000, {.maxSpeed = 80, .minSpeed = 20, .earlyExitRange = 5});
+		chassis.moveToPose(85.5, 65.5, -45, 3000);
+		pros::delay(1500);
+		runOuttake();
+		pros::delay(1000);
+		runIntake();
+		
+		// MATCH LOAD
+		chassis.moveToPoint(121, 24, 4000, {.forwards = false, .maxSpeed = 120});
+		chassis.turnToHeading(180, 1000, {.maxSpeed = 120});
+		matchLoader.set_value(true);
+		chassis.moveToPoint(121, 12, 1000, {.maxSpeed = 120});
+		pros::delay(900);
+		chassis.moveToPoint(121, 24, 4000, {.forwards = false, .maxSpeed = 120});
+		
+		// LONG GOAL
+		chassis.moveToPose(123, 45, 0, 4000);
+		matchLoader.set_value(false);
+		topAligner.set_value(true);
+		pros::delay(1200);
+		runTopScore();
+
 		pros::delay(5000);
 	}
 
