@@ -52,7 +52,7 @@ namespace intakeController {
                 isJamming = true;
                 int targetVelo = hopper.get_target_velocity();
                 hopper.move_voltage(targetVelo > 0? -12000 : 12000);
-                pros::delay(40);
+                pros::delay(70);
                 hopper.move_voltage(targetVelo > 0? 12000 : -12000);
                 pros::delay(10);
                 hopper.move_velocity(targetVelo);
@@ -63,7 +63,7 @@ namespace intakeController {
                 isJamming = true;
                 int targetVelo = intake.get_target_velocity();
                 intake.move_voltage(targetVelo > 0? -12000 : 12000);
-                pros::delay(40);
+                pros::delay(70);
                 intake.move_voltage(targetVelo > 0? 12000 : -12000);
                 pros::delay(10);
                 intake.move_velocity(targetVelo);
@@ -74,7 +74,7 @@ namespace intakeController {
                 isJamming = true;
                 int targetVelo = topScore.get_target_velocity();
                 topScore.move_voltage(targetVelo > 0? -12000 : 12000);
-                pros::delay(40);
+                pros::delay(70);
                 topScore.move_voltage(targetVelo > 0? 12000 : -12000);
                 pros::delay(10);
                 topScore.move_velocity(targetVelo);

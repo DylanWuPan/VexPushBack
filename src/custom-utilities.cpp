@@ -13,7 +13,7 @@ namespace utilities {
         direction dir;
         double angleDifference;
         char* text;
-        pros::lcd::print(2, "%g", pose.theta);
+        pros::lcd::print(0, "%g", pose.theta);
         
         double boundedAngle = angleRangeZeroTo360(pose.theta);
 
@@ -34,13 +34,14 @@ namespace utilities {
             text = "West";
             angleDifference = boundedAngle - 270;
         } else {
-            pros::lcd::print(0, "None");
+            pros::lcd::print(1, "None");
             return pose; // at an odd angle, unable to determine position
         }
-        pros::lcd::print(0, text);
+        pros::lcd::print(1, text);
 
         if (front) {
             double measurement = getDistance(distanceSensor::Front) * std::cos(angleDifference);
+            pros::lcd::print(2, "front: %g", measurement);
             switch (dir) {
                 case direction::North:
                     pose.y = 144 - measurement;
@@ -74,6 +75,7 @@ namespace utilities {
         }
         if (right) {
             double measurement = getDistance(distanceSensor::Right) * std::cos(angleDifference);
+            pros::lcd::print(3, "right: %g", measurement);
             switch (dir) {
                 case direction::North:
                     pose.x = 144 - measurement;
@@ -89,7 +91,7 @@ namespace utilities {
                     break;
             }
         } else if (left) {
-            double measurement = getDistance(distanceSensor::Right) * std::cos(angleDifference);
+            double measurement = getDistance(distanceSensor::Left) * std::cos(angleDifference);
             switch (dir) {
                 case direction::North:
                     pose.x = measurement;
@@ -105,7 +107,7 @@ namespace utilities {
                     break;
             }
         }
-        pros::lcd::print(1, "Angle: %g, X: %f, Y: %f", pose.theta, pose.x, pose.y);
+        pros::lcd::print(4, "Angle: %g, X: %f, Y: %f", pose.theta, pose.x, pose.y);
         return pose;
     }
 

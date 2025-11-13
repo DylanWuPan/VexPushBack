@@ -85,7 +85,8 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	intakeController::periodicTask.end();
+	// intakeController::periodicTask.end();
+	intakeController::isColorSorting = false;
 	
 	while (true) {
 		if (controller.get_digital_new_press(DIGITAL_Y)) {

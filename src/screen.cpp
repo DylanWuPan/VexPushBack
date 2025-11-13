@@ -65,12 +65,12 @@ namespace screenController {
             case 2: {
                 // Blank screen for other prints
                 lemlib::Pose robotPos = chassis.getPose();
-                pros::lcd::clear_line(3); // for some reason pros::lcd::clear makes it crash
                 pros::lcd::clear_line(5); // for some reason pros::lcd::clear makes it crash
                 pros::lcd::clear_line(6); // for some reason pros::lcd::clear makes it crash
-                pros::lcd::print(3, "Angle: %g, X: %f, Y: %f", robotPos.theta, robotPos.x, robotPos.y);
-                pros::lcd::print(5, "DIST FRONT: %f  BACK: %f", getDistance(distanceSensor::Front), getDistance(distanceSensor::Back));
-                pros::lcd::print(6, "DIST RIGHT: %f  LEFT: %f", getDistance(distanceSensor::Right), getDistance(distanceSensor::Left));
+                pros::lcd::clear_line(7); // for some reason pros::lcd::clear makes it crash
+                pros::lcd::print(5, "Angle: %g, X: %f, Y: %f", robotPos.theta, robotPos.x, robotPos.y);
+                pros::lcd::print(6, "DIST FRONT: %f  BACK: %f", getDistance(distanceSensor::Front), getDistance(distanceSensor::Back));
+                pros::lcd::print(7, "DIST RIGHT: %f  LEFT: %f", getDistance(distanceSensor::Right), getDistance(distanceSensor::Left));
             }
         }
     }
