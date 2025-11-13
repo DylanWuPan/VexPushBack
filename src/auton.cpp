@@ -489,19 +489,19 @@ namespace auton {
 	}
 
 	void autonLongMiddleRight() {
-		chassis.setPose(88.5, 22, 270);
+		chassis.setPose(88.5, 22, 90);
 
 		// Match load
 		chassis.moveToPoint(121, 22, 4000, {.maxSpeed = 80});
 		chassis.turnToHeading(180, 500, {.maxSpeed = 80});
 		matchLoader.set_value(true);
 		runIntake();
-		chassis.moveToPose(122, 8, 180, 3000, {.minSpeed = 60});
+		chassis.moveToPose(122, 7, 180, 3000/*, {.minSpeed = 60}*/);
 		pros::delay(1090);
 
 		// Long goal
 		chassis.moveToPoint(122, 24, 2000, {.forwards = false});
-		chassis.moveToPose(124, 40.5, 1, 3000);
+		chassis.moveToPose(122, 40.5, 1, 3000);
 		pros::delay(500);
 		topAligner.set_value(true);
 		pros::delay(100);
@@ -509,7 +509,7 @@ namespace auton {
 		pros::delay(400);
 		runTopScore();
 		pros::delay(2000);
-		chassis.moveToPoint(124, 42, 500);
+		chassis.moveToPoint(120, 42, 500);
 
 		// DESCORE
 		chassis.moveToPoint(124, 30, 4000, {.forwards = false, .maxSpeed = 80});
@@ -520,7 +520,7 @@ namespace auton {
 		// MidGoal
 		chassis.moveToPoint(124, 24, 4000, {.forwards = false});
 		runIntake();
-		chassis.moveToPose(90, 60.5, 45, 6000, {.maxSpeed = 40});
+		chassis.moveToPose(86.5, 64, 315, 6000, {.maxSpeed = 40});
 		pros::delay(3200);
 		runBottomScore();
 
@@ -577,7 +577,7 @@ namespace auton {
 		// MATCHLOAD
 		chassis.moveToPoint(122, 22, 4000, {.maxSpeed = 80});
 		chassis.turnToHeading(180, 500, {.maxSpeed = 80});
-		chassis.moveToPoint(123, 12, 2000, {.maxSpeed = 80});
+		chassis.moveToPoint(123, 10, 2000, {.maxSpeed = 80});
 		pros::delay(1090);
 
 		// LONG GOAL
@@ -593,11 +593,11 @@ namespace auton {
 		chassis.moveToPoint(124, 45, 500);
 
 		// WINGS
-		chassis.moveToPoint(110, 32, 4000, {.forwards = false, .maxSpeed = 80});
+		chassis.moveToPoint(113, 32, 4000, {.forwards = false, .maxSpeed = 80});
 		runIntake();
 		topAligner.set_value(false);
-		chassis.turnToHeading(5, 500, {.maxSpeed = 80});
-		chassis.moveToPoint(111.5, 67, 10000, {.maxSpeed = 60});
+		chassis.turnToHeading(4, 500, {.maxSpeed = 80});
+		chassis.moveToPoint(114, 67, 10000, {.maxSpeed = 60});
 
 		pros::delay(5000);
 	}
