@@ -13,7 +13,6 @@ namespace utilities {
         direction dir;
         double angleDifference;
         char* text;
-        pros::lcd::print(0, "%g", pose.theta);
         
         double boundedAngle = angleRangeZeroTo360(pose.theta);
 
@@ -39,8 +38,10 @@ namespace utilities {
         }
         pros::lcd::print(1, text);
 
+        pros::lcd::print(0, "angle delta: %g", angleDifference);
+
         if (front) {
-            double measurement = getDistance(distanceSensor::Front) * std::cos(angleDifference);
+            double measurement = getDistance(distanceSensor::Front);
             pros::lcd::print(2, "front: %g", measurement);
             switch (dir) {
                 case direction::North:
@@ -57,7 +58,7 @@ namespace utilities {
                     break;
             }
         } else if (back) {
-            double measurement = getDistance(distanceSensor::Back) * std::cos(angleDifference);
+            double measurement = getDistance(distanceSensor::Back);
             switch (dir) {
                 case direction::North:
                     pose.y = measurement;
@@ -74,7 +75,7 @@ namespace utilities {
             }
         }
         if (right) {
-            double measurement = getDistance(distanceSensor::Right) * std::cos(angleDifference);
+            double measurement = getDistance(distanceSensor::Right);
             pros::lcd::print(3, "right: %g", measurement);
             switch (dir) {
                 case direction::North:
@@ -91,7 +92,7 @@ namespace utilities {
                     break;
             }
         } else if (left) {
-            double measurement = getDistance(distanceSensor::Left) * std::cos(angleDifference);
+            double measurement = getDistance(distanceSensor::Left);
             switch (dir) {
                 case direction::North:
                     pose.x = measurement;
@@ -134,8 +135,8 @@ namespace utilities {
                 break;
         }
 
-        double sum = 0.0;
-        for (int i = 0; i < 50; i++) {
+        double sum{0.0};
+        for (int i = 0; i < 50; ++i) {
             sum += activeSensor->get_distance();
         }
 
