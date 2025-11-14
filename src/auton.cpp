@@ -417,35 +417,38 @@ namespace auton {
 		chassis.setPose(55.75, 22.75, 0);
 
 		// HIGH MID
-		chassis.moveToPose(56, 61.5, 50, 3000);
+		chassis.moveToPose(56, 60, 40, 3000);
 		runIntake();
 		pros::delay(2000);
 		runMiddleScore();
-		pros::delay(500);
-		runIntake();
+		pros::delay(50);
 
 		// LOW MID
 		chassis.moveToPoint(48, 54, 4000, {.forwards = false, .maxSpeed = 120});
-		matchLoader.set_value(false);
-		chassis.moveToPose(83, 65, -45, 3000);
-		pros::delay(1500);
-		runOuttake();
-		pros::delay(1500);
 		runIntake();
+		matchLoader.set_value(false);
+		chassis.moveToPose(81, 65, -30, 3500);
+		pros::delay(2100);
+		runOuttake();
+		pros::delay(50);
 		
 		// MATCH LOAD
 		chassis.moveToPoint(120, 24, 4000, {.forwards = false, .maxSpeed = 120});
+		runIntake();
 		chassis.turnToHeading(180, 1000, {.maxSpeed = 120});
 		matchLoader.set_value(true);
-		chassis.moveToPoint(120, 10, 1000, {.maxSpeed = 120});
-		pros::delay(1050);
+		chassis.moveToPoint(120, 11, 1100, {.maxSpeed = 120});
+		pros::delay(1100);
 		chassis.moveToPoint(120, 24, 4000, {.forwards = false, .maxSpeed = 120});
 		
 		// LONG GOAL
-		chassis.moveToPose(122, 46, 0, 4000);
-		matchLoader.set_value(false);
+		chassis.moveToPose(122.5, 46, 0, 4000);
 		topAligner.set_value(true);
-		pros::delay(1000);
+		pros::delay(500);
+		matchLoader.set_value(false);
+		pros::delay(500);
+		runTopScore();
+		pros::delay(70);
 		runTopScore();
 
 		pros::delay(5000);
