@@ -364,6 +364,12 @@ namespace utilities {
         return dis(getGenerator());
     }
     
+    // Generates a random number with a gaussian distribution and the specified mean/standard deviation
+    double getRandomGaussian(double mean, double stddev) {
+        std::normal_distribution<> dis{mean, stddev};
+        return dis(getGenerator());
+    }
+
     // Computes the value of the Gaussian (normal) distribution at x
     double gaussianWithMean(double x, double mean, double stddev) {
         double exponent = -((x - mean) * (x - mean)) / (2 * stddev * stddev);

@@ -97,6 +97,9 @@ namespace utilities {
     // Generates a random number from [min, max) using a uniform distribution
     double getRandomDoubleInRange(double min, double max);
     
+    // Generates a random number with a gaussian distribution and the specified mean/standard deviation
+    double getRandomGaussian(double mean, double stddev);
+    
     // Computes the value of the Gaussian (normal) distribution at x
     double gaussianWithMean(double x, double mean, double stddev);
 
