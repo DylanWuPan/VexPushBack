@@ -1,11 +1,5 @@
 #include "vector.h"
 
-Vector::Vector()
-: x{0}, y{0} {}
-
-Vector::Vector(double x, double y)
-: x{x}, y{y} {}
-
 Vector& Vector::operator+=(Vector vec) {
     x += vec.x;
     y += vec.y;

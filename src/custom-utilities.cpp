@@ -12,37 +12,27 @@ namespace utilities {
         lemlib::Pose pose = devices::chassis.getPose();
         direction dir;
         double angleDifference;
-        char* text;
         
         double boundedAngle = angleRangeZeroTo360(pose.theta);
 
         if (fabs(pose.theta) < resetAngleThreshold) {
             dir = direction::North;
-            text = "North";
-            angleDifference = boundedAngle;
+            angleDifference = boundedAngle * DEG_TO_RAD;
         } else if (fabs(boundedAngle - 90) < resetAngleThreshold) {
             dir = direction::East;
-            text = "East";
-            angleDifference = boundedAngle - 90;
+            angleDifference = (boundedAngle - 90) * DEG_TO_RAD;
         } else if (fabs(boundedAngle - 180) < resetAngleThreshold) {
             dir = direction::South;
-            text = "South";
-            angleDifference = boundedAngle - 180;
+            angleDifference = (boundedAngle - 180) * DEG_TO_RAD;
         } else if (fabs(boundedAngle - 270) < resetAngleThreshold) {
             dir = direction::West;
-            text = "West";
-            angleDifference = boundedAngle - 270;
+            angleDifference = (boundedAngle - 270) * DEG_TO_RAD;
         } else {
-            pros::lcd::print(1, "None");
             return pose; // at an odd angle, unable to determine position
         }
-        pros::lcd::print(1, text);
-
-        pros::lcd::print(0, "angle delta: %g", angleDifference);
 
         if (front) {
-            double measurement = getDistance(distanceSensor::Front);
-            pros::lcd::print(2, "front: %g", measurement);
+            double measurement = getDistance(distanceSensor::Front) * std::cos(angleDifference);
             switch (dir) {
                 case direction::North:
                     pose.y = 144 - measurement;
@@ -58,7 +48,7 @@ namespace utilities {
                     break;
             }
         } else if (back) {
-            double measurement = getDistance(distanceSensor::Back);
+            double measurement = getDistance(distanceSensor::Back) * std::cos(angleDifference);
             switch (dir) {
                 case direction::North:
                     pose.y = measurement;
@@ -75,8 +65,7 @@ namespace utilities {
             }
         }
         if (right) {
-            double measurement = getDistance(distanceSensor::Right);
-            pros::lcd::print(3, "right: %g", measurement);
+            double measurement = getDistance(distanceSensor::Right) * std::cos(angleDifference);
             switch (dir) {
                 case direction::North:
                     pose.x = 144 - measurement;
@@ -92,7 +81,7 @@ namespace utilities {
                     break;
             }
         } else if (left) {
-            double measurement = getDistance(distanceSensor::Left);
+            double measurement = getDistance(distanceSensor::Left) * std::cos(angleDifference);
             switch (dir) {
                 case direction::North:
                     pose.x = measurement;
@@ -108,7 +97,6 @@ namespace utilities {
                     break;
             }
         }
-        pros::lcd::print(4, "Angle: %g, X: %f, Y: %f", pose.theta, pose.x, pose.y);
         return pose;
     }
 
@@ -364,6 +352,12 @@ namespace utilities {
         return dis(getGenerator());
     }
     
+    // Generates a random number with a gaussian distribution and the specified mean/standard deviation
+    double getRandomGaussian(double mean, double stddev) {
+        std::normal_distribution<> dis{mean, stddev};
+        return dis(getGenerator());
+    }
+
     // Computes the value of the Gaussian (normal) distribution at x
     double gaussianWithMean(double x, double mean, double stddev) {
         double exponent = -((x - mean) * (x - mean)) / (2 * stddev * stddev);
