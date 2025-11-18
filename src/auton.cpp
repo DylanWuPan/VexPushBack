@@ -278,17 +278,17 @@ namespace auton {
 		// chassis.moveToPoint(96, 96, 4000, {.maxSpeed = 80});
 
 		// THIRD LOADER
-		chassis.moveToPoint(111, 120, 4000, {.maxSpeed = 80});
+		chassis.moveToPoint(116, 120, 4000, {.maxSpeed = 80});
 		chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
 		matchLoader.set_value(true);
 		topAligner.set_value(false);
-		chassis.moveToPoint(111, 137, 4000, {.maxSpeed = 80});
+		chassis.moveToPoint(116, 137, 4000, {.maxSpeed = 80});
 		pros::delay(2500);
-		chassis.moveToPoint(111, 140, 400, {.maxSpeed = 20});
+		chassis.moveToPoint(116, 140, 400, {.maxSpeed = 20});
 		pros::delay(500);
 
 		// THIRD GOAL
-		chassis.moveToPoint(112, 120, 4000, {.forwards = false, .maxSpeed = 80});
+		chassis.moveToPoint(117, 120, 4000, {.forwards = false, .maxSpeed = 80});
 		chassis.turnToHeading(179, 1000, {.maxSpeed = 80});
 		topAligner.set_value(true);
 		matchLoader.set_value(false);
