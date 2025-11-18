@@ -12,37 +12,27 @@ namespace utilities {
         lemlib::Pose pose = devices::chassis.getPose();
         direction dir;
         double angleDifference;
-        char* text;
         
         double boundedAngle = angleRangeZeroTo360(pose.theta);
 
         if (fabs(pose.theta) < resetAngleThreshold) {
             dir = direction::North;
-            text = "North";
             angleDifference = boundedAngle * DEG_TO_RAD;
         } else if (fabs(boundedAngle - 90) < resetAngleThreshold) {
             dir = direction::East;
-            text = "East";
             angleDifference = (boundedAngle - 90) * DEG_TO_RAD;
         } else if (fabs(boundedAngle - 180) < resetAngleThreshold) {
             dir = direction::South;
-            text = "South";
             angleDifference = (boundedAngle - 180) * DEG_TO_RAD;
         } else if (fabs(boundedAngle - 270) < resetAngleThreshold) {
             dir = direction::West;
-            text = "West";
             angleDifference = (boundedAngle - 270) * DEG_TO_RAD;
         } else {
-            pros::lcd::print(1, "None");
             return pose; // at an odd angle, unable to determine position
         }
-        pros::lcd::print(1, text);
-
-        pros::lcd::print(0, "angle delta: %g", angleDifference);
 
         if (front) {
             double measurement = getDistance(distanceSensor::Front) * std::cos(angleDifference);
-            pros::lcd::print(2, "front: %g", measurement);
             switch (dir) {
                 case direction::North:
                     pose.y = 144 - measurement;
@@ -76,7 +66,6 @@ namespace utilities {
         }
         if (right) {
             double measurement = getDistance(distanceSensor::Right) * std::cos(angleDifference);
-            pros::lcd::print(3, "right: %g", measurement);
             switch (dir) {
                 case direction::North:
                     pose.x = 144 - measurement;
@@ -108,7 +97,6 @@ namespace utilities {
                     break;
             }
         }
-        pros::lcd::print(4, "Angle: %g, X: %f, Y: %f", pose.theta, pose.x, pose.y);
         return pose;
     }
 
