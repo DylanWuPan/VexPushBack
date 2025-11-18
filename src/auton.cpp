@@ -265,16 +265,18 @@ namespace auton {
 		pros::delay(100);
 
 		// THIRD LOADER
-		chassis.moveToPoint(115, 120, 4000, {.maxSpeed = 80});
+		chassis.moveToPoint(116, 120, 4000, {.maxSpeed = 80});
 		chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
 		matchLoader.set_value(true);
 		topAligner.set_value(false);
-		chassis.moveToPoint(115, 139, 4000, {.maxSpeed = 80});
-		pros::delay(2000);
+		chassis.moveToPoint(116, 137, 4000, {.maxSpeed = 80});
+		pros::delay(2500);
+		chassis.moveToPoint(116, 140, 400, {.maxSpeed = 20});
+		pros::delay(500);
 
 		// THIRD GOAL
-		chassis.moveToPoint(115, 120, 4000, {.forwards = false, .maxSpeed = 80});
-		chassis.turnToHeading(180, 1000, {.maxSpeed = 80});
+		chassis.moveToPoint(117, 120, 4000, {.forwards = false, .maxSpeed = 80});
+		chassis.turnToHeading(179, 1000, {.maxSpeed = 80});
 		topAligner.set_value(true);
 		matchLoader.set_value(false);
 		pros::delay(1200);
