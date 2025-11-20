@@ -8,6 +8,7 @@ using namespace intakeController;
 namespace driverControl {
 	
 	namespace driveCurve {
+
 		double curve(double val) {
 			double valSquared = val*val;
 			double valCubed = valSquared*val;
@@ -17,10 +18,10 @@ namespace driverControl {
 				DRIVE_CURVE[3] * valCubed;
 		}
 
-		double driveMap(double val) {
+		double driveMap(double val, double scaleOutput) {
 			if (abs(val) - DEAD_ZONE < 0) return 0;
 			int sign = val < 0? -1 : 1;
-			return sign * (MIN_OUTPUT + (SCALE_OUTPUT - MIN_OUTPUT) *
+			return sign * (MIN_OUTPUT + (scaleOutput - MIN_OUTPUT) *
 				curve(static_cast<double>(abs(val) - DEAD_ZONE) / (SCALE_INPUT - DEAD_ZONE)));
 		}
 	}
@@ -35,8 +36,8 @@ namespace driverControl {
         // int rightStickVal = controller.get_analog(ANALOG_RIGHT_Y);    // Gets the turn left/right from right joystick
 		// leftDrive.move_voltage(driveCurve::driveMap(leftStickVal));   // Sets left motor voltage
 		// rightDrive.move_voltage(driveCurve::driveMap(rightStickVal)); // Sets right motor voltage
-		float LeftY = driveCurve::driveMap(controller.get_analog(ANALOG_LEFT_Y));
-    	float RightX = driveCurve::driveMap(controller.get_analog(ANALOG_RIGHT_X));
+		float LeftY = driveCurve::driveMap(controller.get_analog(ANALOG_LEFT_Y), driveCurve::SCALE_OUTPUT_LINEAR);
+    	float RightX = driveCurve::driveMap(controller.get_analog(ANALOG_RIGHT_X), driveCurve::SCALE_OUTPUT_TURN);
    		chassis.arcade(LeftY, RightX);
     }
 
