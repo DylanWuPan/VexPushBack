@@ -195,239 +195,38 @@ namespace auton {
 		pros::delay(5000);
 	}
 
-	void autonSkillsNoDistance() {
-		intakeController::periodicTask.end();
-
-		chassis.setPose(58, 22, -90);
-
-		// FIRST LOADER
-		chassis.moveToPoint(24, 22, 4000, {.maxSpeed = 80});
-		chassis.turnToHeading(180, 500, {.maxSpeed = 80});
-		runIntake();
-		matchLoader.set_value(true);
-		chassis.moveToPoint(24, 11, 3000, {.maxSpeed = 80});
-		pros::delay(2000);
-
-		// FIRST LONG GOAL
-		chassis.moveToPoint(24, 24, 4000, {.forwards = false, .maxSpeed = 80});
-		chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
-		topAligner.set_value(true);
-		matchLoader.set_value(false);
-		chassis.moveToPose(24, 42, 0, 2000);
-		pros::delay(500);
-		runTopScore();
-		pros::delay(2000);
-		chassis.moveToPoint(24, 45, 500, {.maxSpeed = 20});
-		pros::delay(500);
-		chassis.setPose(24, 39, chassis.getPose().theta);
-		pros::delay(1000);
-		chassis.moveToPoint(24, 42, 400, {.maxSpeed = 20});
-		pros::delay(500);
-
-		//SECOND LOADER
-		chassis.moveToPoint(24, 30, 4000, {.forwards = false, .maxSpeed = 80});
-		runIntake();
-		topAligner.set_value(false);
-		chassis.turnToHeading(90, 1000, {.maxSpeed = 80});
-		chassis.moveToPoint(124, 30, 5000, {.maxSpeed = 80});
-		chassis.turnToHeading(180, 1000, {.maxSpeed = 80});
-		matchLoader.set_value(true);
-		chassis.moveToPoint(124, 8, 4000, {.maxSpeed = 80});
-		pros::delay(2000);
-
-		// SECOND LONG GOAL
-		chassis.moveToPoint(124, 24, 4000, {.forwards = false, .maxSpeed = 80});
-		chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
-		topAligner.set_value(true);
-		chassis.moveToPose(125, 42, 0, 2000);
-		matchLoader.set_value(false);
-		pros::delay(500);
-		runTopScore();
-		pros::delay(2000);
-		chassis.moveToPoint(124, 45, 500, {.maxSpeed = 20});
-		pros::delay(500);
-		chassis.setPose(120, 39, chassis.getPose().theta);
-		pros::delay(500);
-		chassis.moveToPoint(120, 42, 400, {.maxSpeed = 20});
-		pros::delay(500);
-
-		// // MIDDLE BALLS
-		// chassis.moveToPoint(120, 24, 4000, {.forwards = false, .maxSpeed = 80});
-		// runIntake();
-		// chassis.moveToPoint(96, 48, 4000, {.maxSpeed = 80});
-		// chassis.moveToPoint(96, 96, 4000, {.maxSpeed = 80});
-
-		// // THIRD LOADER
-		// chassis.moveToPoint(118, 120, 4000, {.maxSpeed = 80});
-		// chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
-		// matchLoader.set_value(true);
-		// topAligner.set_value(false);
-		// chassis.moveToPoint(118, 136, 4000, {.maxSpeed = 80});
-		// pros::delay(2500);
-		// chassis.moveToPoint(118, 138, 500, {.maxSpeed = 20});
-		// pros::delay(500);
-
-		// //THIRD GOAL
-		// chassis.moveToPoint(118, 120, 4000, {.forwards = false, .maxSpeed = 80});
-		// chassis.turnToHeading(180, 1000, {.maxSpeed = 80});
-		// topAligner.set_value(true);
-		// matchLoader.set_value(false);
-		// chassis.moveToPoint(118, 105, 2000, {.maxSpeed = 60});
-		// pros::delay(500);
-		// runTopScore();
-		// pros::delay(1500);
-		// chassis.moveToPoint(118, 102, 500, {.maxSpeed = 20});
-		// pros::delay(500);
-		// chassis.setPose(120, 105, chassis.getPose().theta);
-		// pros::delay(500);
-		// chassis.moveToPoint(120, 102, 500, {.maxSpeed = 20});
-		// pros::delay(500);
-
-		// // FOURTH LOADER
-		// chassis.moveToPoint(120, 114, 4000, {.forwards = false, .maxSpeed = 80});
-		// runIntake();
-		// topAligner.set_value(false);
-		// chassis.turnToHeading(-90, 1000, {.maxSpeed = 80});
-
-		// chassis.moveToPoint(18, 114, 5000, {.maxSpeed = 80});
-		// chassis.turnToHeading(0, 1000, {.maxSpeed = 80});
-		// matchLoader.set_value(true);
-		// chassis.moveToPoint(18, 135, 4000, {.maxSpeed = 80});
-		// pros::delay(2500);
-		// chassis.moveToPoint(18, 137, 500, {.maxSpeed = 20});
-		// pros::delay(500);
-
-		// // FOURTH LONG GOAL
-		// chassis.moveToPoint(18, 120, 4000, {.forwards = false, .maxSpeed = 80});
-		// chassis.turnToHeading(180, 1000, {.maxSpeed = 80});
-		// topAligner.set_value(true);
-		// matchLoader.set_value(false);
-		// chassis.moveToPoint(18, 99, 2000, {.maxSpeed = 60});
-		// pros::delay(500);
-		// runTopScore();
-		// pros::delay(2000);
-		// chassis.moveToPoint(18, 96, 500, {.maxSpeed = 20});
-		// pros::delay(500);
-		// chassis.setPose(24, 102, chassis.getPose().theta);
-		// pros::delay(500);
-		// chassis.moveToPoint(24, 99, 500, {.maxSpeed = 20});
-		// pros::delay(500);
-
-		// chassis.moveToPoint(72, 140, 100000, {.forwards = false});
-
-		// pros::delay(5000);
-	}
-
 	void autonSAWP() {
-		// chassis.setPose(88.5, 22, 90);
-		
-		// // Match load
-		// chassis.moveToPoint(120, 22, 4000, {.maxSpeed = 80});
-		// pros::delay(1000);
-		// chassis.turnToHeading(180, 500, {.maxSpeed = 80});
-		// matchLoader.set_value(true);
-		// runIntake();
-		// chassis.moveToPose(121, 11, 180, 2000, {.maxSpeed = 50});
-		// pros::delay(1700);
-
-		// // // Long goal
-		// chassis.moveToPoint(122, 24, 2000, {.forwards = false});
-		// chassis.moveToPose(122, 40.5, 0, 3000, {.maxSpeed = 80});
-		// pros::delay(500);
-		// topAligner.set_value(true);
-		// pros::delay(300);
-		// matchLoader.set_value(false);
-		// pros::delay(100);
-		// runTopScore();
-		// pros::delay(2000);
-
-		// // Three balls
-		// chassis.moveToPoint(123, 24, 2000, {.forwards = false});
-		// chassis.turnToHeading(-47, 500, {.maxSpeed = 80});
-		// runIntake();
-		// chassis.moveToPoint(102, 42.5, 3000, {.maxSpeed = 80});
-		// chassis.moveToPoint(86.5, 62.5, 3000, {.maxSpeed = 30});
-		// pros::delay(2000);
-		// outtake();
-		// pros::delay(2000);
-		// chassis.moveToPoint(102, 42.5, 3000, {.forwards = false, .maxSpeed = 80});
-
-		chassis.setPose(55.5, 22, 270);
-
-		// Match load
-		chassis.moveToPoint(23, 22, 4000, {.maxSpeed = 80});
-		chassis.turnToHeading(180, 500, {.maxSpeed = 80});
-		matchLoader.set_value(true);
-		runIntake();
-		chassis.moveToPose(22, 8, 180, 3000, {.minSpeed = 60});
-		pros::delay(1000);
-
-		// Long goal
-		chassis.moveToPoint(22, 24, 2000, {.forwards = false});
-		chassis.moveToPose(19.5, 40.5, 1, 3000);
-		pros::delay(500);
-		topAligner.set_value(true);
-		matchLoader.set_value(false);
-		pros::delay(200);
-		runTopScore();
-		pros::delay(2000);
-		runIntake();
-
-		// MidGoal
-		chassis.moveToPoint(19.5, 24, 4000, {.forwards = false});
-		chassis.moveToPose(54.5, 62.5, 46, 3000, {.maxSpeed = 80});
-		topAligner.set_value(false);
-		pros::delay(800);
-		matchLoader.set_value(true);
-		runMiddleScore();
-		pros::delay(500);
-		runIntake();
-
-		chassis.moveToPoint(48, 48, 4000, {.forwards = false, .minSpeed = 60, .earlyExitRange = 5});
-		matchLoader.set_value(false);
-
-		chassis.moveToPoint(96, 54, 4000, {.minSpeed = 40, .earlyExitRange = 5});
-		pros::delay(1000);
-		matchLoader.set_value(true);
-
-		//SECOND LONG GOAL
-		chassis.moveToPoint(120, 36, 4000, {.minSpeed = 40, .earlyExitRange = 5});
-		matchLoader.set_value(false);
-		chassis.moveToPose(122, 45, 0, 5000, {.maxSpeed = 80});
-		pros::delay(500);
-		topAligner.set_value(true);
-		pros::delay(500);
-		runTopScore();
-		
-		pros::delay(5000);
-	}
-
-	void autonSAWP2() {
 		chassis.setPose(55.75, 22.75, 0);
 
-		// HIGH MID
-		chassis.moveToPose(56, 60, 40, 3000);
+		// 3 BALLS
+		chassis.moveToPoint(46, 55, 1000, {.maxSpeed = 80});
 		runIntake();
-		pros::delay(2000);
+		pros::delay(600);
+		matchLoader.set_value(true);
+
+		// HIGH MID
+		chassis.moveToPose(55.5, 61.5, 55, 2000);
+		runIntake();
+		pros::delay(1100);
 		runMiddleScore();
-		pros::delay(50);
+		pros::delay(1400);
 
 		// LOW MID
 		chassis.moveToPoint(48, 54, 4000, {.forwards = false, .maxSpeed = 120});
 		runIntake();
 		matchLoader.set_value(false);
-		chassis.moveToPose(81, 65, -30, 3500);
-		pros::delay(2100);
+		chassis.moveToPose(81, 65, -30, 3000);
+		pros::delay(1300);
 		runOuttake();
-		pros::delay(50);
+		pros::delay(1700);
 		
 		// MATCH LOAD
 		chassis.moveToPoint(120, 24, 4000, {.forwards = false, .maxSpeed = 120});
 		runIntake();
 		chassis.turnToHeading(180, 1000, {.maxSpeed = 120});
 		matchLoader.set_value(true);
-		chassis.moveToPoint(120, 11, 1100, {.maxSpeed = 120});
-		pros::delay(1100);
+		chassis.moveToPoint(120, 9, 1100, {.maxSpeed = 120});
+		pros::delay(1200);
 		chassis.moveToPoint(120, 24, 4000, {.forwards = false, .maxSpeed = 120});
 		
 		// LONG GOAL

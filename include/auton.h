@@ -16,9 +16,7 @@ namespace auton {
 	void runBottomScore();
 	// Auton Routes
 	void autonSkills();
-	void autonSkillsNoDistance();
 	void autonSAWP();
-	void autonSAWP2();
 	void autonLongMiddleLeft();
 	void autonLongMiddleRight();
 	void autonLeft7Long();

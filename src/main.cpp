@@ -51,7 +51,7 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	auton::autonSkills();
+	auton::autonSAWP();
 	// switch (auton::autonSelect::getAutonMode()) {
 	// 	case auton::autonSelect::autonMode::BLUE_LEFT:
 	// 		auton::autonBlueLeft();
