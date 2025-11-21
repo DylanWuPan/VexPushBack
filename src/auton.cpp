@@ -144,11 +144,11 @@ namespace auton {
 		pros::delay(1100);
 		chassis.setPose(utilities::getPoseWithDistance(false, false, false, true));
 		// pros::delay(100);
-		chassis.moveToPose(120, 102, 180, 4000);
+		chassis.moveToPose(120.5, 102, 180, 4000);
 		pros::delay(500);
 		runTopScore();
 		pros::delay(1500);
-		chassis.moveToPoint(120, 100, 500, {.maxSpeed = 20});
+		chassis.moveToPoint(120.5, 100, 500, {.maxSpeed = 20});
 		pros::delay(500);
 		chassis.setPose(120, 105, chassis.getPose().theta);
 		pros::delay(500);
@@ -187,8 +187,10 @@ namespace auton {
 		pros::delay(500);
 
 		//PARK
-		// chassis.moveToPoint(24, 120, 4000, {.forwards = false, .maxSpeed = 80});
-		chassis.moveToPose(72, 140, 90, 100000, {.forwards = false, .minSpeed = 100});
+		chassis.moveToPoint(24, 120, 4000, {.forwards = false, .maxSpeed = 80});
+		// chassis.moveToPose(72, 140, 90, 100000, {.forwards = false, .minSpeed = 100});
+		chassis.moveToPose(72, 120, 0, 4000, {.maxSpeed = 80});
+		chassis.moveToPoint(72, 140, 100000, {.minSpeed = 100});
 		pros::delay(2000);
 		matchLoader.set_value(true);
 
@@ -246,11 +248,11 @@ namespace auton {
 		chassis.setPose(55.5, 22, 270);
 
 		// Match load
-		chassis.moveToPoint(23, 22, 4000, {.maxSpeed = 80});
-		chassis.turnToHeading(180, 500, {.maxSpeed = 80});
+		chassis.moveToPoint(24, 22, 4000, {.maxSpeed = 80});
+		chassis.turnToHeading(180, 550, {.maxSpeed = 80});
 		matchLoader.set_value(true);
 		runIntake();
-		chassis.moveToPose(22, 8, 180, 3000, {.minSpeed = 60});
+		chassis.moveToPoint(23, 5, 3000, {.minSpeed = 80});
 		pros::delay(1090);
 
 		// Long goal
@@ -262,20 +264,21 @@ namespace auton {
 		matchLoader.set_value(false);
 		pros::delay(400);
 		runTopScore();
-		pros::delay(2000);
+		pros::delay(2200);
 		chassis.moveToPoint(20, 42, 500);
 
-		// DESCORE
-		chassis.moveToPoint(20, 30, 4000, {.forwards = false, .maxSpeed = 80});
-		pros::delay(200);
+		// // DESCORE
+		// chassis.moveToPoint(20, 30, 4000, {.forwards = false, .minSpeed = 80, .earlyExitRange = 2});
+		// pros::delay(200);
 		topAligner.set_value(false);
-		chassis.moveToPoint(20, 40.5, 2000, {.minSpeed = 120});
+		// chassis.moveToPoint(20, 40.5, 2000, {.minSpeed = 120});
 
 		// MidGoal
 		chassis.moveToPoint(20, 24, 4000, {.forwards = false});
 		runIntake();
-		chassis.moveToPose(54, 60.5, 45, 6000, {.maxSpeed = 40});
-		pros::delay(3200);
+		topAligner.set_value(false);
+		chassis.moveToPose(54, 60.5, 45, 6000, {.maxSpeed = 50});
+		pros::delay(3000);
 		runMiddleScore();
 
 		pros::delay(5000);
