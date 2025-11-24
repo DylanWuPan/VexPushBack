@@ -188,6 +188,22 @@ namespace utilities {
         return Vector{vec.x * cos - vec.y * sin, vec.x * sin + vec.y * cos};
     }
 
+    // Converts a Vector to polar coordinates
+    std::pair<double, double> toPolar(Vector vec) {
+        return std::pair{
+            std::sqrt(vec.x * vec.x + vec.y * vec.y),
+            std::atan2(vec.y, vec.x),
+        };
+    }
+
+    // Converts polar coordinates to a cartesian Vector
+    Vector toCartesian(std::pair<double, double> coords) {
+        return Vector{
+            coords.first * cos(coords.second),
+            coords.first * sin(coords.second),
+        };
+    }
+
     // ----- Intersections -----
 
     // Find the intersection points of a circle and a line
@@ -334,9 +350,9 @@ namespace utilities {
     // ---------- Randomness + Probability ----------
     
     // Shared random number generator
-    std::mt19937& getGenerator() {
+    std::ranlux24_base& getGenerator() {
         static std::random_device rd;
-        static std::mt19937 gen(rd());
+        static std::ranlux24_base gen(rd());
         return gen;
     }
     

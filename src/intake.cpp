@@ -1,16 +1,60 @@
 #include "intake.h"
 
 namespace intakeController {
-    bool isRedAlliance = true;
+    bool isRedAlliance = false;
     bool isColorSorting = true;
     bool isAntiJamming = true;
     bool isSkipping = false;
     bool isJamming = false;
     bool rogueBall = false;
+    
+    int pauseEndTime = 0; // for pausing antijam/colorsort
+    intakeState currentState = intakeState::Stop;
 
     double jamThreshold = 5;
 
     PeriodicTask periodicTask{update, DELAY, "Intake Task"};
+
+    void setIntakeState(intakeState state) {
+        if (state == currentState) return; // only for first times
+        currentState = state;
+        switch (state) {
+            case intakeState::Intake: {
+                intake.move_velocity(intakeController::INTAKE_VELOCITY);
+                hopper.move_velocity(intakeController::HOPPER_VELOCITY);
+                topScore.move_velocity(-intakeController::TOPSCORE_VELOCITY);
+                pauseEndTime = pros::millis() + 100;
+                break;
+            }
+            case intakeState::TopScore : {
+                topScore.move_velocity(intakeController::TOPSCORE_VELOCITY);
+                hopper.move_velocity(-intakeController::HOPPER_VELOCITY);
+                intake.move_velocity(intakeController::INTAKE_VELOCITY);
+                pauseEndTime = pros::millis() + 100;
+                break;
+            }
+            case intakeState::MiddleScore: {
+                topScore.move_velocity(-0.5 * intakeController::TOPSCORE_VELOCITY);
+                hopper.move_velocity(-1 * intakeController::HOPPER_VELOCITY);
+                intake.move_velocity(1 * intakeController::INTAKE_VELOCITY);
+                pauseEndTime = pros::millis() + 100;
+                break;
+            }
+            case intakeState::BottomScore: {
+                topScore.move_velocity(-0.67 * intakeController::TOPSCORE_VELOCITY);
+                hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY);
+                intake.move_velocity(-0.67 * intakeController::INTAKE_VELOCITY);
+                pauseEndTime = pros::millis() + 100;
+                break;
+            }
+            case intakeState::Stop: {
+                intake.move_velocity(0);
+                hopper.move_velocity(0);
+                topScore.move_velocity(0);
+                break;
+            }
+        }
+    }
 
     void discardBall() {
         if (!isSkipping) {
@@ -38,6 +82,7 @@ namespace intakeController {
     }
 
     void update() {
+        if (pros::millis() < pauseEndTime) return;
         if (isColorSorting) {
             switch(isRedAlliance) {
                 case true: rogueBall = fabs(colorSensor.get_hue() - BLUE_HUE) < 20; break;

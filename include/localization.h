@@ -18,6 +18,9 @@
 // 	constexpr int MAX_UPDATE_INTERVAL = 2000; // milliseconds
 //     constexpr double START_POS_STD_DEV = 7.5;
 
+//     constexpr double DRIVE_NOISE = 0; // TODO: Change
+//     constexpr double ANGLE_NOISE = 0; // TODO: Change
+
 // 	// TODO: double check offset directions
 // 	constexpr double vertTrackerOffset = -0.4; // TODO // Offset is positive to left
 // 	constexpr double latTrackerOffset = -1.5; // TODO // TODO: find offset direction

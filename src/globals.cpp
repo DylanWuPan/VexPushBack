@@ -11,7 +11,6 @@ namespace devices {
 	pros::Distance distanceFront{7};
 	pros::Distance distanceBack{18};
 
-
 	pros::Controller controller{pros::E_CONTROLLER_MASTER};
 
 	// TODO: Check port order

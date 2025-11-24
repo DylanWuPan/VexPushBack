@@ -10,7 +10,7 @@ namespace auton {
 	void runIntake();
 	void stopIntake();
 	void runIntakeNoHopper();
-	void outtake();
+	void runOuttake();
 	void runTopScore();
 	void runMiddleScore();
 	void runBottomScore();

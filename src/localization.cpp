@@ -10,8 +10,6 @@
 // 	using namespace devices;
 // 	using namespace utilities;
 
-// 	// -------------------- Variables --------------------
-	
 // 	// ---------- Particles ----------
 
 // 	std::vector<Particle> particles;
@@ -87,7 +85,7 @@
 // 		return (rand() % 10 - 5) * 0.1;
 // 	}
 
-//     Vector getOdomPositionDelta() {
+//     Vector getOdomLocalPositionDelta() {
 //         // Odometry
 //         // TODO: Adjust if there is no prev value for trackers and stuff???
 //         const double angleVal = 360 - inertial.get_heading(); // TODO: might have to adjust for wraparound
@@ -128,6 +126,7 @@
 //         prevLatTrackerVal = latTrackerVal;
 
 //         return Vector{globalDeltaX, globalDeltaY};
+//         // return Vector{localDeltaX, localDeltaY};
 //     }
 
 // 	// The update function for the localization task.
@@ -136,19 +135,30 @@
 // 		// ---------- Move Particles With Robot ----------
 // 		// NOTE: Using uniform noise instead of gaussian noise for speed
 // 		// TODO: Tune noise generation
-// 		Vector posDelta = getOdomPositionDelta(); // TODO: Get somehow - odometry
-// 		// double angleDelta = 0; // TODO: Get somehow - odometry
+// 		// std::pair<double, double> posDeltaPolar = utilities::toPolar(getOdomPositionDelta());
+// 		Vector posDelta = getOdomPositionDelta();
+//         double posDeltaMagnitude = posDelta.magnitude();
+        
+//         // std::uniform_real_distribution magDistribution(posDeltaPolar.first - DRIVE_NOISE * posDeltaPolar.first,
+//         //                                                posDeltaPolar.first + DRIVE_NOISE * posDeltaPolar.first);
+//         std::uniform_real_distribution magDistribution(1 - DRIVE_NOISE, 1 + DRIVE_NOISE);
+//         std::uniform_real_distribution angleDistribution(-ANGLE_NOISE, ANGLE_NOISE);
+        
 // 		for (auto &p : particles) {
-// 			// TODO: There might be a better way to add noise
-// 			x(p) += posDelta.x + randomNoise(); // + gaussian_noise();
-// 			y(p) += posDelta.y + randomNoise(); // + gaussian_noise();
-// 			// p.angle += angleDelta + randomNoise(); // + gaussian_noise();
+//             // Vector posDeltaCartesianNoisy = toCartesian(std::pair{
+//             //     magDistribution(utilities::getGenerator()),
+//             //     angleDistribution(utilities::getGenerator()),
+//             // });
+//             Vector posDeltaCartesianNoisy =
+//                 rotate(posDelta, angleDistribution(utilities::getGenerator())) * magDistribution(utilities::getGenerator());
+// 			x(p) += posDeltaCartesianNoisy.x;
+// 			y(p) += posDeltaCartesianNoisy.y;
 // 		}
 
 // 		// ---------- Check if Update Necessary ----------
 // 		// Won't update unless the robot has travelled a certain distance
 // 		// TODO: Could make better by incorporating angular movement too
-// 		distanceSinceUpdate += posDelta.magnitude(); // Not super accurate, but easy
+// 		distanceSinceUpdate += posDeltaMagnitude; // Not super accurate, but easy
 // 		if (distanceSinceUpdate < MAX_DIST_SINCE_UPDATE && periodicTask.getTimeSinceLastUpdate() < MAX_UPDATE_INTERVAL) {
 // 			return;
 // 		}
@@ -169,6 +179,10 @@
 
 // 		double totalWeight = 0.0;
 // 		for (Particle& p : particles) {
+//             if (x(p) < 0.0 || x(p) > FIELD_SIZE || y(p) < 0.0 || y(p) > FIELD_SIZE) {
+//                 // put particle back in field
+//             }
+
 // 			// TODO: raycast including field elements
 // 			double expectedFront = rayWallIntersectDistance(p.pos + offsetFront, angle);
 // 			double expectedBack = rayWallIntersectDistance(p.pos + offsetBack, angle + M_PI);
@@ -195,23 +209,58 @@
 
 // 		// ---------- Resample Particles ----------
 // 		// TODO: 2654e uses a different sampling method to help preserve variety
-// 		std::vector<Particle> newParticles;
-// 		double index = rand() % NUM_PARTICLES;
-// 		double beta = 0.0;
-// 		double maxWeight = 0.0;
-// 		for (const Particle& p : particles) {
-// 			if (p.weight > maxWeight) maxWeight = p.weight;
-// 		}
+// 		// std::vector<Particle> newParticles;
+// 		// double index = rand() % NUM_PARTICLES;
+// 		// double beta = 0.0;
+// 		// double maxWeight = 0.0;
+// 		// for (const Particle& p : particles) {
+// 		// 	if (p.weight > maxWeight) maxWeight = p.weight;
+// 		// }
 	
-// 		for (int i = 0; i < NUM_PARTICLES; i++) {
-// 			beta += (rand() / RAND_MAX) * 2.0 * maxWeight;
-// 			while (beta > particles[static_cast<int>(index)].weight) {
-// 				beta -= particles[static_cast<int>(index)].weight;
-// 				index = fmod((index + 1), NUM_PARTICLES);
+// 		// for (int i = 0; i < NUM_PARTICLES; i++) {
+// 		// 	beta += (rand() / RAND_MAX) * 2.0 * maxWeight;
+// 		// 	while (beta > particles[static_cast<int>(index)].weight) {
+// 		// 		beta -= particles[static_cast<int>(index)].weight;
+// 		// 		index = fmod((index + 1), NUM_PARTICLES);
+// 		// 	}
+// 		// 	newParticles.push_back(particles[static_cast<int>(index)]);
+// 		// }
+// 		// particles = newParticles;
+
+
+//         std::vector<Particle> oldParticles = particles;
+//         // for (size_t i = 0; i < particles.size(); i++) {
+// 		// 	oldParticles[i] = particles[i];
+// 		// }
+
+//         double avgWeight = totalWeight / NUM_PARTICLES;
+// 		// std::uniform_real_distribution distribution(0.0, avgWeight);
+// 		const double randWeight = utilities::getRandomDoubleInRange(0.0, avgWeight);
+
+// 		size_t j = 0;
+// 		auto cumulativeWeight = 0.0;
+
+// 		double xSum = 0.0, ySum = 0.0;
+
+// 		for (size_t i = 0; i < NUM_PARTICLES; i++) {
+// 			const auto weight = static_cast<double>(i) * avgWeight + randWeight;
+
+// 			while (cumulativeWeight < weight) {
+// 				if (j >= particles.size()) {
+// 					break;
+// 				}
+// 				cumulativeWeight += particles[j].weight;
+// 				j++;
 // 			}
-// 			newParticles.push_back(particles[static_cast<int>(index)]);
+
+// 			particles[i].pos.x = oldParticles[j-1].pos.x;
+// 			particles[i].pos.y = oldParticles[j-1].pos.y;
+
+// 			xSum += particles[i].pos.x;
+// 			ySum += particles[i].pos.y;
 // 		}
-// 		particles = newParticles;
+
+// 		// prediction = Eigen::Vector3f(xSum / static_cast<float>(L), ySum / static_cast<float>(L), angle.getValue());
 // 	}
 
 //     // Sets up and starts the localization task with x-y position in inches and angle in radians

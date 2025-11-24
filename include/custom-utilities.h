@@ -69,6 +69,12 @@ namespace utilities {
     // Rotates a Vector around (0,0) by a specified angle in radians
     Vector rotate(Vector vec, double angle);
 
+    // Converts a Vector to polar coordinates
+    std::pair<double, double> toPolar(Vector vec);
+
+    // Converts polar coordinates to a cartesian Vector
+    Vector toCartesian(std::pair<double, double> coords);
+
     // ----- Intersections -----
 
     // Find the intersection points of a circle and a line
@@ -89,7 +95,7 @@ namespace utilities {
     // ---------- Randomness + Probability ----------
     
     // Shared random number generator
-    std::mt19937& getGenerator();
+    std::ranlux24_base& getGenerator();
     
     // Generates a random number from [0, 1) using a uniform distribution
     double getRandomZeroOne();

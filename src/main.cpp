@@ -51,19 +51,19 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	auton::autonLongMiddleLeft();
+	auton::autonLeft7Long();
 	// switch (auton::autonSelect::getAutonMode()) {
-	// 	case auton::autonSelect::autonMode::BLUE_LEFT:
-	// 		auton::autonBlueLeft();
+	// 	case auton::autonSelect::autonMode::LONG_MIDDLE_LEFT:
+	// 		auton::autonLongMiddleLeft();
 	// 		break;
-	// 	case auton::autonSelect::autonMode::BLUE_RIGHT:
-	// 		auton::autonBlueRight();
+	// 	case auton::autonSelect::autonMode::LONG_MIDDLE_RIGHT:
+	// 		auton::autonLongMiddleRight();
 	// 		break; 
-	// 	case auton::autonSelect::autonMode::RED_LEFT:
-	// 		auton::autonRedLeft();
+	// 	case auton::autonSelect::autonMode::LEFT_7_LONG:
+	// 		auton::autonLeft7Long();
 	// 		break;
-	// 	case auton::autonSelect::autonMode::RED_RIGHT:
-	// 		auton::autonRedRight();
+	// 	case auton::autonSelect::autonMode::RIGHT_7_LONG:
+	// 		auton::autonRight7Long();
 	// 		break;
 	// 	case auton::autonSelect::autonMode::SKILLS:
 	// 		auton::autonSkills();
@@ -91,6 +91,10 @@ void opcontrol() {
 	while (true) {
 		if (controller.get_digital_new_press(DIGITAL_Y)) {
 			screenController::onCenterButton();
+		}
+
+		if (controller.get_digital_new_press(DIGITAL_X)) {
+			intakeController::isColorSorting = !intakeController::isColorSorting;
 		}
 
 		driverControl::opcontrolPneumatics();

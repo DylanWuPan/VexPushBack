@@ -66,37 +66,16 @@ namespace driverControl {
 				isAutoIntaking = !isAutoIntaking;
 			}
 
-			if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)) {
-				intake.move_velocity(INTAKE_VELOCITY);
-				hopper.move_velocity(HOPPER_VELOCITY);
-				topScore.move_velocity(-TOPSCORE_VELOCITY);
-			} else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) {
-				intake.move_velocity(-INTAKE_VELOCITY/3);
-				hopper.move_velocity(-HOPPER_VELOCITY);
+			if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // TOP SCORE
+				intakeController::setIntakeState(intakeState::TopScore);
+			} else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // MIDDLE SCORE
+				intakeController::setIntakeState(intakeState::MiddleScore);
+			} else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // BOTTOM SCORE
+				intakeController::setIntakeState(intakeState::BottomScore);
+			} else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2) || isAutoIntaking) { // INTAKE
+				intakeController::setIntakeState(intakeState::Intake);
 			} else {
-				if (isAutoIntaking) {
-					intake.move_velocity(INTAKE_VELOCITY);
-					hopper.move_velocity(HOPPER_VELOCITY);
-					topScore.move_velocity(-TOPSCORE_VELOCITY);
-				} else {
-					intake.move_velocity(0);
-					hopper.move_velocity(0);
-					topScore.move_velocity(0);
-				}
-			}
-
-			//MID SCORE
-			if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) {
-				topScore.move_velocity(-TOPSCORE_VELOCITY/3);
-				intake.move_velocity(INTAKE_VELOCITY);
-				hopper.move_velocity(-HOPPER_VELOCITY);
-			} 
-
-			//TOP SCORE
-			if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) {
-				topScore.move_velocity(TOPSCORE_VELOCITY/2);
-				intake.move_velocity(INTAKE_VELOCITY);
-				hopper.move_velocity(-HOPPER_VELOCITY);
+				intakeController::setIntakeState(intakeState::Stop);
 			}
     }
 

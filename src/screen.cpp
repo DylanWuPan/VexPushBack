@@ -6,7 +6,7 @@ namespace screenController {
     using namespace devices;
     using namespace utilities;
 
-    int printMode = 2;
+    int printMode = 1;
 
     PeriodicTask periodicTask{update, DELAYS[printMode], "Screen Task"};
 
