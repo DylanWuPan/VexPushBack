@@ -93,10 +93,6 @@ void opcontrol() {
 			screenController::onCenterButton();
 		}
 
-		if (controller.get_digital_new_press(DIGITAL_X)) {
-			intakeController::isColorSorting = !intakeController::isColorSorting;
-		}
-
 		driverControl::opcontrolPneumatics();
 		driverControl::opcontrolIntake();
 		driverControl::opcontrolDrive();

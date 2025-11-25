@@ -19,7 +19,9 @@ namespace driverControl {
 
 	constexpr float DRIVERS_SPEED = 1;
 
-  	extern bool matchLoaderDown;
+	extern bool matchLoaderDown;
+	extern bool topAlignerDown;
+	extern bool isAutoIntaking;
 
 	// Called to control the robot driving during the driver control period
     void opcontrolDrive();

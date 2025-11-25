@@ -16,16 +16,18 @@ namespace intakeController {
     extern bool isJamming;
     extern bool rogueBall;
 
-    extern int pauseEndTime; // for pausing antijam/colorsort
+    extern int antiJamPauseEndTime; // for pausing antijam
 
     extern double jamThreshold;
 
     extern bool isRedAlliance;
     constexpr int BLUE_HUE = 240;
     constexpr int RED_HUE = 350;
-	constexpr int INTAKE_VELOCITY = 600;
-	constexpr int HOPPER_VELOCITY = 200;
-	constexpr int TOPSCORE_VELOCITY = 600;
+	constexpr int INTAKE_VELOCITY_MAX = 600;
+	constexpr int HOPPER_VELOCITY_MAX = 200;
+	constexpr int TOPSCORE_VELOCITY_MAX = 200;
+
+    constexpr int ANTI_JAM_PAUSE_DURATION = 100;
 
     enum class intakeState {
         Intake,

@@ -60,8 +60,12 @@ namespace driverControl {
 
 	// Called to control the robot intake during the driver control period
     void opcontrolIntake() {
+			if (controller.get_digital_new_press(DIGITAL_X)) {
+				intakeController::isColorSorting = !intakeController::isColorSorting;
+			}
+
 			if (isSkipping || isJamming) return;
-			//INTAKE
+
 			if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
 				isAutoIntaking = !isAutoIntaking;
 			}

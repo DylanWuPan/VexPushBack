@@ -2,18 +2,15 @@
 #include "main.h"
 #include "globals.h"
 
-// TODO: Figure out what this is for
-constexpr int TURN_SPEED = 80;
-
 namespace auton {
 	// Supporting Commands
-	void runIntake();
-	void stopIntake();
-	void runIntakeNoHopper();
-	void runOuttake();
-	void runTopScore();
-	void runMiddleScore();
-	void runBottomScore();
+	// void runIntake();
+	// void stopIntake();
+	// void runIntakeNoHopper();
+	// void runOuttake();
+	// void runTopScore();
+	// void runMiddleScore();
+	// void runBottomScore();
 	// Auton Routes
 	void autonSkills();
 	void autonSAWP();

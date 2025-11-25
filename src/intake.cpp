@@ -8,7 +8,7 @@ namespace intakeController {
     bool isJamming = false;
     bool rogueBall = false;
     
-    int pauseEndTime = 0; // for pausing antijam/colorsort
+    int antiJamPauseEndTime = 0; // for pausing antijam/colorsort
     intakeState currentState = intakeState::Stop;
 
     double jamThreshold = 5;
@@ -20,31 +20,31 @@ namespace intakeController {
         currentState = state;
         switch (state) {
             case intakeState::Intake: {
-                intake.move_velocity(intakeController::INTAKE_VELOCITY);
-                hopper.move_velocity(intakeController::HOPPER_VELOCITY);
-                topScore.move_velocity(-intakeController::TOPSCORE_VELOCITY);
-                pauseEndTime = pros::millis() + 100;
+                intake.move_velocity(intakeController::INTAKE_VELOCITY_MAX);
+                hopper.move_velocity(intakeController::HOPPER_VELOCITY_MAX);
+                topScore.move_velocity(-intakeController::TOPSCORE_VELOCITY_MAX);
+                antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
                 break;
             }
             case intakeState::TopScore : {
-                topScore.move_velocity(intakeController::TOPSCORE_VELOCITY);
-                hopper.move_velocity(-intakeController::HOPPER_VELOCITY);
-                intake.move_velocity(intakeController::INTAKE_VELOCITY);
-                pauseEndTime = pros::millis() + 100;
+                topScore.move_velocity(intakeController::TOPSCORE_VELOCITY_MAX);
+                hopper.move_velocity(-intakeController::HOPPER_VELOCITY_MAX);
+                intake.move_velocity(intakeController::INTAKE_VELOCITY_MAX);
+                antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
                 break;
             }
             case intakeState::MiddleScore: {
-                topScore.move_velocity(-0.5 * intakeController::TOPSCORE_VELOCITY);
-                hopper.move_velocity(-1 * intakeController::HOPPER_VELOCITY);
-                intake.move_velocity(1 * intakeController::INTAKE_VELOCITY);
-                pauseEndTime = pros::millis() + 100;
+                topScore.move_velocity(-0.5 * intakeController::TOPSCORE_VELOCITY_MAX);
+                hopper.move_velocity(-1 * intakeController::HOPPER_VELOCITY_MAX);
+                intake.move_velocity(1 * intakeController::INTAKE_VELOCITY_MAX);
+                antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
                 break;
             }
             case intakeState::BottomScore: {
-                topScore.move_velocity(-0.67 * intakeController::TOPSCORE_VELOCITY);
-                hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY);
-                intake.move_velocity(-0.67 * intakeController::INTAKE_VELOCITY);
-                pauseEndTime = pros::millis() + 100;
+                topScore.move_velocity(-0.67 * intakeController::TOPSCORE_VELOCITY_MAX);
+                hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
+                intake.move_velocity(-0.67 * intakeController::INTAKE_VELOCITY_MAX);
+                antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
                 break;
             }
             case intakeState::Stop: {
@@ -62,13 +62,13 @@ namespace intakeController {
             // TODO: This isn't quite right - I think we want to discard
             // out the middle no matter which direction the hopper is spinning
             if (hopper.get_target_velocity() > 0) {
-                hopper.move_velocity(-HOPPER_VELOCITY);
+                hopper.move_velocity(-HOPPER_VELOCITY_MAX);
                 pros::delay(70);
-                hopper.move_velocity(HOPPER_VELOCITY);
+                hopper.move_velocity(HOPPER_VELOCITY_MAX);
             } else {
-                hopper.move_velocity(HOPPER_VELOCITY);
+                hopper.move_velocity(HOPPER_VELOCITY_MAX);
                 pros::delay(70);
-                hopper.move_velocity(-HOPPER_VELOCITY);
+                hopper.move_velocity(-HOPPER_VELOCITY_MAX);
             }
             rogueBall = false;
             isSkipping = false;
@@ -82,17 +82,16 @@ namespace intakeController {
     }
 
     void update() {
-        if (pros::millis() < pauseEndTime) return;
         if (isColorSorting) {
             switch(isRedAlliance) {
-                case true: rogueBall = fabs(colorSensor.get_hue() - BLUE_HUE) < 20; break;
-                case false: rogueBall = fabs(colorSensor.get_hue() - RED_HUE) < 20; break;
+                case true: rogueBall = fabs(colorSensor.get_hue() - BLUE_HUE) < 20.0; break;
+                case false: rogueBall = fabs(colorSensor.get_hue() - RED_HUE) < 20.0; break;
             }
             if (rogueBall && abs(intake.get_voltage()) > 0) {
                 discardBall();
             }
         }
-        if (isAntiJamming) {
+        if (isAntiJamming && pros::millis() >= antiJamPauseEndTime) {
             if (fabs(hopper.get_actual_velocity()) < jamThreshold && fabs(hopper.get_target_velocity()) > jamThreshold) {
                 isJamming = true;
                 int targetVelo = hopper.get_target_velocity();
