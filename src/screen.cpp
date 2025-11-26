@@ -6,11 +6,13 @@ namespace screenController {
     using namespace devices;
     using namespace utilities;
 
-    int printMode = 1;
+    // ---------- Variables ----------
 
+    int printMode = 1;
     PeriodicTask periodicTask{update, DELAYS[printMode], "Screen Task"};
 
     // ---------- Functions ----------
+    
     void onCenterButton() {
         if (++printMode > MAX_PRINT_MODE) printMode = 0;
         periodicTask.setDelay(DELAYS[printMode]);

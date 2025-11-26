@@ -1,6 +1,9 @@
 #include "intake.h"
 
 namespace intakeController {
+
+    // ---------- Variables ----------
+
     bool isRedAlliance = false;
     bool isColorSorting = true;
     bool isAntiJamming = true;
@@ -10,10 +13,11 @@ namespace intakeController {
     
     int antiJamPauseEndTime = 0; // for pausing antijam/colorsort
     intakeState currentState = intakeState::Stop;
-
     double jamThreshold = 5;
 
     PeriodicTask periodicTask{update, DELAY, "Intake Task"};
+
+    // ---------- Functions ----------
 
     void setIntakeState(intakeState state) {
         if (state == currentState) return; // only for first times

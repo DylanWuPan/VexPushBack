@@ -6,16 +6,20 @@
 #include "liblvgl/llemu.hpp"
 
 namespace screenController {
-    // ---------- Variables ----------
-    extern int printMode;
+    // ---------- Constants ----------
+    
     constexpr int MAX_PRINT_MODE = 1;
     constexpr int DELAYS[] = {20, 1000, 1000}; // different cycle times for the different print modes
 
-    void start();
-    void update();
+    // ---------- Variables ----------
+
+    extern int printMode;
     extern PeriodicTask periodicTask;
 
     // ---------- Functions ----------
+
+    void start();
+    void update();
     void onCenterButton();
     void onLeftButton();
     void onRightButton();

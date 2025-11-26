@@ -15,7 +15,6 @@ using namespace devices;
  */
 void initialize() {	
 	chassis.calibrate();
-	// chassis.setPose(0, 0, 0);
 	
 	screenController::start();
 	intakeController::start();
@@ -85,12 +84,11 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	// intakeController::periodicTask.end();
 	intakeController::isColorSorting = false;
 	
 	while (true) {
 		if (controller.get_digital_new_press(DIGITAL_Y)) {
-			screenController::onCenterButton();
+			screenController::onCenterButton(); // Prints
 		}
 
 		driverControl::opcontrolPneumatics();

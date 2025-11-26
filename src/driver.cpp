@@ -6,29 +6,13 @@ using namespace devices;
 using namespace intakeController;
 
 namespace driverControl {
-	
-	namespace driveCurve {
-
-		double curve(double val) {
-			double valSquared = val*val;
-			double valCubed = valSquared*val;
-			return DRIVE_CURVE[0] * (1 - 3*val + 3*valSquared - valCubed) +
-				DRIVE_CURVE[1] * (3*val - 6*valSquared + 3*valCubed) +
-				DRIVE_CURVE[2] * (3*valSquared - 3*valCubed) +
-				DRIVE_CURVE[3] * valCubed;
-		}
-
-		double driveMap(double val, double scaleOutput) {
-			if (abs(val) - DEAD_ZONE < 0) return 0;
-			int sign = val < 0? -1 : 1;
-			return sign * (MIN_OUTPUT + (scaleOutput - MIN_OUTPUT) *
-				curve(static_cast<double>(abs(val) - DEAD_ZONE) / (SCALE_INPUT - DEAD_ZONE)));
-		}
-	}
+	// ---------- Variables ----------
 
 	bool matchLoaderDown = false;
 	bool topAlignerDown = true;
 	bool isAutoIntaking = true;
+
+	// ---------- Functions ----------
 
 	// Called to control the robot driving during the driver control period
     void opcontrolDrive() {
@@ -84,3 +68,22 @@ namespace driverControl {
     }
 
 } // namespace driverControl
+
+
+namespace driverControl::driveCurve {
+	double curve(double val) {
+		double valSquared = val*val;
+		double valCubed = valSquared*val;
+		return DRIVE_CURVE[0] * (1 - 3*val + 3*valSquared - valCubed) +
+			DRIVE_CURVE[1] * (3*val - 6*valSquared + 3*valCubed) +
+			DRIVE_CURVE[2] * (3*valSquared - 3*valCubed) +
+			DRIVE_CURVE[3] * valCubed;
+	}
+
+	double driveMap(double val, double scaleOutput) {
+		if (abs(val) - DEAD_ZONE < 0) return 0;
+		int sign = val < 0? -1 : 1;
+		return sign * (MIN_OUTPUT + (scaleOutput - MIN_OUTPUT) *
+			curve(static_cast<double>(abs(val) - DEAD_ZONE) / (SCALE_INPUT - DEAD_ZONE)));
+	}
+}
