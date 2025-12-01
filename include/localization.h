@@ -1,119 +1,99 @@
 // #pragma once
-// #include "main.h"
-// #include "vector.h"
-// #include "globals.h"
 // #include "custom-utilities.h"
+// #include "distance-sensor.h"
+// #include "globals.h"
+// #include "main.h"
 // #include "periodic-task.h"
+// #include "position.h"
+// #include "vector.h"
 
 // // A namespace to hold all the code needed for localization
 // namespace localization {
-// 	using namespace devices;
-// 	using namespace utilities;
+//     // -------------------- Constants --------------------
 
-// 	// -------------------- Variables --------------------
-// 	// ---------- Tuning ----------
-// 	// TODO: Tune these values
-// 	constexpr double STD_DEV = 0.2; // inches
-// 	constexpr double MAX_DIST_SINCE_UPDATE = 0.5; // inches
-// 	constexpr int MAX_UPDATE_INTERVAL = 2000; // milliseconds
-//     constexpr double START_POS_STD_DEV = 7.5;
+//     // TODO: Tune these values
+//     // constexpr double STD_DEV = 0.2;             // inches
+//     constexpr double MAX_DIST_SINCE_UPDATE = 2; // inches
+//     constexpr int MAX_UPDATE_INTERVAL = 2000;   // milliseconds
+//                                                 // TODO: edit this
+//     constexpr double START_POS_STD_DEV = 5;     // inches
 
-//     constexpr double DRIVE_NOISE = 0; // TODO: Change
-//     constexpr double ANGLE_NOISE = 0; // TODO: Change
+//     constexpr double DRIVE_NOISE = 0.05; // i.e. 5% (TODO: Change to 25% of velocity?)
+//     constexpr double ANGLE_NOISE = 3.0 * utilities::DEG_TO_RAD;
 
-// 	// TODO: double check offset directions
-// 	constexpr double vertTrackerOffset = -0.4; // TODO // Offset is positive to left
-// 	constexpr double latTrackerOffset = -1.5; // TODO // TODO: find offset direction
-// 	constexpr double vertTrackerWheelDiameter = 2;
-// 	constexpr double latTrackerWheelDiameter = 2;
+//     // TODO: double check offset directions
+//     constexpr double vertTrackerOffset = -0.125;   // TODO inches
+//     constexpr double latTrackerOffset = -1.75;     // TODO inches
+//     constexpr double vertTrackerWheelDiameter = 2; // inches
+//     constexpr double latTrackerWheelDiameter = 2;  // inches
 
-// 	// TODO: Correct these values
-// 	constexpr Vector frontLocalOffset{0,0};
-// 	constexpr Vector backLocalOffset{0,0};
-// 	constexpr Vector rightLocalOffset{0,0};
-// 	constexpr Vector leftLocalOffset{0,0};
-	
-// 	// ---------- Pose ----------
+//     // TODO: Correct these values
+//     // offset according to bot facing east
+//     constexpr Vector frontLocalOffset{7.0, -5.875};   // inches
+//     constexpr Vector backLocalOffset{-7.5, -4.25};    // inches
+//     constexpr Vector rightLocalOffset{-2.1875, -6.5}; // inches
+//     constexpr Vector leftLocalOffset{-2.1875, 6.5};   // inches
 
-// 	// A position and heading for the robot
-//     struct Pose {
-//         Pose() = default;
-//         Pose(double x, double y, double angle)
-//             : pos{x, y}, angle{angle} {}
-		
-// 		Vector pos;
-//         double angle;
-//     };
+//     constexpr double frontTuningConst = 1.0;
+//     constexpr double backTuningConst = 1.0;
+//     constexpr double rightTuningConst = 1.0;
+//     constexpr double leftTuningConst = 1.0;
 
-// 	// ---------- Particles ----------
+//     constexpr size_t NUM_PARTICLES = 100;
 
-// 	// A weighted position for the robot
-//     struct Particle {
-//         Particle() = default;
-//         Particle(double x, double y, double weight)
-//             : pos{x, y}, weight{weight} {}
-		
-// 		Vector pos;
-//         // double angle; Just assuming the inertial sensor is correct
-//         double weight;
-//     };
+//     constexpr int DELAY = 10;
 
-// 	constexpr int NUM_PARTICLES = 300;
-// 	extern std::vector<Particle> particles;
+//     // -------------------- Variables --------------------
 
-// 	// ---------- Robot Pose ----------
+//     // Distributions (to avoid recreating them every loop)
+//     // Not const because they can't be for the function call operator
+//     extern std::uniform_real_distribution<float> magDistribution;
+//     extern std::uniform_real_distribution<float> angleDistribution;
+//     extern std::uniform_real_distribution<float> fieldDistribution;
 
-// 	// extern double robotAngle;
-//     double initialAngle{0};
-// 	// extern Vector robotPos;
+//     extern std::array<Particle, NUM_PARTICLES> particles;
 
-// 	extern double distanceSinceUpdate;
+//     extern double distanceSinceUpdate;
+//     extern int lastUpdateTime;
 
-//     // ---------- Odometry ----------
+//     extern double initialAngle;
 
-// 	extern double prevAngle; // bc of inertial
-// 	extern int prevVertTrackerVal; // I think
-// 	extern int prevLatTrackerVal; // I think
+//     // For Odometry
+//     extern double prevAngle;       // bc of inertial
+//     extern int prevVertTrackerVal; // I think
+//     extern int prevLatTrackerVal;  // I think
 
-// 	// ---------- Task ----------
+//     extern DistanceSensor sensorRight;
+//     extern DistanceSensor sensorLeft;
+//     extern DistanceSensor sensorFront;
+//     extern DistanceSensor sensorBack;
+
+//     extern std::vector<DistanceSensor*> distanceSensors;
+
+//     // The predicted pose in lemlib coordinates
+//     extern Pose predictedPose;
+
+//     extern PeriodicTask periodicTask;
+
+//     // -------------------- Function Definitions --------------------
+//     // ---------- External Interfacing Functions ----------
 
 //     void start(double startX, double startY, double startA);
+
+//     lemlib::Pose getPrediction();
+
+//     // Print the robot's position and angle to the specified line
+//     void logLocalization(int line);
+
+//     // ---------- Algorithm Functions ----------
+
+//     // The update function for the localization task.
 //     void update();
-//     constexpr int DELAY = 10;
-//     extern PeriodicTask periodicTask;
-// 	extern bool first;
 
-// 	// double getRobotAngle();
-
-// 	// -------------------- Function Definitions --------------------
-// 	// ---------- External Interfacing Functions ----------
-
-// 	Pose estimatePose();
-	
-// 	// Manually set the robot's position
-// 	// void setPosition(Vector position);
-// 	// Manually set the robot's position
-// 	// void setPosition(double posX, double posY);
-
-// 	// Print the robot's position and angle to the specified line
-// 	void logLocalization(int line);
-
-// 	// ---------- Algorithm Functions ----------
-//     // Get positiond delta since last frame
+//     // Get the position delta since the last frame using odometry
 //     Vector getOdomPositionDelta();
 
-// 	// Initialize the particles to random positions on the field
-//     void initParticles();
-
-// 	double randomNoise();
-
-// 	// The update function for the localization task.
-// 	// TODO: Change to just use inertial sensor for angle measurement
-// 	void update();
-
-//     double getRobotAngle();
-
-//     // Sets up and starts the localization task
-// 	void start(double startX, double startY, double startA);
+//     // Initialize the particles on the field
+//     void initParticles(double startX, double startY);
 
 // } // namespace localization

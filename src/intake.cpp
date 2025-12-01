@@ -1,7 +1,8 @@
 #include "intake.h"
 
-namespace intakeController {
+using namespace devices;
 
+namespace intakeController {
     // ---------- Variables ----------
 
     bool isRedAlliance = false;
@@ -10,53 +11,53 @@ namespace intakeController {
     bool isSkipping = false;
     bool isJamming = false;
     bool rogueBall = false;
-    
+
     int antiJamPauseEndTime = 0; // for pausing antijam/colorsort
     intakeState currentState = intakeState::Stop;
-    double jamThreshold = 5;
 
     PeriodicTask periodicTask{update, DELAY, "Intake Task"};
 
     // ---------- Functions ----------
 
     void setIntakeState(intakeState state) {
-        if (state == currentState) return; // only for first times
+        if (state == currentState)
+            return; // only for first times
         currentState = state;
         switch (state) {
-            case intakeState::Intake: {
-                intake.move_velocity(intakeController::INTAKE_VELOCITY_MAX);
-                hopper.move_velocity(intakeController::HOPPER_VELOCITY_MAX);
-                topScore.move_velocity(-intakeController::TOPSCORE_VELOCITY_MAX);
-                antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
-                break;
-            }
-            case intakeState::TopScore : {
-                topScore.move_velocity(intakeController::TOPSCORE_VELOCITY_MAX);
-                hopper.move_velocity(-intakeController::HOPPER_VELOCITY_MAX);
-                intake.move_velocity(intakeController::INTAKE_VELOCITY_MAX);
-                antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
-                break;
-            }
-            case intakeState::MiddleScore: {
-                topScore.move_velocity(-0.5 * intakeController::TOPSCORE_VELOCITY_MAX);
-                hopper.move_velocity(-1 * intakeController::HOPPER_VELOCITY_MAX);
-                intake.move_velocity(1 * intakeController::INTAKE_VELOCITY_MAX);
-                antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
-                break;
-            }
-            case intakeState::BottomScore: {
-                topScore.move_velocity(-0.67 * intakeController::TOPSCORE_VELOCITY_MAX);
-                hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
-                intake.move_velocity(-0.67 * intakeController::INTAKE_VELOCITY_MAX);
-                antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
-                break;
-            }
-            case intakeState::Stop: {
-                intake.move_velocity(0);
-                hopper.move_velocity(0);
-                topScore.move_velocity(0);
-                break;
-            }
+        case intakeState::Intake: {
+            intake.move_velocity(intakeController::INTAKE_VELOCITY_MAX);
+            hopper.move_velocity(intakeController::HOPPER_VELOCITY_MAX);
+            topScore.move_velocity(-intakeController::TOPSCORE_VELOCITY_MAX);
+            antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
+            break;
+        }
+        case intakeState::TopScore: {
+            topScore.move_velocity(intakeController::TOPSCORE_VELOCITY_MAX);
+            hopper.move_velocity(-intakeController::HOPPER_VELOCITY_MAX);
+            intake.move_velocity(intakeController::INTAKE_VELOCITY_MAX);
+            antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
+            break;
+        }
+        case intakeState::MiddleScore: {
+            topScore.move_velocity(-0.5 * intakeController::TOPSCORE_VELOCITY_MAX);
+            hopper.move_velocity(-1 * intakeController::HOPPER_VELOCITY_MAX);
+            intake.move_velocity(1 * intakeController::INTAKE_VELOCITY_MAX);
+            antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
+            break;
+        }
+        case intakeState::BottomScore: {
+            topScore.move_velocity(-0.67 * intakeController::TOPSCORE_VELOCITY_MAX);
+            hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
+            intake.move_velocity(-0.67 * intakeController::INTAKE_VELOCITY_MAX);
+            antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
+            break;
+        }
+        case intakeState::Stop: {
+            intake.move_velocity(0);
+            hopper.move_velocity(0);
+            topScore.move_velocity(0);
+            break;
+        }
         }
     }
 
@@ -87,47 +88,51 @@ namespace intakeController {
 
     void update() {
         if (isColorSorting) {
-            switch(isRedAlliance) {
-                case true: rogueBall = fabs(colorSensor.get_hue() - BLUE_HUE) < 20.0; break;
-                case false: rogueBall = fabs(colorSensor.get_hue() - RED_HUE) < 20.0; break;
+            switch (isRedAlliance) {
+            case true:
+                rogueBall = fabs(colorSensor.get_hue() - BLUE_HUE) < 20.0;
+                break;
+            case false:
+                rogueBall = fabs(colorSensor.get_hue() - RED_HUE) < 20.0;
+                break;
             }
             if (rogueBall && abs(intake.get_voltage()) > 0) {
                 discardBall();
             }
         }
         if (isAntiJamming && pros::millis() >= antiJamPauseEndTime) {
-            if (fabs(hopper.get_actual_velocity()) < jamThreshold && fabs(hopper.get_target_velocity()) > jamThreshold) {
+            if (fabs(hopper.get_actual_velocity()) < JAM_THRESHOLD && fabs(hopper.get_target_velocity()) > JAM_THRESHOLD) {
                 isJamming = true;
                 int targetVelo = hopper.get_target_velocity();
-                hopper.move_voltage(targetVelo > 0? -12000 : 12000);
+                hopper.move_voltage(targetVelo > 0 ? -12000 : 12000);
                 pros::delay(70);
-                hopper.move_voltage(targetVelo > 0? 12000 : -12000);
+                hopper.move_voltage(targetVelo > 0 ? 12000 : -12000);
                 pros::delay(10);
                 hopper.move_velocity(targetVelo);
                 isJamming = false;
             }
 
-            if (fabs(intake.get_actual_velocity()) < jamThreshold && fabs(intake.get_target_velocity()) > jamThreshold) {
+            if (fabs(intake.get_actual_velocity()) < JAM_THRESHOLD && fabs(intake.get_target_velocity()) > JAM_THRESHOLD) {
                 isJamming = true;
                 int targetVelo = intake.get_target_velocity();
-                intake.move_voltage(targetVelo > 0? -12000 : 12000);
+                intake.move_voltage(targetVelo > 0 ? -12000 : 12000);
                 pros::delay(70);
-                intake.move_voltage(targetVelo > 0? 12000 : -12000);
+                intake.move_voltage(targetVelo > 0 ? 12000 : -12000);
                 pros::delay(10);
                 intake.move_velocity(targetVelo);
                 isJamming = false;
             }
 
-            if (fabs(topScore.get_actual_velocity()) < jamThreshold && fabs(topScore.get_target_velocity()) > jamThreshold) {
+            if (fabs(topScore.get_actual_velocity()) < JAM_THRESHOLD && fabs(topScore.get_target_velocity()) > JAM_THRESHOLD) {
                 isJamming = true;
                 int targetVelo = topScore.get_target_velocity();
-                topScore.move_voltage(targetVelo > 0? -12000 : 12000);
+                topScore.move_voltage(targetVelo > 0 ? -12000 : 12000);
                 pros::delay(70);
-                topScore.move_voltage(targetVelo > 0? 12000 : -12000);
+                topScore.move_voltage(targetVelo > 0 ? 12000 : -12000);
                 pros::delay(10);
                 topScore.move_velocity(targetVelo);
                 isJamming = false;
             }
         }
     }
-}
+} // namespace intakeController

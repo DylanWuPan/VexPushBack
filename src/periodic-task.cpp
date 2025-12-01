@@ -5,12 +5,13 @@ void PeriodicTask::loopWrapper(void* obj_ptr) {
     instance->loop();
 }
 
-PeriodicTask::PeriodicTask(std::function<void()> update, int delay, char* name)
-: update{update}, enableFlag{false}, time{0}, name{name}, taskDelay{delay} {}
+PeriodicTask::PeriodicTask(std::function<void()> update, int delay, const char* name)
+    : update{update}, enableFlag{false}, time{0}, name{name}, taskDelay{delay} {}
 
 void PeriodicTask::loop() {
     while (true) {
-        if (!enableFlag) return;
+        if (!enableFlag)
+            return;
         update();
 
         task->delay_until(&time, taskDelay);
@@ -30,9 +31,8 @@ void PeriodicTask::end() {
     enableFlag = false;
 }
 
-
 uint32_t PeriodicTask::getTimeSinceLastUpdate() {
-    return time;
+    return pros::millis() - time;
 }
 
 void PeriodicTask::setDelay(int delay) {

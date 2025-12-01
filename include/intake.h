@@ -1,12 +1,10 @@
 #pragma once
-#include "main.h"
-#include "globals.h"
 #include "auton.h"
+#include "globals.h"
+#include "main.h"
 #include "periodic-task.h"
 
 namespace intakeController {
-    using namespace devices;
-
     // ---------- Types ----------
 
     enum class intakeState {
@@ -19,16 +17,18 @@ namespace intakeController {
 
     // ---------- Constants ----------
 
-    constexpr int DELAY = 5;
+    constexpr int DELAY = 5; // msec
 
     constexpr int BLUE_HUE = 240;
     constexpr int RED_HUE = 350;
 
-	constexpr int INTAKE_VELOCITY_MAX = 600;
-	constexpr int HOPPER_VELOCITY_MAX = 200;
-	constexpr int TOPSCORE_VELOCITY_MAX = 200;
+    constexpr int INTAKE_VELOCITY_MAX = 600;   // rpm
+    constexpr int HOPPER_VELOCITY_MAX = 200;   // rpm
+    constexpr int TOPSCORE_VELOCITY_MAX = 200; // rpm
 
-    constexpr int ANTI_JAM_PAUSE_DURATION = 100;
+    constexpr int ANTI_JAM_PAUSE_DURATION = 100; // msec
+
+    constexpr double JAM_THRESHOLD = 5.0; // rpm
 
     // ---------- Variables ----------
 
@@ -41,7 +41,6 @@ namespace intakeController {
 
     extern int antiJamPauseEndTime; // for pausing antijam
     extern intakeState currentState;
-    extern double jamThreshold;
 
     extern PeriodicTask periodicTask;
 
@@ -53,4 +52,4 @@ namespace intakeController {
 
     void start();
     void update();
-}
+} // namespace intakeController

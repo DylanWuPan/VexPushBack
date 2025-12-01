@@ -1,47 +1,38 @@
 #pragma once
-#include "main.h"
 #include "globals.h"
+#include "main.h"
 
 namespace auton {
-	// Supporting Commands
-	// void runIntake();
-	// void stopIntake();
-	// void runIntakeNoHopper();
-	// void runOuttake();
-	// void runTopScore();
-	// void runMiddleScore();
-	// void runBottomScore();
-	// Auton Routes
-	void autonSkills();
-	void autonSAWP();
-	void autonLongMiddleLeft();
-	void autonLongMiddleRight();
-	void autonLeft7Long();
-	void autonRight7Long();
+	void autonTest();
+    void autonSkills();
+    void autonSAWP();
+    void autonLongMiddleLeft();
+    void autonLongMiddleRight();
+    void autonLeft7Long();
+    void autonRight7Long();
 } // namespace auton
 
-
 // FOR SELECTING AUTON MODE BEFORE MATCH
-namespace auton::autonSelect { 
-	enum class autonMode {
-		SKILLS,
-		SAWP,
-		LONG_MIDDLE_LEFT,
-		LONG_MIDDLE_RIGHT,
-		LEFT_7_LONG,
-		RIGHT_7_LONG,
-		END // for incrementation
-	};
+namespace auton::autonSelect {
+    enum class autonMode {
+        SKILLS,
+        SAWP,
+        LONG_MIDDLE_LEFT,
+        LONG_MIDDLE_RIGHT,
+        LEFT_7_LONG,
+        RIGHT_7_LONG,
+        END // for incrementation
+    };
 
-	constexpr int NUM_AUTONS = static_cast<int>(autonMode::END);
+    constexpr int NUM_AUTONS = static_cast<int>(autonMode::END);
 
-	extern autonMode mode;
+    extern autonMode mode;
 
-	inline autonMode getAutonMode() {
-		return mode;
-	}
+    inline autonMode getAutonMode() {
+        return mode;
+    }
 
-	void printAutonMode(int line);
-	void incrementAutonMode();
-	void decrementAutonMode();
-} // namespace autonSelect
+    void printAutonMode(int line);
+    void incrementAutonMode();
+    void decrementAutonMode();
+} // namespace auton::autonSelect

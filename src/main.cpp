@@ -1,9 +1,10 @@
 #include "main.h"
-#include "globals.h"
-#include "driver.h"
-#include "screen.h"
 #include "auton.h"
+#include "driver.h"
+#include "globals.h"
 #include "intake.h"
+#include "localization.h"
+#include "screen.h"
 
 using namespace devices;
 
@@ -13,11 +14,11 @@ using namespace devices;
  * All other competition modes are blocked by initialize; it is recommended
  * to keep execution time for this mode under a few seconds.
  */
-void initialize() {	
-	chassis.calibrate();
-	
-	screenController::start();
-	intakeController::start();
+void initialize() {
+    chassis.calibrate();
+
+    screenController::start();
+    intakeController::start();
 }
 
 /**
@@ -50,24 +51,24 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	auton::autonLeft7Long();
-	// switch (auton::autonSelect::getAutonMode()) {
-	// 	case auton::autonSelect::autonMode::LONG_MIDDLE_LEFT:
-	// 		auton::autonLongMiddleLeft();
-	// 		break;
-	// 	case auton::autonSelect::autonMode::LONG_MIDDLE_RIGHT:
-	// 		auton::autonLongMiddleRight();
-	// 		break; 
-	// 	case auton::autonSelect::autonMode::LEFT_7_LONG:
-	// 		auton::autonLeft7Long();
-	// 		break;
-	// 	case auton::autonSelect::autonMode::RIGHT_7_LONG:
-	// 		auton::autonRight7Long();
-	// 		break;
-	// 	case auton::autonSelect::autonMode::SKILLS:
-	// 		auton::autonSkills();
-	// 		break;
-	// }
+    // auton::autonTest();
+    // switch (auton::autonSelect::getAutonMode()) {
+    // 	case auton::autonSelect::autonMode::LONG_MIDDLE_LEFT:
+    // 		auton::autonLongMiddleLeft();
+    // 		break;
+    // 	case auton::autonSelect::autonMode::LONG_MIDDLE_RIGHT:
+    // 		auton::autonLongMiddleRight();
+    // 		break;
+    // 	case auton::autonSelect::autonMode::LEFT_7_LONG:
+    // 		auton::autonLeft7Long();
+    // 		break;
+    // 	case auton::autonSelect::autonMode::RIGHT_7_LONG:
+    // 		auton::autonRight7Long();
+    // 		break;
+    // 	case auton::autonSelect::autonMode::SKILLS:
+    // 		auton::autonSkills();
+    // 		break;
+    // }
 }
 
 /**
@@ -84,16 +85,17 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	intakeController::isColorSorting = false;
-	
-	while (true) {
-		if (controller.get_digital_new_press(DIGITAL_Y)) {
-			screenController::onCenterButton(); // Prints
-		}
+	localization::start(55.75, 22.75, 0); // like SAWP Auton (for testing)
+    intakeController::isColorSorting = false;
 
-		driverControl::opcontrolPneumatics();
-		driverControl::opcontrolIntake();
-		driverControl::opcontrolDrive();
-		pros::delay(20);
-	}
+    while (true) {
+        if (controller.get_digital_new_press(DIGITAL_Y)) {
+            screenController::onCenterButton(); // Prints
+        }
+
+        driverControl::opcontrolPneumatics();
+        driverControl::opcontrolIntake();
+        driverControl::opcontrolDrive();
+        pros::delay(20);
+    }
 }

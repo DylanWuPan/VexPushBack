@@ -1,123 +1,131 @@
 
 // #include "localization.h"
 
-// // Maybe not the best way to do this, but a macro makes things more convenient
-// #define x(particle) particle.pos.x
-// #define y(particle) particle.pos.y
+// using namespace devices;
+// using namespace utilities;
 
 // // A namespace to hold all the code needed for localization
 // namespace localization {
-// 	using namespace devices;
-// 	using namespace utilities;
+//     // -------------------- Variables --------------------
 
-// 	// ---------- Particles ----------
+//     // Distributions (to avoid recreating them every loop)
+//     // Not const because they can't be for the function call operator
+//     std::uniform_real_distribution<float> magDistribution(1 - DRIVE_NOISE, 1 + DRIVE_NOISE);
+//     std::uniform_real_distribution<float> angleDistribution(-ANGLE_NOISE, ANGLE_NOISE);
+//     std::uniform_real_distribution<float> fieldDistribution(-HALF_FIELD_SIZE, HALF_FIELD_SIZE);
 
-// 	std::vector<Particle> particles;
+//     std::array<Particle, NUM_PARTICLES> particles;
 
-// 	// ---------- Robot Pose ----------
+//     double distanceSinceUpdate{0};
+//     int lastUpdateTime{0};
 
-// 	// double robotAngle{0};
-//     // double initialAngle{0};
-// 	// Vector robotPos{};
+//     // For odometry
+//     double prevAngle{0};
+//     int prevVertTrackerVal{0};
+//     int prevLatTrackerVal{0};
 
-// 	double distanceSinceUpdate{0};
+//     DistanceSensor sensorRight{rightLocalOffset, -HALF_PI, rightTuningConst, distanceRight};
+//     DistanceSensor sensorLeft{leftLocalOffset, HALF_PI, leftTuningConst, distanceLeft};
+//     DistanceSensor sensorFront{frontLocalOffset, 0, frontTuningConst, distanceRight};
+//     DistanceSensor sensorBack{backLocalOffset, M_PI, backTuningConst, distanceBack};
 
-//     // ---------- Odometry ----------
+//     std::vector<DistanceSensor*> distanceSensors{&sensorRight, &sensorLeft, &sensorFront, &sensorBack};
 
-// 	double prevAngle = 0; // bc of inertial
-// 	int prevVertTrackerVal = 0; // I think
-// 	int prevLatTrackerVal = 0; // I think
-
-// 	// ---------- Task ----------
+//     // The predicted pose in lemlib coordinates
+//     Pose predictedPose;
 
 //     PeriodicTask periodicTask{update, DELAY, "Localization Task"};
-// 	bool first = true;
 
-// 	double getRobotAngle();
+//     // -------------------- Functions --------------------
+//     // ---------- External Interfacing Functions ----------
 
-// 	// -------------------- Function Definitions --------------------
-// 	// ---------- External Interfacing Functions ----------
+//     // Sets up and starts the localization task with x-y position in inches
+//     // and angle in cw degrees, north=0
+//     void start(double startX, double startY, double startA) {
+//         vertTracker.reset();
+//         latTracker.reset();
+//         inertial.tare();
+//         inertial.set_heading(angleRangeZeroTo360(startA - 90)); // cw degrees, east=0
 
-// 	Pose estimatePose() {
-// 		double x = 0;
-//         double y = 0;
-//         // NOTE: Different than other angle calc because of Lemlib
-// 		double angle = -inertial.get_heading(); // TODO: Odometry get angle + Check this
-// 		for (const Particle& p : particles) {
-// 			x += x(p) * p.weight;
-// 			y += y(p) * p.weight;
-// 		}
-// 		return Pose{x, y, angle};
-// 	}
-	
-// 	// // Manually set the robot's position
-// 	// void setPosition(Vector position) {
-// 	// 	robotPos = position;
-// 	// }
-// 	// // Manually set the robot's position
-// 	// void setPosition(double posX, double posY) {
-// 	// 	robotPos.x = posX;
-// 	// 	robotPos.y = posY;
-// 	// }
+//         initParticles(startX - 72, startY - 72);
 
-// 	// Print the robot's position and angle to the specified line
-// 	void logLocalization(int line) {
-//         Pose pose = estimatePose();
-// 		pros::lcd::print(line, "x: %g, y: %g, angle: %g", round(x(pose) * 100) * 0.01, round(y(pose) * 100) * 0.01, pose.angle);
-// 	}
+//         periodicTask.start();
+//     }
 
-// 	// ---------- Algorithm Functions ----------
+//     lemlib::Pose getPrediction() {
+//         return lemlib::Pose{
+//             static_cast<float>(predictedPose.pos.x),
+//             static_cast<float>(predictedPose.pos.y),
+//             static_cast<float>(predictedPose.angle)};
+//     }
 
-// 	// Initialize the particles to random positions on the field
+//     // Print the robot's position and angle to the specified line
+//     void logLocalization(int line) {
+//         lemlib::Pose pose = getPrediction();
+//         pros::lcd::print(
+//             line,
+//             "x: %g, y: %g, angle: %g",
+//             round(pose.x * 100) * 0.01,
+//             round(pose.y * 100) * 0.01,
+//             round(pose.theta * 100) * 0.01);
+//     }
+
+//     // ---------- Algorithm Functions ----------
+
+//     // Initialize the particles to random positions on the field
 //     void initParticles(double startX, double startY) {
-// 		particles.clear(); // safety
-//         for (int i = 0; i < NUM_PARTICLES; ++i) {
-//             Particle p;
-//             x(p) = std::clamp(getRandomGaussian(startX, START_POS_STD_DEV), 0.0, 144.0);
-//             y(p) = std::clamp(getRandomGaussian(startY, START_POS_STD_DEV), 0.0, 144.0);;
-//             // p.angle = getRandomDoubleInRange(0.0, 360.0);
+//         std::normal_distribution xDistribution{startX, START_POS_STD_DEV};
+//         std::normal_distribution yDistribution{startY, START_POS_STD_DEV};
+//         for (size_t i = 0; i < NUM_PARTICLES; ++i) {
+//             Particle p{};
+//             // TODO: Would probably be better to do this in polar coordinates
+//             p.pos.x = std::clamp(xDistribution(utilities::getGenerator()), -HALF_FIELD_SIZE, HALF_FIELD_SIZE);
+//             p.pos.y = std::clamp(yDistribution(utilities::getGenerator()), -HALF_FIELD_SIZE, HALF_FIELD_SIZE);
 //             p.weight = 1.0 / NUM_PARTICLES;
-//             particles.push_back(p);
+//             particles[i] = p;
 //         }
 //     }
 
-// 	double randomNoise() {
-// 		return (rand() % 10 - 5) * 0.1;
-// 	}
-
-//     Vector getOdomLocalPositionDelta() {
-//         // Odometry
-//         // TODO: Adjust if there is no prev value for trackers and stuff???
-//         const double angleVal = 360 - inertial.get_heading(); // TODO: might have to adjust for wraparound
-//         double angleDelta = (angleVal - prevAngle) * DEG_TO_RAD;
-//         if (angleDelta > 180) angleDelta -= 360; // possibly unnecesary
-//         if (angleDelta < -180) angleDelta += 360;
+//     // Get the position delta since the last frame using odometry
+//     Vector getOdomPositionDelta() {
+//         const double angleVal = 360.0 - inertial.get_heading();  // ccw degrees, east=0
+//         double angleDelta = (angleVal - prevAngle) * DEG_TO_RAD; // ccw radians, east=0 (relative)
+//         // shortcut because the robot is unlikely to turn >360 degrees in a frame
+//         if (angleDelta > M_PI)
+//             angleDelta -= TWO_PI;
+//         if (angleDelta < -M_PI)
+//             angleDelta += TWO_PI;
 
 //         const int vertTrackerVal = vertTracker.get_angle();
 //         int vertTrackerDelta = vertTrackerVal - prevVertTrackerVal; // might have to adjust for wraparound
-//         if (vertTrackerDelta > 18000) vertTrackerDelta -= 36000;
-//         if (vertTrackerDelta < -18000) vertTrackerDelta += 36000;
+//         if (vertTrackerDelta > 18000)
+//             vertTrackerDelta -= 36000;
+//         if (vertTrackerDelta < -18000)
+//             vertTrackerDelta += 36000;
 //         const double vertTrackerDeltaDist = vertTrackerDelta * 0.01 * DEG_TO_RAD * vertTrackerWheelDiameter * 0.5;
 
 //         const int latTrackerVal = latTracker.get_angle();
 //         int latTrackerDelta = latTrackerVal - prevLatTrackerVal; // might have to adjust for wraparound
-//         if (latTrackerDelta > 18000) latTrackerDelta -= 36000;
-//         if (latTrackerDelta < -18000) latTrackerDelta += 36000;
+//         if (latTrackerDelta > 18000)
+//             latTrackerDelta -= 36000;
+//         if (latTrackerDelta < -18000)
+//             latTrackerDelta += 36000;
 //         const double latTrackerDeltaDist = latTrackerDelta * 0.01 * DEG_TO_RAD * latTrackerWheelDiameter * 0.5;
 
 //         double localDeltaX;
 //         double localDeltaY;
-//         // TODO: no angle change case (infinite radius, divide by zero)
-//         if (angleDelta == 0) { // will this work??
+
+//         if (angleDelta == 0) {
 //             localDeltaX = vertTrackerDeltaDist;
 //             localDeltaY = latTrackerDeltaDist;
 //         } else {
-//             localDeltaX = 2 * sin(angleDelta/2) * (vertTrackerDeltaDist / angleDelta - vertTrackerOffset); // double check
+//             localDeltaX = 2 * sin(angleDelta * 0.5) * (vertTrackerDeltaDist / angleDelta - vertTrackerOffset); // double check
 //             // turn radius is latTrackerDeltaDist / angleDelta - latTrackerOffset
-//             localDeltaY = 2 * sin(angleDelta/2) * (latTrackerDeltaDist / angleDelta - latTrackerOffset);
+//             localDeltaY = 2 * sin(angleDelta * 0.5) * (latTrackerDeltaDist / angleDelta - latTrackerOffset);
 //         }
 
-//         const double avrgAngle = ((prevAngle + angleVal) * 0.5) * DEG_TO_RAD; // TODO: is this the angle we want to rotate by???
+//         // TODO: is this the angle we want to rotate by???
+//         const double avrgAngle = ((prevAngle + angleVal) * 0.5) * DEG_TO_RAD; // ccw radians, east=0
 //         const double globalDeltaX = localDeltaX * cos(avrgAngle) - localDeltaY * sin(avrgAngle);
 //         const double globalDeltaY = localDeltaY * cos(avrgAngle) + localDeltaX * sin(avrgAngle);
 
@@ -126,153 +134,125 @@
 //         prevLatTrackerVal = latTrackerVal;
 
 //         return Vector{globalDeltaX, globalDeltaY};
+//         // Could probably return the local delta and then rotate later
 //         // return Vector{localDeltaX, localDeltaY};
 //     }
 
-// 	// The update function for the localization task.
-// 	// TODO: Change to just use inertial sensor for angle measurement
-// 	void update() {
-// 		// ---------- Move Particles With Robot ----------
-// 		// NOTE: Using uniform noise instead of gaussian noise for speed
-// 		// TODO: Tune noise generation
-// 		// std::pair<double, double> posDeltaPolar = utilities::toPolar(getOdomPositionDelta());
-// 		Vector posDelta = getOdomPositionDelta();
+//     // The update function for the localization task.
+//     void update() {
+//         // ---------- Move Particles With Robot ----------
+//         double inertialMeasurement = inertial.get_heading(); // cw degrees, east=0
+//         Vector posDelta = getOdomPositionDelta();
 //         double posDeltaMagnitude = posDelta.magnitude();
-        
-//         // std::uniform_real_distribution magDistribution(posDeltaPolar.first - DRIVE_NOISE * posDeltaPolar.first,
-//         //                                                posDeltaPolar.first + DRIVE_NOISE * posDeltaPolar.first);
-//         std::uniform_real_distribution magDistribution(1 - DRIVE_NOISE, 1 + DRIVE_NOISE);
-//         std::uniform_real_distribution angleDistribution(-ANGLE_NOISE, ANGLE_NOISE);
-        
-// 		for (auto &p : particles) {
-//             // Vector posDeltaCartesianNoisy = toCartesian(std::pair{
-//             //     magDistribution(utilities::getGenerator()),
-//             //     angleDistribution(utilities::getGenerator()),
-//             // });
+
+//         for (Particle& p : particles) {
+//             // NOTE: Using uniform noise instead of gaussian noise for speed
 //             Vector posDeltaCartesianNoisy =
 //                 rotate(posDelta, angleDistribution(utilities::getGenerator())) * magDistribution(utilities::getGenerator());
-// 			x(p) += posDeltaCartesianNoisy.x;
-// 			y(p) += posDeltaCartesianNoisy.y;
-// 		}
+//             // TODO: unnecessary
+// 			p.pos.x += posDeltaCartesianNoisy.x;
+//             p.pos.y += posDeltaCartesianNoisy.y;
+//         }
 
-// 		// ---------- Check if Update Necessary ----------
-// 		// Won't update unless the robot has travelled a certain distance
-// 		// TODO: Could make better by incorporating angular movement too
-// 		distanceSinceUpdate += posDeltaMagnitude; // Not super accurate, but easy
-// 		if (distanceSinceUpdate < MAX_DIST_SINCE_UPDATE && periodicTask.getTimeSinceLastUpdate() < MAX_UPDATE_INTERVAL) {
-// 			return;
-// 		}
-		
-// 		// ---------- Re-weight Particles Based on Sensor Measurements   ----------
-// 		double sensorFront = distanceFront.get() * MM_TO_INCHES;
-// 		double sensorBack = distanceBack.get() * MM_TO_INCHES;
-// 		double sensorRight = distanceRight.get() * MM_TO_INCHES;
-// 		double sensorLeft = distanceLeft.get() * MM_TO_INCHES;
-//         // TODO: Check if inertial increases CW or CCW
-// 		double angle = -inertial.get_heading() * DEG_TO_RAD; // TODO: Get angle
+//         // ---------- Check if Update Necessary ----------
+//         // Won't update unless the robot has travelled a certain distance
+//         // TODO: Could make better by incorporating angular movement too
+//         distanceSinceUpdate += posDeltaMagnitude; // Not super accurate, but easy
 
-//         // TODO: This might be expensive, so instead could calculate the offset only once with a constant angle
-//         Vector offsetFront = rotate(frontLocalOffset, angle);
-//         Vector offsetBack = rotate(backLocalOffset, angle);
-//         Vector offsetRight = rotate(rightLocalOffset, angle);
-//         Vector offsetLeft = rotate(leftLocalOffset, angle);
+//         int time = pros::millis();
+// 		// pros::lcd::print(3, "dist: %g, time: %i", distanceSinceUpdate, periodicTask.getTimeSinceLastUpdate());
+//         if (distanceSinceUpdate < MAX_DIST_SINCE_UPDATE && time - lastUpdateTime < MAX_UPDATE_INTERVAL) {
+//             // Re-estimate pose
+//             double xSum = 0.0, ySum = 0.0; // TODO: could use vector here
 
-// 		double totalWeight = 0.0;
-// 		for (Particle& p : particles) {
-//             if (x(p) < 0.0 || x(p) > FIELD_SIZE || y(p) < 0.0 || y(p) > FIELD_SIZE) {
-//                 // put particle back in field
+//             for (Particle& p : particles) {
+//                 xSum += p.pos.x;
+//                 ySum += p.pos.y;
+//             }
+// 			// pros::lcd::print(1, "x: %g, y: %g", xSum, ySum);
+// 			// pros::lcd::print(2, "x: %g, y: %g", xSum / NUM_PARTICLES, ySum / NUM_PARTICLES);
+
+//             predictedPose = Pose{
+//                 72.0 + (xSum / static_cast<double>(NUM_PARTICLES)),
+//                 72.0 + (ySum / static_cast<double>(NUM_PARTICLES)),
+//                 angleRangeZeroTo360(90.0 + inertialMeasurement) // cw degrees, north=0
+//             };
+//             chassis.setPose(getPrediction());
+
+//             return;
+//         }
+
+//         distanceSinceUpdate = 0;
+//         lastUpdateTime = time;
+
+//         // ---------- Re-weight Particles Based on Sensor Measurements   ----------
+//         for (DistanceSensor* sensor : distanceSensors) {
+//             sensor->update();
+//         }
+// 		// for (auto it = distanceSensors.begin(); it != distanceSensors.end(); ++it) {
+// 		// 	(*(*it)).update();
+// 		// }
+
+//         // TODO: might not be necessary to keep this in [0, 2pi) range
+//         double angle = (360.0 - inertialMeasurement) * DEG_TO_RAD; // ccw radians, east=0
+
+//         double totalWeight = 0.0;
+//         for (Particle& p : particles) {
+//             if (p.pos.x < -HALF_FIELD_SIZE || p.pos.x > HALF_FIELD_SIZE || p.pos.y < -HALF_FIELD_SIZE || p.pos.y > HALF_FIELD_SIZE) {
+//                 p.pos.x = fieldDistribution(utilities::getGenerator());
+//                 p.pos.y = fieldDistribution(utilities::getGenerator());
 //             }
 
-// 			// TODO: raycast including field elements
-// 			double expectedFront = rayWallIntersectDistance(p.pos + offsetFront, angle);
-// 			double expectedBack = rayWallIntersectDistance(p.pos + offsetBack, angle + M_PI);
-// 			double expectedRight = rayWallIntersectDistance(p.pos + offsetRight, angle - M_PI / 2);
-// 			double expectedLeft = rayWallIntersectDistance(p.pos + offsetLeft, angle + M_PI / 2);
-		
-// 			// TODO: Could instead compute a different standard deviation based off the distance measurement
-// 			// The VEX specs say that the measurement will be within 5% error
-// 			// TODO: 2654e uses a cheaper version of the gaussian distribution
-// 			// TODO: Utilize the getConfidence method on the sensors to improve probability
-// 			double probFront = gaussian(sensorFront - expectedFront, STD_DEV);
-// 			double probBack = gaussian(sensorBack - expectedBack, STD_DEV);
-// 			double probRight = gaussian(sensorFront - expectedFront, STD_DEV);
-// 			double probLeft = gaussian(sensorBack - expectedBack, STD_DEV);
-// 			// TODO: Is multiplying the probabilities the best way to do this?
-// 			p.weight = probFront * probBack * probRight * probLeft;
-// 			totalWeight += p.weight;
-// 		}
-
-// 		// ---------- Normalize Particle Weights ----------
-// 		for (Particle& p : particles) {
-// 			p.weight /= totalWeight;
-// 		}
-
-// 		// ---------- Resample Particles ----------
-// 		// TODO: 2654e uses a different sampling method to help preserve variety
-// 		// std::vector<Particle> newParticles;
-// 		// double index = rand() % NUM_PARTICLES;
-// 		// double beta = 0.0;
-// 		// double maxWeight = 0.0;
-// 		// for (const Particle& p : particles) {
-// 		// 	if (p.weight > maxWeight) maxWeight = p.weight;
-// 		// }
-	
-// 		// for (int i = 0; i < NUM_PARTICLES; i++) {
-// 		// 	beta += (rand() / RAND_MAX) * 2.0 * maxWeight;
-// 		// 	while (beta > particles[static_cast<int>(index)].weight) {
-// 		// 		beta -= particles[static_cast<int>(index)].weight;
-// 		// 		index = fmod((index + 1), NUM_PARTICLES);
-// 		// 	}
-// 		// 	newParticles.push_back(particles[static_cast<int>(index)]);
-// 		// }
-// 		// particles = newParticles;
-
-
-//         std::vector<Particle> oldParticles = particles;
-//         // for (size_t i = 0; i < particles.size(); i++) {
-// 		// 	oldParticles[i] = particles[i];
-// 		// }
-
-//         double avgWeight = totalWeight / NUM_PARTICLES;
-// 		// std::uniform_real_distribution distribution(0.0, avgWeight);
-// 		const double randWeight = utilities::getRandomDoubleInRange(0.0, avgWeight);
-
-// 		size_t j = 0;
-// 		auto cumulativeWeight = 0.0;
-
-// 		double xSum = 0.0, ySum = 0.0;
-
-// 		for (size_t i = 0; i < NUM_PARTICLES; i++) {
-// 			const auto weight = static_cast<double>(i) * avgWeight + randWeight;
-
-// 			while (cumulativeWeight < weight) {
-// 				if (j >= particles.size()) {
-// 					break;
-// 				}
-// 				cumulativeWeight += particles[j].weight;
-// 				j++;
+//             // TODO: add case for if no sensor gets a valid measurement?
+//             p.weight = 1.0; // TODO: increase for precision
+//             for (int i = 0; i < distanceSensors.size(); ++i) {
+// 				DistanceSensor* sensor = distanceSensors[i];
+//                 // TODO: avoid recalculating the offset in probability function (because constant angle)
+//                 std::optional<double> probability = sensor->probability(p, angle);
+//                 if (probability.has_value()) {
+// 					if (p.pos.x == particles[0].pos.x && p.pos.y == particles[0].pos.y && i == 3) {
+// 						pros::lcd::print(2, "val: %g", probability.value());
+// 					}
+//                     p.weight *= probability.value();
+//                 }
+//             }
+// 			if (p.pos.x == particles[0].pos.x && p.pos.y == particles[0].pos.y) {
+// 				pros::lcd::print(1, "weight: %g", p.weight);
 // 			}
+//             totalWeight += p.weight;
+//         }
 
-// 			particles[i].pos.x = oldParticles[j-1].pos.x;
-// 			particles[i].pos.y = oldParticles[j-1].pos.y;
+//         // ---------- Resample Particles ----------
+//         std::array<Particle, NUM_PARTICLES> oldParticles = particles;
 
-// 			xSum += particles[i].pos.x;
-// 			ySum += particles[i].pos.y;
-// 		}
+//         double avgWeight = totalWeight / static_cast<double>(NUM_PARTICLES);
+//         const double randWeight = utilities::getRandomDoubleInRange(0.0, avgWeight);
 
-// 		// prediction = Eigen::Vector3f(xSum / static_cast<float>(L), ySum / static_cast<float>(L), angle.getValue());
-// 	}
+//         size_t j = 0;
+//         double cumulativeWeight = 0.0;
 
-//     // Sets up and starts the localization task with x-y position in inches and angle in radians
-// 	void start(double startX, double startY, double startA) {
-// 		vertTracker.reset();
-// 		latTracker.reset();
-// 		inertial.tare();
-//         inertial.set_heading(startA); // TODO: Check
+//         double xSum = 0.0, ySum = 0.0; // TODO: could use vector here
 
-//         initParticles(startX, startY);
+//         for (size_t i = 0; i < NUM_PARTICLES; ++i) {
+//             const double weight = static_cast<double>(i) * avgWeight + randWeight;
 
-// 		periodicTask.start();
-// 	}
+//             while (cumulativeWeight < weight) {
+//                 if (j >= NUM_PARTICLES)
+//                     break;
+//                 cumulativeWeight += particles[j++].weight;
+//             }
 
+//             particles[i].pos = oldParticles[j - 1].pos;
+
+//             xSum += particles[i].pos.x;
+//             ySum += particles[i].pos.y;
+//         }
+
+//         predictedPose = Pose{
+//             72.0 + (xSum / static_cast<double>(NUM_PARTICLES)),
+//             72.0 + (ySum / static_cast<double>(NUM_PARTICLES)),
+//             angleRangeZeroTo360(90.0 + inertialMeasurement) // cw degrees, north=0
+//         };
+//         chassis.setPose(getPrediction());
+//     }
 // } // namespace localization

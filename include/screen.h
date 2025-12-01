@@ -1,15 +1,15 @@
 #pragma once
-#include "main.h"
-#include "globals.h"
 #include "auton.h"
-#include "periodic-task.h"
+#include "globals.h"
 #include "liblvgl/llemu.hpp"
+#include "main.h"
+#include "periodic-task.h"
 
 namespace screenController {
     // ---------- Constants ----------
-    
-    constexpr int MAX_PRINT_MODE = 1;
-    constexpr int DELAYS[] = {20, 1000, 1000}; // different cycle times for the different print modes
+
+    constexpr int MAX_PRINT_MODE = 2;
+    constexpr int DELAYS[] = {30, 1000, 100}; // different cycle times for the different print modes
 
     // ---------- Variables ----------
 
@@ -23,4 +23,4 @@ namespace screenController {
     void onCenterButton();
     void onLeftButton();
     void onRightButton();
-}
+} // namespace screenController
