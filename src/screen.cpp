@@ -9,7 +9,7 @@ using namespace utilities;
 namespace screenController {
     // ---------- Variables ----------
 
-    int printMode = 2;
+    int printMode = 1;
     PeriodicTask periodicTask{update, DELAYS[printMode], "Screen Task"};
 
     // ---------- Functions ----------
@@ -68,15 +68,15 @@ namespace screenController {
         }
         case 2: {
             // Blank screen for other prints
-            pros::lcd::clear_line(5);
-            pros::lcd::clear_line(6);
-            pros::lcd::clear_line(7);
+            // pros::lcd::clear_line(5);
+            // pros::lcd::clear_line(6);
+            // pros::lcd::clear_line(7);
  
-            lemlib::Pose robotPos = chassis.getPose();
-            pros::lcd::print(4, "x: %g, y: %g, angle: %g", round(robotPos.x * 100) * 0.01, round(robotPos.y * 100) * 0.01, round(robotPos.theta * 100) * 0.01);
-            localization::logLocalization(5 );
-            pros::lcd::print(6, "DIST FRONT: %f  BACK: %f", getDistance(distanceSensor::Front), getDistance(distanceSensor::Back));
-            pros::lcd::print(7, "DIST RIGHT: %f  LEFT: %f", getDistance(distanceSensor::Right), getDistance(distanceSensor::Left));
+            // lemlib::Pose robotPos = chassis.getPose();
+            // pros::lcd::print(4, "x: %g, y: %g, angle: %g", round(robotPos.x * 100) * 0.01, round(robotPos.y * 100) * 0.01, round(robotPos.theta * 100) * 0.01);
+            // // localization::logLocalization(5 );
+            // pros::lcd::print(6, "DIST FRONT: %f  BACK: %f", getDistance(distanceSensor::Front), getDistance(distanceSensor::Back));
+            // pros::lcd::print(7, "DIST RIGHT: %f  LEFT: %f", getDistance(distanceSensor::Right), getDistance(distanceSensor::Left));
         }
         }
     }

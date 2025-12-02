@@ -85,7 +85,7 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-	localization::start(55.75, 22.75, 0); // like SAWP Auton (for testing)
+	// localization::start(55.75, 22.75, 0); // like SAWP Auton (for testing)
     intakeController::isColorSorting = false;
 
     while (true) {

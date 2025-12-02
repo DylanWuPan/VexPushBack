@@ -3,7 +3,7 @@
 
 class PeriodicTask {
   public:
-    PeriodicTask(std::function<void()> update, int delay, const char* name);
+    PeriodicTask(std::function<void()> update, int delay, char* name);
     void loop();
     void start();
     void end();

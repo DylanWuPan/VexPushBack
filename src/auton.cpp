@@ -9,10 +9,10 @@ using namespace devices;
 namespace auton {
     // Auton Routes
 	void autonTest() {
-        localization::start(55.75, 22.75, 0); // like SAWP Auton
+        // localization::start(55.75, 22.75, 0); // like SAWP Auton
 
-        chassis.moveToPoint(46, 55, 1000, {.maxSpeed = 80});
-        intakeController::setIntakeState(intakeController::intakeState::Intake);
+        // chassis.moveToPoint(46, 55, 1000, {.maxSpeed = 80});
+        // intakeController::setIntakeState(intakeController::intakeState::Intake);
 	}
 
     void autonSkills() {
