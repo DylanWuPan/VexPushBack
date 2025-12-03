@@ -23,6 +23,7 @@ namespace devices {
 
     extern pros::adi::DigitalOut matchLoader;
     extern pros::adi::DigitalOut topAligner;
+    extern pros::adi::DigitalOut wing;    
 
     extern pros::Optical colorSensor;
 

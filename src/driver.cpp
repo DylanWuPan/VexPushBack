@@ -11,6 +11,7 @@ namespace driverControl {
     bool matchLoaderDown = false;
     bool topAlignerDown = true;
     bool isAutoIntaking = false;
+    bool wingDown = true;
 
     // ---------- Functions ----------
 
@@ -39,6 +40,18 @@ namespace driverControl {
             matchLoaderDown = !matchLoaderDown;
             matchLoader.set_value(matchLoaderDown);
             topAligner.set_value(topAlignerDown);
+        }
+
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+            topAligner.set_value(true);
+            matchLoader.set_value(false);
+            topAlignerDown = false;
+            matchLoaderDown = true;
+        }
+
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+            wing.set_value(!wingDown);
+            wingDown = !wingDown;
         }
     }
 

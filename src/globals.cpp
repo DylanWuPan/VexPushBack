@@ -23,6 +23,7 @@ namespace devices {
 
     pros::adi::DigitalOut matchLoader{'H', false};
     pros::adi::DigitalOut topAligner{'G', false};
+    pros::adi::DigitalOut wing{'F', false};
 
     pros::Optical colorSensor{17};
 
