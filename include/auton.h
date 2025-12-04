@@ -10,6 +10,7 @@ namespace auton {
     void autonSAWP2();
     void autonLongMiddleLeft();
     void autonLongMiddleRight();
+    void autonMiddleLongRight();
     void autonLeft7Long();
     void autonRight7Long();
 } // namespace auton

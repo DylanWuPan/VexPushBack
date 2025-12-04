@@ -455,6 +455,7 @@ namespace auton {
 
     void autonLongMiddleRight() {
         chassis.setPose(88.5, 22, 90);
+        chassis.setPose(utilities::getPoseWithDistance(true, true, false, false));
 
         // Match load
         chassis.moveToPoint(121, 22, 4000, {.maxSpeed = 80});
@@ -462,11 +463,13 @@ namespace auton {
         matchLoader.set_value(true);
         intakeController::setIntakeState(intakeController::intakeState::Intake);
         chassis.moveToPoint(122, 3, 1200 /*, {.minSpeed = 60}*/);
-        pros::delay(1200);
+        pros::delay(1050);
 
         // Long goal
-        chassis.moveToPoint(122, 24, 2000, {.forwards = false});
-        chassis.moveToPose(122, 40.5, 1, 3000);
+        chassis.moveToPoint(122, 24, 1000, {.forwards = false});
+        pros::delay(1100);
+        chassis.setPose(utilities::getPoseWithDistance(false, false, false, true));
+        chassis.moveToPose(120, 40.5, 1, 3000);
         pros::delay(500);
         topAligner.set_value(true);
         pros::delay(100);
@@ -474,7 +477,9 @@ namespace auton {
         pros::delay(400);
         intakeController::setIntakeState(intakeController::intakeState::TopScore);
         pros::delay(2000);
-        chassis.moveToPoint(120, 42, 500);
+        chassis.moveToPoint(120, 42, 500, {.maxSpeed = 20});
+        pros::delay(550);
+        chassis.setPose(120, 39, chassis.getPose().theta);
 
         // DESCORE
         // chassis.moveToPoint(124, 30, 4000, {.forwards = false, .maxSpeed = 80});
@@ -483,12 +488,58 @@ namespace auton {
         // chassis.moveToPoint(124, 40.5, 2000, {.minSpeed = 120});
 
         // MidGoal
-        chassis.moveToPoint(124, 24, 4000, {.forwards = false});
+        chassis.moveToPoint(120, 24, 1000, {.forwards = false});
+        pros::delay(1050);
+        chassis.setPose(utilities::getPoseWithDistance(false, true, true, false));
         intakeController::setIntakeState(intakeController::intakeState::Intake);
         topAligner.set_value(false);
-        chassis.moveToPose(84, 62, -43, 6000, {.maxSpeed = 40});
-        pros::delay(2500);
+        chassis.moveToPose(82, 63, -45, 6000, {.maxSpeed = 40});
+        pros::delay(3000);
         intakeController::setIntakeState(intakeController::intakeState::BottomScore);
+
+        pros::delay(5000);
+    }
+
+    void autonMiddleLongRight(){
+        chassis.setPose(88.25, 22.75, 0);
+        chassis.setPose(utilities::getPoseWithDistance(false, true, true, false));
+
+        // 3 BALLS
+        chassis.moveToPoint(98, 55, 4000, {.maxSpeed = 50});
+        intakeController::setIntakeState(intakeController::intakeState::Intake);
+        pros::delay(1400);
+        matchLoader.set_value(true);
+
+        // MIDDLE GOAL
+        chassis.moveToPose(83, 62, -45, 4000, {.maxSpeed = 60});
+        pros::delay(1000);
+        matchLoader.set_value(false);
+        pros::delay(1000);
+        intakeController::setIntakeState(intakeController::intakeState::BottomScore);
+        pros::delay(2000);
+        intakeController::setIntakeState(intakeController::intakeState::Intake);
+
+        // MATCHLOAD
+        chassis.moveToPoint(120, 24, 4000, {.forwards = false, .maxSpeed = 80});
+        chassis.turnToHeading(180, 1000, {.maxSpeed = 80});
+        pros::delay(1050);
+        matchLoader.set_value(true);
+        chassis.setPose(utilities::getPoseWithDistance(false, false, false, true));
+        chassis.moveToPoint(120, 10, 1100);
+        pros::delay(1100);
+
+        // LONG GOAL
+        chassis.moveToPoint(122, 24, 1000, {.forwards = false});
+        pros::delay(1100);
+        chassis.setPose(utilities::getPoseWithDistance(false, false, false, true));
+        chassis.moveToPose(120, 40.5, 1, 3000);
+        pros::delay(500);
+        topAligner.set_value(true);
+        pros::delay(100);
+        matchLoader.set_value(false);
+        pros::delay(400);
+        intakeController::setIntakeState(intakeController::intakeState::TopScore);
+
 
         pros::delay(5000);
     }
