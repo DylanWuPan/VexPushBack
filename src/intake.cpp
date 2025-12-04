@@ -12,7 +12,7 @@ namespace intakeController {
     bool isJamming = false;
     bool rogueBall = false;
 
-    int pauseEndTime = 0; // for pausing antijam/colorsort
+    int antiJamPauseEndTime = 0; // for pausing antijam/colorsort
     intakeState currentState = intakeState::Stop;
 
     PeriodicTask periodicTask{update, DELAY, "Intake Task"};
@@ -28,28 +28,28 @@ namespace intakeController {
             intake.move_velocity(intakeController::INTAKE_VELOCITY_MAX);
             hopper.move_velocity(intakeController::HOPPER_VELOCITY_MAX);
             topScore.move_velocity(-intakeController::TOPSCORE_VELOCITY_MAX);
-            pauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
+            antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
             break;
         }
         case intakeState::TopScore: {
             topScore.move_velocity(intakeController::TOPSCORE_VELOCITY_MAX);
             hopper.move_velocity(-intakeController::HOPPER_VELOCITY_MAX);
             intake.move_velocity(intakeController::INTAKE_VELOCITY_MAX);
-            pauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
+            antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
             break;
         }
         case intakeState::MiddleScore: {
             topScore.move_velocity(-0.5 * intakeController::TOPSCORE_VELOCITY_MAX);
             hopper.move_velocity(-1 * intakeController::HOPPER_VELOCITY_MAX);
             intake.move_velocity(1 * intakeController::INTAKE_VELOCITY_MAX);
-            pauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
+            antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
             break;
         }
         case intakeState::BottomScore: {
             topScore.move_velocity(-0.67 * intakeController::TOPSCORE_VELOCITY_MAX);
             hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
             intake.move_velocity(-0.67 * intakeController::INTAKE_VELOCITY_MAX);
-            pauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
+            antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
             break;
         }
         case intakeState::Stop: {
@@ -83,11 +83,13 @@ namespace intakeController {
                 break;
             }
             // case intakeState::TopScore: {
-            //     pros::delay(25);
+            //     pros::delay(60);
             //     topScore.move_velocity(-TOPSCORE_VELOCITY_MAX);
-            //     pros::delay(165);
-            //     topScore.move_velocity(TOPSCORE_VELOCITY_MAX);
-            //     pauseEndTime = pros::millis() + 60;
+            //     hopper.move_velocity(0);
+            //     pros::delay(100);
+            //     setIntakeState(currentState, true);
+            //     pros::delay(10);
+            //     // antiJamPauseEndTime = pros::millis() + 60;
             //     break;
             // }
             // case intakeState::MiddleScore: {
@@ -129,7 +131,7 @@ namespace intakeController {
                 discardBall();
             }
         }
-        if (isAntiJamming && pros::millis() >= pauseEndTime) {
+        if (isAntiJamming && pros::millis() >= antiJamPauseEndTime) {
             if (fabs(hopper.get_actual_velocity()) < JAM_THRESHOLD && fabs(hopper.get_target_velocity()) > JAM_THRESHOLD) {
                 isJamming = true;
                 int targetVelo = hopper.get_target_velocity();
@@ -137,7 +139,8 @@ namespace intakeController {
                 pros::delay(70);
                 hopper.move_voltage(targetVelo > 0 ? 12000 : -12000);
                 pros::delay(10);
-                hopper.move_velocity(targetVelo);
+                // hopper.move_velocity(targetVelo);
+                setIntakeState(currentState, true);
                 isJamming = false;
             }
 
@@ -148,7 +151,8 @@ namespace intakeController {
                 pros::delay(70);
                 intake.move_voltage(targetVelo > 0 ? 12000 : -12000);
                 pros::delay(10);
-                intake.move_velocity(targetVelo);
+                // intake.move_velocity(targetVelo);
+                setIntakeState(currentState, true);
                 isJamming = false;
             }
 
@@ -159,7 +163,8 @@ namespace intakeController {
                 pros::delay(70);
                 topScore.move_voltage(targetVelo > 0 ? 12000 : -12000);
                 pros::delay(10);
-                topScore.move_velocity(targetVelo);
+                // topScore.move_velocity(targetVelo);
+                setIntakeState(currentState, true);
                 isJamming = false;
             }
         }
