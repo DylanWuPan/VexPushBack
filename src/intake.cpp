@@ -46,7 +46,6 @@ namespace intakeController {
             break;
         }
         case intakeState::BottomScore: {
-            topScore.move_velocity(-1 * intakeController::TOPSCORE_VELOCITY_MAX);
             hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
             intake.move_velocity(-1 * intakeController::INTAKE_VELOCITY_MAX);
             antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
