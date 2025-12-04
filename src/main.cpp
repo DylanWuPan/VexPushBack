@@ -51,6 +51,7 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
+    auton::autonLeft7Long();
     // auton::autonTest();
     // switch (auton::autonSelect::getAutonMode()) {
     // 	case auton::autonSelect::autonMode::LONG_MIDDLE_LEFT:

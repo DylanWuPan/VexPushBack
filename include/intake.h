@@ -46,7 +46,7 @@ namespace intakeController {
 
     // ---------- Functions ----------
 
-    void setIntakeState(intakeState state);
+    void setIntakeState(intakeState state, bool allowRepeat = false);
 
     void discardBall();
 

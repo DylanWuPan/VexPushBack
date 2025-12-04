@@ -3,7 +3,7 @@
 #include "main.h"
 
 namespace auton {
-	void autonTest();
+	// void autonTest();
     void autonSkills();
     void autonSAWP();
     void autonLongMiddleLeft();
