@@ -611,7 +611,7 @@ namespace auton {
         chassis.moveToPose(84.25, 60.75, -45, 2100);
         pros::delay(1000);
         matchLoader.set_value(false);
-        pros::delay(120);
+        pros::delay(150);
         intakeController::setIntakeState(intakeController::intakeState::BottomScore);
         pros::delay(1000);
         intakeController::setIntakeState(intakeController::intakeState::Intake);
@@ -747,7 +747,7 @@ namespace auton {
 
 // FOR SELECTING AUTON MODE BEFORE MATCH
 namespace auton::autonSelect {
-    autonMode mode(autonMode::SKILLS);
+    autonMode mode(autonMode::MIDDLE_LONG_RIGHT);
 
     void printAutonMode(int line) {
         switch (mode) {

@@ -51,7 +51,8 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-    auton::autonSkills();
+    auton::autonMiddleLongRight();
+    // auton::autonSkills();
     // switch (auton::autonSelect::mode) {
     //     case auton::autonSelect::autonMode::SKILLS: {
     //         auton::autonSkills();
@@ -103,7 +104,7 @@ void autonomous() {
  */
 void opcontrol() {
     // localization::start(55.75, 22.75, 0); // like SAWP Auton (for testing)
-    intakeController::isColorSorting = false;
+    intakeController::isColorSorting = true;
 
     while (true) {
         if (controller.get_digital_new_press(DIGITAL_Y)) {
