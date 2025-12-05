@@ -51,41 +51,41 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-    // auton::autonSkills();
-    switch (auton::autonSelect::mode) {
-        case auton::autonSelect::autonMode::SKILLS: {
-            auton::autonSkills();
-            break;
-        }
-        case auton::autonSelect::autonMode::SAWP: {
-            auton::autonSAWP();
-            break;
-        }
-        case auton::autonSelect::autonMode::MIDDLE_LONG_LEFT: {
-            auton::autonMiddleLongLeft();
-            break;
-        }
-        case auton::autonSelect::autonMode::MIDDLE_LONG_RIGHT: {
-            auton::autonMiddleLongRight();
-            break;
-        }
-        case auton::autonSelect::autonMode::LONG_MIDDLE_LEFT: {
-            auton::autonLongMiddleLeft();
-            break;
-        }
-        case auton::autonSelect::autonMode::LONG_MIDDLE_RIGHT: {
-            auton::autonLongMiddleRight();
-            break;
-        }
-        case auton::autonSelect::autonMode::LEFT_7_LONG: {
-            auton::autonLeft7Long();
-            break;
-        }
-        case auton::autonSelect::autonMode::RIGHT_7_LONG: {
-            auton::autonRight7Long();
-            break;
-        }
-    }
+    auton::autonSkills();
+    // switch (auton::autonSelect::mode) {
+    //     case auton::autonSelect::autonMode::SKILLS: {
+    //         auton::autonSkills();
+    //         break;
+    //     }
+    //     case auton::autonSelect::autonMode::SAWP: {
+    //         auton::autonSAWP();
+    //         break;
+    //     }
+    //     case auton::autonSelect::autonMode::MIDDLE_LONG_LEFT: {
+    //         auton::autonMiddleLongLeft();
+    //         break;
+    //     }
+    //     case auton::autonSelect::autonMode::MIDDLE_LONG_RIGHT: {
+    //         auton::autonMiddleLongRight();
+    //         break;
+    //     }
+    //     case auton::autonSelect::autonMode::LONG_MIDDLE_LEFT: {
+    //         auton::autonLongMiddleLeft();
+    //         break;
+    //     }
+    //     case auton::autonSelect::autonMode::LONG_MIDDLE_RIGHT: {
+    //         auton::autonLongMiddleRight();
+    //         break;
+    //     }
+    //     case auton::autonSelect::autonMode::LEFT_7_LONG: {
+    //         auton::autonLeft7Long();
+    //         break;
+    //     }
+    //     case auton::autonSelect::autonMode::RIGHT_7_LONG: {
+    //         auton::autonRight7Long();
+    //         break;
+    //     }
+    // }
 }
 
 /**
@@ -107,8 +107,7 @@ void opcontrol() {
 
     while (true) {
         if (controller.get_digital_new_press(DIGITAL_Y)) {
-            // screenController::onCenterButton(); // Prints
-            autonomous();
+            screenController::onCenterButton(); // Prints
         }
 
         driverControl::opcontrolPneumatics();

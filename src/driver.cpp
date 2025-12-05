@@ -49,7 +49,7 @@ namespace driverControl {
             matchLoaderDown = true;
         }
 
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_DOWN)) {
+        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
             wing.set_value(!wingDown);
             wingDown = !wingDown;
         }
@@ -74,7 +74,7 @@ namespace driverControl {
             intakeController::setIntakeState(intakeState::MiddleScore);
         } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // BOTTOM SCORE
             intakeController::setIntakeState(intakeState::BottomScore);
-        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2) || isAutoIntaking) { // INTAKE
+        } else if (/* controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2) || */ isAutoIntaking) { // INTAKE
             intakeController::setIntakeState(intakeState::Intake);
         } else {
             intakeController::setIntakeState(intakeState::Stop);
