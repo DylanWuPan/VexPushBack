@@ -34,67 +34,67 @@ namespace utilities {
         if (front) {
             double measurement = getDistance(distanceSensor::Front) * std::cos(angleDifference);
             switch (dir) {
-            case direction::North:
-                pose.y = 144 - measurement;
-                break;
-            case direction::East:
-                pose.x = 144 - measurement;
-                break;
-            case direction::South:
-                pose.y = measurement;
-                break;
-            case direction::West:
-                pose.x = measurement;
-                break;
+                case direction::North:
+                    pose.y = 144 - measurement;
+                    break;
+                case direction::East:
+                    pose.x = 144 - measurement;
+                    break;
+                case direction::South:
+                    pose.y = measurement;
+                    break;
+                case direction::West:
+                    pose.x = measurement;
+                    break;
             }
         } else if (back) {
             double measurement = getDistance(distanceSensor::Back) * std::cos(angleDifference);
             switch (dir) {
-            case direction::North:
-                pose.y = measurement;
-                break;
-            case direction::East:
-                pose.x = measurement;
-                break;
-            case direction::South:
-                pose.y = 144 - measurement;
-                break;
-            case direction::West:
-                pose.x = 144 - measurement;
-                break;
+                case direction::North:
+                    pose.y = measurement;
+                    break;
+                case direction::East:
+                    pose.x = measurement;
+                    break;
+                case direction::South:
+                    pose.y = 144 - measurement;
+                    break;
+                case direction::West:
+                    pose.x = 144 - measurement;
+                    break;
             }
         }
         if (right) {
             double measurement = getDistance(distanceSensor::Right) * std::cos(angleDifference);
             switch (dir) {
-            case direction::North:
-                pose.x = 144 - measurement;
-                break;
-            case direction::East:
-                pose.y = measurement;
-                break;
-            case direction::South:
-                pose.x = measurement;
-                break;
-            case direction::West:
-                pose.y = 144 - measurement;
-                break;
+                case direction::North:
+                    pose.x = 144 - measurement;
+                    break;
+                case direction::East:
+                    pose.y = measurement;
+                    break;
+                case direction::South:
+                    pose.x = measurement;
+                    break;
+                case direction::West:
+                    pose.y = 144 - measurement;
+                    break;
             }
         } else if (left) {
             double measurement = getDistance(distanceSensor::Left) * std::cos(angleDifference);
             switch (dir) {
-            case direction::North:
-                pose.x = measurement;
-                break;
-            case direction::East:
-                pose.y = 144 - measurement;
-                break;
-            case direction::South:
-                pose.x = 144 - measurement;
-                break;
-            case direction::West:
-                pose.y = measurement;
-                break;
+                case direction::North:
+                    pose.x = measurement;
+                    break;
+                case direction::East:
+                    pose.y = 144 - measurement;
+                    break;
+                case direction::South:
+                    pose.x = 144 - measurement;
+                    break;
+                case direction::West:
+                    pose.y = measurement;
+                    break;
             }
         }
         return pose;
@@ -105,22 +105,22 @@ namespace utilities {
         double offset;
 
         switch (sensor) {
-        case distanceSensor::Front:
-            activeSensor = &devices::distanceFront;
-            offset = 7.0;
-            break;
-        case distanceSensor::Right:
-            activeSensor = &devices::distanceRight;
-            offset = 6.5;
-            break;
-        case distanceSensor::Back:
-            activeSensor = &devices::distanceBack;
-            offset = 7.5;
-            break;
-        case distanceSensor::Left:
-            activeSensor = &devices::distanceLeft;
-            offset = 6.5;
-            break;
+            case distanceSensor::Front:
+                activeSensor = &devices::distanceFront;
+                offset = 7.0;
+                break;
+            case distanceSensor::Right:
+                activeSensor = &devices::distanceRight;
+                offset = 6.5;
+                break;
+            case distanceSensor::Back:
+                activeSensor = &devices::distanceBack;
+                offset = 7.5;
+                break;
+            case distanceSensor::Left:
+                activeSensor = &devices::distanceLeft;
+                offset = 6.5;
+                break;
         }
 
         double sum{0.0};

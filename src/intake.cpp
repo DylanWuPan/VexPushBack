@@ -24,39 +24,39 @@ namespace intakeController {
             return; // only for first times
         currentState = state;
         switch (state) {
-        case intakeState::Intake: {
-            intake.move_velocity(intakeController::INTAKE_VELOCITY_MAX);
-            hopper.move_velocity(intakeController::HOPPER_VELOCITY_MAX);
-            topScore.move_velocity(-intakeController::TOPSCORE_VELOCITY_MAX);
-            antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
-            break;
-        }
-        case intakeState::TopScore: {
-            topScore.move_velocity(intakeController::TOPSCORE_VELOCITY_MAX);
-            hopper.move_velocity(-intakeController::HOPPER_VELOCITY_MAX);
-            intake.move_velocity(intakeController::INTAKE_VELOCITY_MAX);
-            antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
-            break;
-        }
-        case intakeState::MiddleScore: {
-            topScore.move_velocity(-0.5 * intakeController::TOPSCORE_VELOCITY_MAX);
-            hopper.move_velocity(-1 * intakeController::HOPPER_VELOCITY_MAX);
-            intake.move_velocity(1 * intakeController::INTAKE_VELOCITY_MAX);
-            antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
-            break;
-        }
-        case intakeState::BottomScore: {
-            hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
-            intake.move_velocity(-1 * intakeController::INTAKE_VELOCITY_MAX);
-            antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
-            break;
-        }
-        case intakeState::Stop: {
-            intake.move_velocity(0);
-            hopper.move_velocity(0);
-            topScore.move_velocity(0);
-            break;
-        }
+            case intakeState::Intake: {
+                intake.move_velocity(intakeController::INTAKE_VELOCITY_MAX);
+                hopper.move_velocity(intakeController::HOPPER_VELOCITY_MAX);
+                topScore.move_velocity(-intakeController::TOPSCORE_VELOCITY_MAX);
+                antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
+                break;
+            }
+            case intakeState::TopScore: {
+                topScore.move_velocity(intakeController::TOPSCORE_VELOCITY_MAX);
+                hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
+                intake.move_velocity(intakeController::INTAKE_VELOCITY_MAX);
+                antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
+                break;
+            }
+            case intakeState::MiddleScore: {
+                topScore.move_velocity(-0.5 * intakeController::TOPSCORE_VELOCITY_MAX);
+                hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
+                intake.move_velocity(1 * intakeController::INTAKE_VELOCITY_MAX);
+                antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
+                break;
+            }
+            case intakeState::BottomScore: {
+                hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
+                intake.move_velocity(-1 * intakeController::INTAKE_VELOCITY_MAX);
+                antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
+                break;
+            }
+            case intakeState::Stop: {
+                intake.move_velocity(0);
+                hopper.move_velocity(0);
+                topScore.move_velocity(0);
+                break;
+            }
         }
     }
 
@@ -75,35 +75,35 @@ namespace intakeController {
             //     hopper.move_velocity(-HOPPER_VELOCITY_MAX);
             // }
             switch (currentState) {
-            case intakeState::Intake: {
-                hopper.move_velocity(-HOPPER_VELOCITY_MAX);
-                pros::delay(60);
-                setIntakeState(currentState, true);
-                break;
-            }
-            // case intakeState::TopScore: {
-            //     pros::delay(60);
-            //     topScore.move_velocity(-TOPSCORE_VELOCITY_MAX);
-            //     hopper.move_velocity(0);
-            //     pros::delay(100);
-            //     setIntakeState(currentState, true);
-            //     pros::delay(10);
-            //     // antiJamPauseEndTime = pros::millis() + 60;
-            //     break;
-            // }
-            // case intakeState::MiddleScore: {
-            //     pros::delay(20);
-            //     topScore.move_velocity(TOPSCORE_VELOCITY_MAX);
-            //     pros::delay(30);
-            //     topScore.move_velocity(-0.5 * TOPSCORE_VELOCITY_MAX);
-            //     break;
-            // }
-            // case intakeState::BottomScore: {
-            //     intake.move_velocity(INTAKE_VELOCITY_MAX);
-            //     pros::delay(70);
-            //     intake.move_velocity(-0.67 * INTAKE_VELOCITY_MAX);
-            //     break;
-            // }
+                case intakeState::Intake: {
+                    hopper.move_velocity(-HOPPER_VELOCITY_MAX);
+                    pros::delay(60);
+                    setIntakeState(currentState, true);
+                    break;
+                }
+                // case intakeState::TopScore: {
+                //     pros::delay(60);
+                //     topScore.move_velocity(-TOPSCORE_VELOCITY_MAX);
+                //     hopper.move_velocity(0);
+                //     pros::delay(100);
+                //     setIntakeState(currentState, true);
+                //     pros::delay(10);
+                //     // antiJamPauseEndTime = pros::millis() + 60;
+                //     break;
+                // }
+                    // case intakeState::MiddleScore: {
+                    //     pros::delay(20);
+                    //     topScore.move_velocity(TOPSCORE_VELOCITY_MAX);
+                    //     pros::delay(30);
+                    //     topScore.move_velocity(-0.5 * TOPSCORE_VELOCITY_MAX);
+                    //     break;
+                    // }
+                    // case intakeState::BottomScore: {
+                    //     intake.move_velocity(INTAKE_VELOCITY_MAX);
+                    //     pros::delay(70);
+                    //     intake.move_velocity(-0.67 * INTAKE_VELOCITY_MAX);
+                    //     break;
+                    // }
             }
             rogueBall = false;
             isSkipping = false;
@@ -119,12 +119,12 @@ namespace intakeController {
     void update() {
         if (isColorSorting) {
             switch (isRedAlliance) {
-            case true:
-                rogueBall = fabs(colorSensor.get_hue() - BLUE_HUE) < 20.0;
-                break;
-            case false:
-                rogueBall = fabs(colorSensor.get_hue() - RED_HUE) < 20.0;
-                break;
+                case true:
+                    rogueBall = fabs(colorSensor.get_hue() - BLUE_HUE) < 20.0;
+                    break;
+                case false:
+                    rogueBall = fabs(colorSensor.get_hue() - RED_HUE) < 20.0;
+                    break;
             }
             if (rogueBall && abs(intake.get_voltage()) > 0) {
                 discardBall();
@@ -135,7 +135,7 @@ namespace intakeController {
                 isJamming = true;
                 int targetVelo = hopper.get_target_velocity();
                 hopper.move_voltage(targetVelo > 0 ? -12000 : 12000);
-                pros::delay(70);
+                pros::delay(100);
                 hopper.move_voltage(targetVelo > 0 ? 12000 : -12000);
                 pros::delay(10);
                 // hopper.move_velocity(targetVelo);

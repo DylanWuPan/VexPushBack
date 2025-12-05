@@ -18,7 +18,7 @@
 
 // // gets the probability of getting the measurement given position and angle (in ccw radians, east=0)
 // std::optional<double> DistanceSensor::probability(const Particle& particle, double angle) {
-//     if (exit) 
+//     if (exit)
 //         return std::nullopt;
 
 //     double sensorAngle = angle + angleOffset; // ccw radians, east=0

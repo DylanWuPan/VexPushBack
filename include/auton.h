@@ -10,6 +10,7 @@ namespace auton {
     void autonSAWP2();
     void autonLongMiddleLeft();
     void autonLongMiddleRight();
+    void autonMiddleLongLeft();
     void autonMiddleLongRight();
     void autonLeft7Long();
     void autonRight7Long();
@@ -20,8 +21,10 @@ namespace auton::autonSelect {
     enum class autonMode {
         SKILLS,
         SAWP,
-        LONG_MIDDLE_LEFT,
+        MIDDLE_LONG_LEFT,
+        MIDDLE_LONG_RIGHT,
         LONG_MIDDLE_RIGHT,
+        LONG_MIDDLE_LEFT,
         LEFT_7_LONG,
         RIGHT_7_LONG,
         END // for incrementation
