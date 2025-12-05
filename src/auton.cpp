@@ -527,7 +527,7 @@ namespace auton {
         pros::delay(1000);
         matchLoader.set_value(false);
         pros::delay(100);
-        intakeController::setIntakeState(intakeController::intakeState::BottomScore);
+        intakeController::setIntakeState(intakeController::intakeState::MiddleScore);
         pros::delay(1000);
         intakeController::setIntakeState(intakeController::intakeState::Intake);
 
