@@ -5,7 +5,7 @@ using namespace devices;
 namespace intakeController {
     // ---------- Variables ----------
 
-    bool isRedAlliance = false;
+    bool isRedAlliance = true;
     bool isColorSorting = true;
     bool isAntiJamming = true;
     bool isSkipping = false;
