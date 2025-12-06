@@ -9,7 +9,7 @@ using namespace utilities;
 namespace screenController {
     // ---------- Variables ----------
 
-    int printMode = 1;
+    int printMode = 2;
     PeriodicTask periodicTask{update, DELAYS[printMode], "Screen Task"};
 
     // ---------- Functions ----------

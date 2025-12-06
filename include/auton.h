@@ -5,6 +5,7 @@
 namespace auton {
 	// void autonTest();
     void autonSkills();
+    void autonSkillsLeft();
     void autonSkills2();
     void autonSAWP();
     void autonSAWP2();

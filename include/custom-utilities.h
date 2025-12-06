@@ -32,7 +32,7 @@ namespace utilities {
         Left
     };
 
-    constexpr double RESET_ANGLE_THRESHOLD = 10;
+    constexpr double RESET_ANGLE_THRESHOLD = 45.0;
     lemlib::Pose getPoseWithDistance(bool front, bool right, bool back, bool left);
     double getDistance(distanceSensor sensor);
 

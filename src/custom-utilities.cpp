@@ -103,32 +103,38 @@ namespace utilities {
     double getDistance(distanceSensor sensor) {
         pros::Distance* activeSensor = nullptr;
         double offset;
+        // double tuningConst;
 
         switch (sensor) {
             case distanceSensor::Front:
                 activeSensor = &devices::distanceFront;
                 offset = 7.0;
+                // tuningConst = 0.96;
                 break;
             case distanceSensor::Right:
                 activeSensor = &devices::distanceRight;
                 offset = 6.5;
+                // tuningConst = 0.95;
                 break;
             case distanceSensor::Back:
                 activeSensor = &devices::distanceBack;
                 offset = 7.5;
+                // tuningConst = 1.0;
                 break;
             case distanceSensor::Left:
                 activeSensor = &devices::distanceLeft;
                 offset = 6.5;
+                // tuningConst = 1.0;
                 break;
         }
 
         double sum{0.0};
-        for (int i = 0; i < 50; ++i) {
+        for (int i = 0; i < 10; ++i) {
             sum += activeSensor->get_distance();
         }
 
-        return offset + sum / 50 * MM_TO_INCHES;
+        return offset + sum * 0.1 * MM_TO_INCHES;
+        // 0.194 = 0.97 / 5
     }
 
     // ---------- Math ----------
