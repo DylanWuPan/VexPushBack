@@ -52,11 +52,13 @@ void competition_initialize() {}
  */
 void autonomous() {
     auton::autonMiddleLongRight();
+    // auton::autonMiddleLongLeft();
+    // auton::autonRight7Long();
     // auton::autonSkills();
     // switch (auton::autonSelect::mode) {
     //     case auton::autonSelect::autonMode::SKILLS: {
     //         auton::autonSkills();
-    //         break;
+    //         break;,m
     //     }
     //     case auton::autonSelect::autonMode::SAWP: {
     //         auton::autonSAWP();
