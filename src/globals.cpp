@@ -6,7 +6,7 @@ namespace devices {
     pros::Rotation latTracker{4};
     pros::Rotation vertTracker{-19};
 
-    pros::Distance distanceRight{16};
+    pros::Distance distanceRight{14};
     pros::Distance distanceLeft{12};
     pros::Distance distanceFront{7};
     pros::Distance distanceBack{18};

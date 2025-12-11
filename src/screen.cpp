@@ -68,15 +68,20 @@ namespace screenController {
             }
             case 2: {
                 // Blank screen for other prints
-                // pros::lcd::clear_line(5);
-                // pros::lcd::clear_line(6);
-                // pros::lcd::clear_line(7);
+                pros::lcd::clear_line(1);
+                pros::lcd::clear_line(2);
+                pros::lcd::clear_line(6);
+                pros::lcd::clear_line(7);
 
                 // lemlib::Pose robotPos = chassis.getPose();
                 // pros::lcd::print(4, "x: %g, y: %g, angle: %g", round(robotPos.x * 100) * 0.01, round(robotPos.y * 100) * 0.01, round(robotPos.theta * 100) * 0.01);
-                // // localization::logLocalization(5 );
+                localization::logLocalization(1);
                 // pros::lcd::print(6, "DIST FRONT: %f  BACK: %f", getDistance(distanceSensor::Front), getDistance(distanceSensor::Back));
                 // pros::lcd::print(7, "DIST RIGHT: %f  LEFT: %f", getDistance(distanceSensor::Right), getDistance(distanceSensor::Left));
+                // pros::lcd::print(6, "DIST FRONT: %f  BACK: %f", distanceFront.get() * MM_TO_INCHES, distanceBack.get() * MM_TO_INCHES);
+                // pros::lcd::print(7, "DIST RIGHT: %f  LEFT: %f", distanceRight.get() * MM_TO_INCHES, distanceLeft.get() * MM_TO_INCHES);
+                pros::lcd::print(6, "DIST FRONT: %f  BACK: %f", localization::sensorFront.measurement, localization::sensorBack.measurement);
+                pros::lcd::print(7, "DIST RIGHT: %f  LEFT: %f", localization::sensorRight.measurement, localization::sensorLeft.measurement);
             }
         }
     }

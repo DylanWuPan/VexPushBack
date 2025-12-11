@@ -10,7 +10,7 @@ namespace driverControl {
 
     bool matchLoaderDown = false;
     bool topAlignerDown = true;
-    bool isAutoIntaking = true;
+    bool isAutoIntaking = false;
     bool wingDown = true;
 
     // ---------- Functions ----------

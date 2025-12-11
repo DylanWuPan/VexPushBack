@@ -155,6 +155,13 @@ namespace utilities {
 
     // TODO: improve bounding methods with modular arithmetic
 
+    // Quicker bounding to [-pi, pi) if the angle is within [-3pi,3pi)
+    double lazyBoundPNPi(double angle) {
+        if (angle > M_PI) angle -= TWO_PI;
+        if (angle < -M_PI) angle += TWO_PI;
+        return angle;
+    }
+
     // Bound an angle to [-pi, pi)
     double angleRangePNPi(double angle) {
         return angle - std::floor((angle + M_PI) / (TWO_PI)) * (TWO_PI);
@@ -169,10 +176,15 @@ namespace utilities {
     }
     // Bound an angle to [0, 360)
     double angleRangeZeroTo360(double angle) {
+        // return angle < 0? std::fmod(angle, 360) + 360 : std::fmod(angle, 360);
         return angle - std::floor(angle / (360)) * (360);
     }
 
     // ----- Vectors -----
+    
+    double dot(Vector p1, Vector p2) {
+        return p1.x * p2.x + p1.y * p2.y;
+    }
 
     // Gives the distance between two Vectors
     double dist(Vector p1, Vector p2) {
@@ -276,78 +288,58 @@ namespace utilities {
     // Find the distance from a position within a square (center=(0,0)) to the edge on a ray defined by an angle in radians
     double raySquareIntersectDistance(double x, double y, double angle, double halfSquareSize) {
         // Get coefficients for a parametric line
-        // double dx = std::cos(angle);
-        // double dy = std::sin(angle);
+        double dx = std::cos(angle);
+        double dy = std::sin(angle);
 
-        // double tMin = std::numeric_limits<double>::max();
-        // double t;
+        double tMin = std::numeric_limits<double>::max();
+        double t;
 
-        // // TODO: Improve edge case handling
-        // if (dx == 0) {
-        //     // Bottom edge (y = -halfSquareSize)
-        //     t = (-halfSquareSize - y) / dy;
-        //     if (t >= 0 && t < tMin)
-        //         tMin = t;
+        if (dx != 0.0) {
+            // Left edge (x = -halfSquareSize)
+            t = (-halfSquareSize - x) / dx;
+            if (t >= 0.0 && t < tMin)
+                tMin = t;
 
-        //     // Top edge (y = halfSquareSize)
-        //     t = (halfSquareSize - y) / dy;
-        //     if (t >= 0 && t < tMin)
-        //         tMin = t;
-        //     return tMin;
-        // } else if (dy == 0) {
-        //     // Left edge (x = -halfSquareSize)
-        //     t = (-halfSquareSize - x) / dx;
-        //     if (t >= 0 && t < tMin)
-        //         tMin = t;
+            // Right edge (x =  halfSquareSize)
+            t = (halfSquareSize - x) / dx;
+            if (t >= 0.0 && t < tMin)
+                tMin = t;
+        }
 
-        //     // Right edge (x = halfSquareSize)
-        //     t = (halfSquareSize - x) / dx;
-        //     if (t >= 0 && t < tMin)
-        //         tMin = t;
-        //     return tMin;
+        if (dy != 0.0) {
+            // Bottom edge (y = -halfSquareSize)
+            t = (-halfSquareSize - y) / dy;
+            if (t >= 0.0 && t < tMin)
+                tMin = t;
+            // Top edge (y =  halfSquareSize)
+            t = (halfSquareSize - y) / dy;
+            if (t >= 0.0 && t < tMin)
+                tMin = t;
+        }
+
+        return tMin;
+
+        // double predicted = 2000;
+
+        // if (const auto theta = abs(angleRangeZeroToTwoPi(0 - angle)); theta < M_PI_2) {
+        //     predicted = std::min((HALF_FIELD_SIZE - x) / cos(theta), predicted);
         // }
 
-        // // Left edge (x = -halfSquareSize)
-        // t = (-halfSquareSize - x) / dx;
-        // if (t >= 0 && t < tMin)
-        //     tMin = t;
+        // if (const auto theta = abs(angleRangeZeroToTwoPi(HALF_PI - angle)); theta < M_PI_2) {
+        //     predicted = std::min((HALF_FIELD_SIZE - y) / cos(theta), predicted);
+        // }
 
-        // // Right edge (x = halfSquareSize)
-        // t = (halfSquareSize - x) / dx;
-        // if (t >= 0 && t < tMin)
-        //     tMin = t;
+        // if (const auto theta = abs(angleRangeZeroToTwoPi(M_PI - angle)); theta < M_PI_2) {
+        //     predicted = std::min((x + HALF_FIELD_SIZE) / cos(theta), predicted);
+        // }
 
-        // // Bottom edge (y = -halfSquareSize)
-        // t = (-halfSquareSize - y) / dy;
-        // if (t >= 0 && t < tMin)
-        //     tMin = t;
-
-        // // Top edge (y = halfSquareSize)
-        // t = (halfSquareSize - y) / dy;
-        // if (t >= 0 && t < tMin)
-        //     tMin = t;
-
-        double predicted = 2000;
-
-        if (const auto theta = abs(angleRangeZeroToTwoPi(0 - angle)); theta < M_PI_2) {
-            predicted = std::min((HALF_FIELD_SIZE - x) / cos(theta), predicted);
-        }
-
-        if (const auto theta = abs(angleRangeZeroToTwoPi(HALF_PI - angle)); theta < M_PI_2) {
-            predicted = std::min((HALF_FIELD_SIZE - y) / cos(theta), predicted);
-        }
-
-        if (const auto theta = abs(angleRangeZeroToTwoPi(M_PI - angle)); theta < M_PI_2) {
-            predicted = std::min((x + HALF_FIELD_SIZE) / cos(theta), predicted);
-        }
-
-        if (const auto theta = abs(angleRangeZeroToTwoPi(-HALF_PI - angle)); theta < M_PI_2) {
-            predicted = std::min((y + HALF_FIELD_SIZE) / cos(theta), predicted);
-        }
+        // if (const auto theta = abs(angleRangeZeroToTwoPi(-HALF_PI - angle)); theta < M_PI_2) {
+        //     predicted = std::min((y + HALF_FIELD_SIZE) / cos(theta), predicted);
+        // }
 
         // tMin is the distance, since dx^2 + dy^2 = cos^2 + sin^2 = 1
         // return tMin;
-        return predicted;
+        // return predicted;
     }
     // Find the distance from a position within a square (center=(0,0))  to the edge on a ray defined by an angle
     double raySquareIntersectDistance(Vector startPos, double angle, double halfSquareSize) {
@@ -367,9 +359,9 @@ namespace utilities {
     // ---------- Randomness + Probability ----------
 
     // Shared random number generator
-    std::ranlux24_base& getGenerator() {
+    std::mt19937& getGenerator() {
         static std::random_device rd;
-        static std::ranlux24_base gen(rd());
+        static std::mt19937 gen(rd());
         return gen;
     }
 
@@ -401,8 +393,9 @@ namespace utilities {
     // Computes the value of the Gaussian (normal) distribution at x
     double gaussian(double x, double stddev) {
         double exponent = -(x * x) / (2 * stddev * stddev);
-        double denominator = stddev * std::sqrt(TWO_PI);
-        return std::exp(exponent) / denominator;
+        // double denominator = stddev * std::sqrt(TWO_PI);
+        // return std::exp(exponent) / denominator;
+        return std::exp(exponent);
     }
 
     // Approximation of the standard normal PDF

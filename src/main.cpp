@@ -51,10 +51,13 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-    auton::autonSkillsLeft();
+    auton::autonTest();
+    // auton::autonSkillsLeft();
+    // auton::autonMiddleLongRight();
     // auton::autonMiddleLongLeft();
     // auton::autonRight7Long();
     // auton::autonSkills();
+
     // switch (auton::autonSelect::mode) {
     //     case auton::autonSelect::autonMode::SKILLS: {
     //         auton::autonSkills();
@@ -105,7 +108,10 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
-    // localization::start(55.75, 22.75, 0); // like SAWP Auton (for testing)
+    // chassis.setPose(0,0,0);
+    if (localization::firstFrame)
+        localization::start(15.5, -47.75, 0);
+    // localization::start(140.4 - 56.5, 22, 90); // like skills Auton (for testing)
     intakeController::isColorSorting = true;
 
     while (true) {

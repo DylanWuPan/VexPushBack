@@ -3,18 +3,18 @@
 #include "main.h"
 
 namespace auton {
-	// void autonTest();
+	void autonTest();
     void autonSkills();
     void autonSkillsLeft();
     void autonSkills2();
-    void autonSAWP();
-    void autonSAWP2();
-    void autonLongMiddleLeft();
-    void autonLongMiddleRight();
-    void autonMiddleLongLeft();
-    void autonMiddleLongRight();
-    void autonLeft7Long();
-    void autonRight7Long();
+    void autonSAWP(bool isRedAlliance);
+    void autonSAWP2(bool isRedAlliance);
+    void autonLongMiddleLeft(bool isRedAlliance);
+    void autonLongMiddleRight(bool isRedAlliance);
+    void autonMiddleLongLeft(bool isRedAlliance);
+    void autonMiddleLongRight(bool isRedAlliance);
+    void autonLeft7Long(bool isRedAlliance);
+    void autonRight7Long(bool isRedAlliance);
 } // namespace auton
 
 // FOR SELECTING AUTON MODE BEFORE MATCH

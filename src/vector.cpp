@@ -40,3 +40,7 @@ Vector operator/(Vector p, double scalar) {
 double Vector::magnitude() {
     return sqrt(x * x + y * y);
 }
+
+double Vector::magnitudeSquared() {
+    return x * x + y * y;
+}

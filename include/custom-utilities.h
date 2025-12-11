@@ -16,6 +16,7 @@ namespace utilities {
     constexpr double HALF_PI = 0.5 * M_PI;
 
     constexpr double HALF_FIELD_SIZE = 70.205;
+    constexpr double FULL_FIELD_SIZE = HALF_FIELD_SIZE * 2;
 
     // ---------- Distance Sensors ----------
     enum class direction {
@@ -46,6 +47,9 @@ namespace utilities {
 
     // ----- Angles -----
 
+    // Quicker bounding to [-pi, pi) if the angle is within [-3pi,3pi)
+    double lazyBoundPNPi(double angle);
+
     // Bound an angle to [-pi, pi)
     double angleRangePNPi(double angle);
     // Bound an angle to [0, 2pi)
@@ -56,6 +60,8 @@ namespace utilities {
     double angleRangeZeroTo360(double angle);
 
     // ----- Vectors -----
+
+    double dot(Vector p1, Vector p2);
 
     // Gives the distance between two Vectors
     double dist(Vector p1, Vector p2);
@@ -92,7 +98,7 @@ namespace utilities {
     // ---------- Randomness + Probability ----------
 
     // Shared random number generator
-    std::ranlux24_base& getGenerator();
+    std::mt19937& getGenerator();
 
     // Generates a random number from [0, 1) using a uniform distribution
     double getRandomZeroOne();

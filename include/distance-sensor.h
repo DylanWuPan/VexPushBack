@@ -1,28 +1,30 @@
-// #pragma once
-// #include "custom-utilities.h"
-// #include "main.h"
-// #include "position.h"
-// #include "vector.h"
+#pragma once
+#include "custom-utilities.h"
+#include "field.h"
+#include "main.h"
+#include "position.h"
+#include "vector.h"
 
-// class DistanceSensor {
-//   private:
-//     Vector posOffset;
-//     double angleOffset;
-//     double tuningConst;
-//     pros::Distance& sensor;
+class DistanceSensor {
+  private:
+    Vector posOffset;
+    double angleOffset;
+    double tuningConst;
+    pros::Distance& sensor;
 
-//     double measurement;
-//     bool exit;
-//     double stdDev;
+    bool exit;
+    double stdDev;
 
-//   public:
-//     // angleOffset in ccw radians, east=0, posOffset according to robot facing east
-//     DistanceSensor(Vector posOffset, double angleOffset, double tuningConst, pros::Distance& sensor);
+  public:
+    double measurement;
 
-//     void update();
+    // angleOffset in ccw radians, east=0, posOffset according to robot facing east
+    DistanceSensor(Vector posOffset, double angleOffset, double tuningConst, pros::Distance& sensor);
 
-//     // gets the probability of getting the measurement given position and angle (in ccw radians, east=0)
-//     std::optional<double> probability(const Particle& particle, double angle);
+    void update();
 
-//     ~DistanceSensor() = default;
-// };
+    // gets the probability of getting the measurement given position and angle (in ccw radians, east=0)
+    std::optional<double> probability(const Particle& particle, double angle, Field& field, bool print);
+
+    ~DistanceSensor() = default;
+};

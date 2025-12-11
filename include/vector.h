@@ -17,6 +17,8 @@ class Vector {
     Vector& operator/=(double scalar);
 
     double magnitude();
+    double magnitudeSquared();
+    // Vector norm();
 
     double x;
     double y;
