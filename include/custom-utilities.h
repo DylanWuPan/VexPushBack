@@ -17,6 +17,7 @@ namespace utilities {
 
     constexpr double HALF_FIELD_SIZE = 70.205;
     constexpr double FULL_FIELD_SIZE = HALF_FIELD_SIZE * 2;
+    constexpr double FULL_FIELD_DIAGONAL = FULL_FIELD_SIZE * 1.4142135624;
 
     // ---------- Distance Sensors ----------
     enum class direction {
@@ -49,6 +50,8 @@ namespace utilities {
 
     // Quicker bounding to [-pi, pi) if the angle is within [-3pi,3pi)
     double lazyBoundPNPi(double angle);
+    // Quicker bounding to [-180, 180) if the angle is within [-540,540)
+    double lazyBoundPN180(double angle);
 
     // Bound an angle to [-pi, pi)
     double angleRangePNPi(double angle);
@@ -62,6 +65,8 @@ namespace utilities {
     // ----- Vectors -----
 
     double dot(Vector p1, Vector p2);
+
+    double cross(Vector p1, Vector p2);
 
     // Gives the distance between two Vectors
     double dist(Vector p1, Vector p2);

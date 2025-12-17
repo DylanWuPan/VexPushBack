@@ -7,6 +7,7 @@ namespace auton {
     void autonSkills();
     void autonSkillsLeft();
     void autonSkills2();
+    void autonSkillsMCL();
     void autonSAWP(bool isRedAlliance);
     void autonSAWP2(bool isRedAlliance);
     void autonLongMiddleLeft(bool isRedAlliance);

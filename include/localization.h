@@ -15,19 +15,20 @@ namespace localization {
     // -------------------- Constants --------------------
 
     // TODO: Tune these values
-    constexpr double MAX_DIST_SINCE_UPDATE = 1.0; // inches
-    constexpr int MAX_UPDATE_INTERVAL = 2000;   // milliseconds
-                                                // TODO: edit this
-    constexpr double START_POS_STD_DEV = 3;     // inches
+    constexpr double MAX_DIST_SINCE_UPDATE = 2.0; // inches
+    constexpr double MAX_ANGLE_CHANGE_SINCE_UPDATE = 15.0;
+    constexpr int MAX_UPDATE_INTERVAL = 2000; // milliseconds
+                                              // TODO: edit this
+    constexpr double START_POS_STD_DEV = 3;   // inches
 
-    constexpr double DRIVE_NOISE = 0.05; // i.e. 5% (TODO: Change to 25% of velocity?)
-    constexpr double ANGLE_NOISE = 3.0 * utilities::DEG_TO_RAD;
+    constexpr double DRIVE_NOISE = 0.25; // i.e. 5% (TODO: Change to 25% of velocity?)
+    constexpr double ANGLE_NOISE = 10.0 * utilities::DEG_TO_RAD;
 
     // TODO: double check offset directions
     constexpr double vertTrackerOffset = -0.125;      // TODO inches
     constexpr double latTrackerOffset = -1.75;        // TODO inches
-    constexpr double vertTrackerWheelRad = 2.0 / 2.0; // inches
-    constexpr double latTrackerWheelRad = 2.0 / 2.0;  // inches
+    constexpr double vertTrackerWheelRad = 2.05 / 2.0; // inches
+    constexpr double latTrackerWheelRad = 2.05 / 2.0;  // inches
 
     // TODO: Correct these values
     // offset according to bot facing east
@@ -41,28 +42,33 @@ namespace localization {
     constexpr double rightTuningConst = 0.98;
     constexpr double leftTuningConst = 0.99;
 
-    constexpr size_t NUM_PARTICLES = 250;
+    constexpr size_t NUM_PARTICLES = 100;
 
-    constexpr int DELAY = 10;
+    constexpr int DELAY = 20;
 
     // -------------------- Variables --------------------
 
     // Distributions (to avoid recreating them every loop)
     // Not const because they can't be for the function call operator
-    extern std::uniform_real_distribution<float> magDistribution;
-    extern std::uniform_real_distribution<float> angleDistribution;
-    // extern std::normal_distribution<float> magDistribution;
-    // extern std::normal_distribution<float> angleDistribution;
+    // extern std::uniform_real_distribution<float> magDistribution;
+    // extern std::uniform_real_distribution<float> angleDistribution;
+    extern std::normal_distribution<float> magDistribution;
+    extern std::normal_distribution<float> angleDistribution;
     extern std::uniform_real_distribution<float> fieldDistribution;
 
     extern std::array<Particle, NUM_PARTICLES> particles;
+    extern std::array<Vector, NUM_PARTICLES> oldParticleLocations; // doesn't need to hold weights
 
     extern bool firstFrame;
 
-    extern double distanceSinceUpdate;
-    extern int lastUpdateTime;
+    // extern int count;
 
-    extern double initialAngle;
+    extern double distanceSinceUpdate;
+    extern double angleChangeSinceUpdate;
+    extern int lastUpdateTime;
+    extern bool isResampling;
+
+    // extern double initialAngle;
 
     // For Odometry
     extern double prevAngle;       // bc of inertial
@@ -80,6 +86,7 @@ namespace localization {
 
     // The predicted pose in lemlib coordinates
     extern Pose predictedPose;
+    extern lemlib::Pose lemlibPredictedPose;
 
     extern PeriodicTask periodicTask;
 
@@ -99,7 +106,7 @@ namespace localization {
     void update();
 
     // Get the position delta since the last frame using odometry
-    Vector getOdomPositionDelta();
+    Vector getOdomPositionDelta(double inertialMeasurement);
 
     // Initialize the particles on the field
     void initParticles(double startX, double startY);

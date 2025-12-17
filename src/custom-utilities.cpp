@@ -162,6 +162,13 @@ namespace utilities {
         return angle;
     }
 
+    // Quicker bounding to [-180, 180) if the angle is within [-540,540)
+    double lazyBoundPN180(double angle) {
+        if (angle > 180) angle -= 360;
+        if (angle < -180) angle += 360;
+        return angle;
+    }
+
     // Bound an angle to [-pi, pi)
     double angleRangePNPi(double angle) {
         return angle - std::floor((angle + M_PI) / (TWO_PI)) * (TWO_PI);
@@ -184,6 +191,10 @@ namespace utilities {
     
     double dot(Vector p1, Vector p2) {
         return p1.x * p2.x + p1.y * p2.y;
+    }
+
+    double cross(Vector p1, Vector p2) {
+        return p1.x * p2.y - p1.y * p2.x;
     }
 
     // Gives the distance between two Vectors
@@ -284,7 +295,6 @@ namespace utilities {
         }
     }
 
-    // TODO: Test and Optimize
     // Find the distance from a position within a square (center=(0,0)) to the edge on a ray defined by an angle in radians
     double raySquareIntersectDistance(double x, double y, double angle, double halfSquareSize) {
         // Get coefficients for a parametric line
@@ -346,7 +356,6 @@ namespace utilities {
         return raySquareIntersectDistance(startPos.x, startPos.y, angle, halfSquareSize);
     }
 
-    // TODO: Test and Optimize
     // Find the distance from a position within a square (center=(0,0))  to the edge on a ray defined by an angle
     double rayWallIntersectDistance(double x, double y, double angle) {
         return raySquareIntersectDistance(x, y, angle, HALF_FIELD_SIZE);

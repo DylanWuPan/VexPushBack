@@ -7,6 +7,7 @@
 
 class DistanceSensor {
   private:
+
     Vector posOffset;
     double angleOffset;
     double tuningConst;
@@ -21,10 +22,12 @@ class DistanceSensor {
     // angleOffset in ccw radians, east=0, posOffset according to robot facing east
     DistanceSensor(Vector posOffset, double angleOffset, double tuningConst, pros::Distance& sensor);
 
-    void update();
+    void update(const Pose& pose, const Field& field);
 
     // gets the probability of getting the measurement given position and angle (in ccw radians, east=0)
-    std::optional<double> probability(const Particle& particle, double angle, Field& field, bool print);
+    std::optional<double> probability(const Particle& particle, double angle, Field& field);
+
+    // bool hittingCorner(Vector pos, double angle);
 
     ~DistanceSensor() = default;
 };

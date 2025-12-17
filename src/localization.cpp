@@ -11,18 +11,23 @@ namespace localization {
 
     // Distributions (to avoid recreating them every loop)
     // Not const because they can't be for the function call operator
-    std::uniform_real_distribution<float> magDistribution(1 - DRIVE_NOISE, 1 + DRIVE_NOISE);
-    std::uniform_real_distribution<float> angleDistribution(-ANGLE_NOISE, ANGLE_NOISE);
-    // std::normal_distribution<float> magDistribution(1, 2.0 * DRIVE_NOISE / sqrt(12.0));
-    // std::normal_distribution<float> angleDistribution(0, 2.0 * ANGLE_NOISE / sqrt(12.0));
+    // std::uniform_real_distribution<float> magDistribution(1 - DRIVE_NOISE, 1 + DRIVE_NOISE);
+    // std::uniform_real_distribution<float> angleDistribution(-ANGLE_NOISE, ANGLE_NOISE);
+    std::normal_distribution<float> magDistribution(1, 2.0 * DRIVE_NOISE / sqrt(12.0));
+    std::normal_distribution<float> angleDistribution(0, 2.0 * ANGLE_NOISE / sqrt(12.0));
     std::uniform_real_distribution<float> fieldDistribution(-HALF_FIELD_SIZE, HALF_FIELD_SIZE);
 
     std::array<Particle, NUM_PARTICLES> particles;
+    std::array<Vector, NUM_PARTICLES> oldParticleLocations; // doesn't need to hold weights
 
+    double angleChangeSinceUpdate{0};
     double distanceSinceUpdate{0};
     int lastUpdateTime{0};
+    bool isResampling = true;
 
     bool firstFrame = true;
+
+    // int count{0};
 
     // For odometry
     double prevAngle{0};
@@ -36,24 +41,21 @@ namespace localization {
 
     const std::vector<DistanceSensor*> distanceSensors{&sensorFront, &sensorRight, &sensorBack, &sensorLeft};
 
-    Field field(HALF_FIELD_SIZE, {
-                                     {-47, -65.7, 4.5}, // Matchloaders
-                                     {47, -65.7, 4.5},
-                                     {-47, 65.7, 4.5},
-                                     {47, 65.7, 4.5},
-                                     {-48, -23, 3}, // Long Goals
-                                     {48, -23, 3},
-                                     {-48, 23, 3},
-                                     {48, 23, 3},
-                                     {0, 0, 5},
-                                 });
+    Field field(HALF_FIELD_SIZE, {                  /*{-47, -67.95, 2.25}, // Matchloaders
+                                                    {47, -67.95, 2.25},
+                                                    {-47, 67.95, 2.25},
+                                                    {47, 67.95, 2.25}, */
+                                  {-48, -23, 2.25}, // Long Goals
+                                  {48, -23, 2.25},
+                                  {-48, 23, 2.25},
+                                  {48, 23, 2.25},
+                                  {0, 0, 4}});
 
-                                //  {HALF_FIELD_SIZE - 5, HALF_FIELD_SIZE - 5, 5},
-                                //   {-(HALF_FIELD_SIZE - 5), HALF_FIELD_SIZE - 5, 5},
-                                //   {HALF_FIELD_SIZE - 5, -(HALF_FIELD_SIZE - 5), 5},
-                                //   {-(HALF_FIELD_SIZE - 5), -(HALF_FIELD_SIZE - 5), 5}
+    // Field field(FULL_FIELD_SIZE);
+
     // The predicted pose in lemlib coordinates
     Pose predictedPose;
+    lemlib::Pose lemlibPredictedPose{0, 0, 0};
 
     PeriodicTask periodicTask{update, DELAY, "Localization Task"};
 
@@ -65,10 +67,8 @@ namespace localization {
     void start(double startX, double startY, double startA) {
         vertTracker.reset();
         latTracker.reset();
+        // inertial.reset(true);
         inertial.tare();
-        // TODO
-        // pros::delay(100);
-        // pros::lcd::print(0, "1: %g, 2: %g, 3: %g", startA, startA + 270, angleRangeZeroTo360(startA + 270));
         inertial.set_heading(angleRangeZeroTo360(startA + 270)); // cw degrees, east=0
 
         initParticles(startX, startY);
@@ -77,10 +77,7 @@ namespace localization {
     }
 
     lemlib::Pose getPrediction() {
-        return lemlib::Pose{
-            static_cast<float>(predictedPose.pos.x),
-            static_cast<float>(predictedPose.pos.y),
-            static_cast<float>(predictedPose.angle)};
+        return lemlibPredictedPose;
     }
 
     // Print the robot's position and angle to the specified line
@@ -118,23 +115,22 @@ namespace localization {
     void initParticles(double startX, double startY) {
         std::normal_distribution xDistribution{startX, START_POS_STD_DEV};
         std::normal_distribution yDistribution{startY, START_POS_STD_DEV};
-        // Vector sumPos{};
         for (size_t i = 0; i < NUM_PARTICLES; ++i) {
             Particle p{};
             // TODO: Would probably be better to do this in polar coordinates
             p.pos.x = std::clamp(xDistribution(utilities::getGenerator()), -HALF_FIELD_SIZE, HALF_FIELD_SIZE);
             p.pos.y = std::clamp(yDistribution(utilities::getGenerator()), -HALF_FIELD_SIZE, HALF_FIELD_SIZE);
             p.weight = 1.0 / NUM_PARTICLES; // TODO: unnecessary
-            // sumPos += p.pos;
             particles[i] = p;
         }
-        // sumPos /= static_cast<double>(NUM_PARTICLES);
-        // pros::lcd::print(0, "x: %g, y: %g", sumPos.x, sumPos.y);
     }
 
-    Vector getOdomPositionDelta() {
-        const double angleVal = 360.0 - inertial.get_heading();                            // ccw degrees, east=0
-        double angleDelta = utilities::lazyBoundPNPi((angleVal - prevAngle) * DEG_TO_RAD); // ccw radians, east=0 (relative)
+    Vector getOdomPositionDelta(double currentAngleDeg) {
+        // currentAngleDeg is in ccw degrees, east=0
+        double angleDelta = utilities::lazyBoundPNPi((currentAngleDeg - prevAngle) * DEG_TO_RAD); // ccw radians, east=0 (relative)
+
+        // TODO
+        angleChangeSinceUpdate += angleDelta;
 
         const int vertTrackerVal = vertTracker.get_angle();
         int vertTrackerDelta = vertTrackerVal - prevVertTrackerVal; // might have to adjust for wraparound
@@ -159,47 +155,51 @@ namespace localization {
             localDelta.y = 2 * sin(angleDelta * 0.5) * (latTrackerDeltaDist / angleDelta - latTrackerOffset);
         }
 
-        // TODO: is this the angle we want to rotate by???
-        const double avrgAngle = ((prevAngle + angleVal) * 0.5) * DEG_TO_RAD; // ccw radians, east=0
+        const double avrgAngle = ((prevAngle + currentAngleDeg) * 0.5) * DEG_TO_RAD; // ccw radians, east=0
         Vector globalDelta = utilities::rotate(localDelta, avrgAngle);
-        // const double globalDeltaX = localDelta.x * cos(avrgAngle) - localDelta.y * sin(avrgAngle);
-        // const double globalDeltaY = localDelta.y * cos(avrgAngle) + localDelta.x * sin(avrgAngle);
 
-        prevAngle = angleVal;
+        prevAngle = currentAngleDeg;
         prevVertTrackerVal = vertTrackerVal;
         prevLatTrackerVal = latTrackerVal;
 
-        // return Vector{globalDeltaX, globalDeltaY};
         return globalDelta;
-        // Could probably return the local delta and then rotate later
-        // return Vector{localDeltaX, localDeltaY};
+        // TODO: Could probably return the local delta and then rotate later
     }
 
     // The update function for the localization task.
     void update() {
         // ---------- Move Particles With Robot ----------
         double inertialMeasurement = inertial.get_heading(); // cw degrees, east=0
-        Vector posDelta = getOdomPositionDelta();
+        double angleDeg = 360.0 - inertialMeasurement;       // ccw degrees, east=0
+        Vector posDelta = getOdomPositionDelta(angleDeg);
 
+        double angle = angleDeg * DEG_TO_RAD; // ccw radians, east=0
+
+        // TODO: Remove need to skip first frame
+        // Odom reading will be inaccurate the first time
         if (firstFrame) {
             firstFrame = false;
             return;
         }
 
         for (Particle& p : particles) {
-            // NOTE: Using uniform noise instead of gaussian noise for speed
             Vector posDeltaCartesianNoisy =
                 rotate(posDelta, angleDistribution(utilities::getGenerator())) * magDistribution(utilities::getGenerator());
             p.pos += posDeltaCartesianNoisy;
+            // p.pos.x = std::clamp(p.pos.x + posDeltaCartesianNoisy.x, -HALF_FIELD_SIZE, HALF_FIELD_SIZE);
+            // p.pos.y = std::clamp(p.pos.y + posDeltaCartesianNoisy.y, -HALF_FIELD_SIZE, HALF_FIELD_SIZE);
         }
 
         // ---------- Check if Update Necessary ----------
         // Won't update unless the robot has travelled a certain distance
-        // TODO: Could make better by incorporating angular movement too
+        // TODO: Could improve by incorporating angular movement too
         distanceSinceUpdate += posDelta.magnitude(); // Not super accurate, but easy
 
         int time = pros::millis();
-        if (distanceSinceUpdate < MAX_DIST_SINCE_UPDATE && time - lastUpdateTime < MAX_UPDATE_INTERVAL) {
+        if ((distanceSinceUpdate < MAX_DIST_SINCE_UPDATE &&
+             time - lastUpdateTime < MAX_UPDATE_INTERVAL &&
+             angleChangeSinceUpdate < MAX_ANGLE_CHANGE_SINCE_UPDATE) &&
+            isResampling) {
             // Re-estimate pose
             Vector sumPos;
 
@@ -210,40 +210,43 @@ namespace localization {
             predictedPose = Pose{
                 sumPos.x / static_cast<double>(NUM_PARTICLES),
                 sumPos.y / static_cast<double>(NUM_PARTICLES),
-                // angleRangeZeroTo360(90.0 + inertialMeasurement) // cw degrees, north=0
-                inertialMeasurement < 270.0 ? inertialMeasurement + 90.0 : inertialMeasurement - 270.0 // cw degrees, north=0
-            };
-            chassis.setPose(getPrediction());
+                angle};
+            lemlibPredictedPose = lemlib::Pose{
+                static_cast<float>(predictedPose.pos.x),
+                static_cast<float>(predictedPose.pos.y),
+                static_cast<float>(inertialMeasurement < 270.0 ? inertialMeasurement + 90.0 : inertialMeasurement - 270.0)}; // cw degrees, north=0
+            chassis.setPose(lemlibPredictedPose);
 
             return;
         }
 
         distanceSinceUpdate = 0;
+        angleChangeSinceUpdate = 0;
         lastUpdateTime = time;
 
         // ---------- Re-weight Particles Based on Sensor Measurements   ----------
         for (DistanceSensor* sensor : distanceSensors) {
-            sensor->update();
+            sensor->update(predictedPose, field);
         }
-
-        // TODO: might not be necessary to keep this in [0, 2pi) range
-        double angle = (360.0 - inertialMeasurement) * DEG_TO_RAD; // ccw radians, east=0
-
-        bool first = true;
 
         double totalWeight = 0.0;
         for (Particle& p : particles) {
             if (p.pos.x < -HALF_FIELD_SIZE || p.pos.x > HALF_FIELD_SIZE || p.pos.y < -HALF_FIELD_SIZE || p.pos.y > HALF_FIELD_SIZE) {
-                p.pos.x = fieldDistribution(utilities::getGenerator());
-                p.pos.y = fieldDistribution(utilities::getGenerator());
+                // p.pos.x = fieldDistribution(utilities::getGenerator());
+                // p.pos.y = fieldDistribution(utilities::getGenerator());
+                std::normal_distribution xDistribution{predictedPose.pos.x, START_POS_STD_DEV};
+                std::normal_distribution yDistribution{predictedPose.pos.y, START_POS_STD_DEV};
+                p.pos.x = std::clamp(xDistribution(utilities::getGenerator()), -HALF_FIELD_SIZE, HALF_FIELD_SIZE);
+                p.pos.y = std::clamp(yDistribution(utilities::getGenerator()), -HALF_FIELD_SIZE, HALF_FIELD_SIZE);
+                // p.pos.x = std::clamp(p.pos.x, -HALF_FIELD_SIZE, HALF_FIELD_SIZE);
+                // p.pos.y = std::clamp(p.pos.y, -HALF_FIELD_SIZE, HALF_FIELD_SIZE);
             }
 
             // TODO: add case for if no sensor gets a valid measurement?
-            p.weight = 1.0; // TODO: increase for precision
+            p.weight = 1.0;
             for (DistanceSensor* sensor : distanceSensors) {
                 // TODO: avoid recalculating the offset in probability function (because constant angle)
-                std::optional<double> probability = sensor->probability(p, angle, field, first);
-                first = false;
+                std::optional<double> probability = sensor->probability(p, angle, field);
                 if (probability.has_value()) {
                     p.weight *= probability.value();
                 }
@@ -252,7 +255,9 @@ namespace localization {
         }
 
         // ---------- Resample Particles ----------
-        std::array<Particle, NUM_PARTICLES> oldParticles = particles;
+        for (size_t i = 0; i < particles.size(); i++) {
+            oldParticleLocations[i] = particles[i].pos;
+        }
 
         double avgWeight = totalWeight / static_cast<double>(NUM_PARTICLES);
         const double randWeight = utilities::getRandomDoubleInRange(0.0, avgWeight);
@@ -271,7 +276,7 @@ namespace localization {
                 cumulativeWeight += particles[j++].weight;
             }
 
-            particles[i].pos = oldParticles[j - 1].pos;
+            particles[i].pos = oldParticleLocations[j - 1];
 
             sumPos += particles[i].pos;
         }
@@ -279,9 +284,11 @@ namespace localization {
         predictedPose = Pose{
             sumPos.x / static_cast<double>(NUM_PARTICLES),
             sumPos.y / static_cast<double>(NUM_PARTICLES),
-            // angleRangeZeroTo360(90.0 + inertialMeasurement) // cw degrees, north=0
-            inertialMeasurement < 270.0 ? inertialMeasurement + 90.0 : inertialMeasurement - 270.0 // cw degrees, north=0
-        };
-        chassis.setPose(getPrediction());
+            angle};
+        lemlibPredictedPose = lemlib::Pose{
+            static_cast<float>(predictedPose.pos.x),
+            static_cast<float>(predictedPose.pos.y),
+            static_cast<float>(inertialMeasurement < 270.0 ? inertialMeasurement + 90.0 : inertialMeasurement - 270.0)}; // cw degrees, north=0
+        chassis.setPose(lemlibPredictedPose);
     }
 } // namespace localization

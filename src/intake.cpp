@@ -63,17 +63,6 @@ namespace intakeController {
     void discardBall() {
         if (!isSkipping) {
             isSkipping = true;
-            // TODO: This isn't quite right - I think we want to discard
-            // out the middle no matter which direction the hopper is spinning
-            // if (hopper.get_target_velocity() > 0) {
-            //     hopper.move_velocity(-HOPPER_VELOCITY_MAX);
-            //     pros::delay(70);
-            //     hopper.move_velocity(HOPPER_VELOCITY_MAX);
-            // } else {
-            //     hopper.move_velocity(HOPPER_VELOCITY_MAX);
-            //     pros::delay(70);
-            //     hopper.move_velocity(-HOPPER_VELOCITY_MAX);
-            // }
             switch (currentState) {
                 case intakeState::Intake: {
                     hopper.move_velocity(-HOPPER_VELOCITY_MAX);

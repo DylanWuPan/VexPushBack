@@ -1,5 +1,7 @@
 #pragma once
 #include "obstacle.h"
+#include "vector.h"
+#include <array>
 #include <memory>
 #include <vector>
 
@@ -9,7 +11,9 @@ class Field {
     // Field(double size, std::vector<std::unique_ptr<CircularObstacle>> obstacles);
     Field(double size, std::initializer_list<std::array<double, 3>> obstacleParams);
 
-    std::pair<double, bool> raycast(const Vector& pos, double angle);
+    double raycast(const Vector& pos, double angle);
+
+    std::array<Vector, 4> corners;
 
   private:
     const double halfFieldSize;
