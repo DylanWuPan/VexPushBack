@@ -53,7 +53,7 @@ void competition_initialize() {}
 void autonomous() {
     // auton::autonTest();
     // auton::autonSkillsLeft();
-    auton::autonSkillsMCL();
+    // auton::autonSkillsMCL();
     // auton::autonMiddleLongRight();
     // auton::autonMiddleLongLeft();
     // auton::autonRight7Long();

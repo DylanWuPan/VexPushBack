@@ -9,9 +9,9 @@ namespace driverControl {
     // ---------- Variables ----------
 
     bool matchLoaderDown = false;
-    bool topAlignerDown = true;
     bool isAutoIntaking = false;
     bool wingDown = true;
+    bool liftUp = false;
 
     // ---------- Functions ----------
 
@@ -29,55 +29,53 @@ namespace driverControl {
     // Called to control the pneumatics during the driver control period
     void opcontrolPneumatics() {
         if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_UP)) {
-            topAligner.set_value(false);
-            matchLoader.set_value(false);
-            topAlignerDown = true;
-            matchLoaderDown = false;
+            lift.set_value(!liftUp);
+            liftUp = !liftUp;
         }
 
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
-            topAlignerDown = !topAlignerDown;
-            matchLoaderDown = !matchLoaderDown;
-            matchLoader.set_value(matchLoaderDown);
-            topAligner.set_value(topAlignerDown);
-        }
+        // if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_LEFT)) {
+        //     matchLoaderDown = !matchLoaderDown;
+        //     matchLoader.set_value(matchLoaderDown);
+        // }
 
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
-            topAligner.set_value(true);
-            matchLoader.set_value(false);
-            topAlignerDown = false;
-            matchLoaderDown = true;
-        }
+        // if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_RIGHT)) {
+        //     matchLoader.set_value(false);
+        //     matchLoaderDown = true;
+        // }
 
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
-            wing.set_value(!wingDown);
-            wingDown = !wingDown;
-        }
+        // if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R2)) {
+        //     wing.set_value(!wingDown);
+        //     wingDown = !wingDown;
+        // }
     }
 
     // Called to control the robot intake during the driver control period
     void opcontrolIntake() {
-        if (controller.get_digital_new_press(DIGITAL_X)) {
-            intakeController::isColorSorting = !intakeController::isColorSorting;
-        }
+        // if (controller.get_digital_new_press(DIGITAL_X)) {
+        //     intakeController::isColorSorting = !intakeController::isColorSorting;
+        // }
 
-        if (isSkipping || isJamming)
-            return;
+        // if (isSkipping || isJamming)
+        //     return;
 
-        if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
-            isAutoIntaking = !isAutoIntaking;
-        }
+        // if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)) {
+        //     isAutoIntaking = !isAutoIntaking;
+        // }
 
-        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)) { // TOP SCORE
-            intakeController::setIntakeState(intakeState::TopScore);
-        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // MIDDLE SCORE
-            intakeController::setIntakeState(intakeState::MiddleScore);
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L1)) { // TOP SCORE
+            intake.move_velocity(600);
         } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_L2)) { // BOTTOM SCORE
-            intakeController::setIntakeState(intakeState::BottomScore);
-        } else if (/* controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2) || */ isAutoIntaking) { // INTAKE
-            intakeController::setIntakeState(intakeState::Intake);
+            intake.move_velocity(-600);
         } else {
-            intakeController::setIntakeState(intakeState::Stop);
+            intake.move_velocity(0);
+        }
+
+        if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R1)){
+            lever.move_velocity(200);
+        } else if (controller.get_digital(pros::E_CONTROLLER_DIGITAL_R2)){
+            lever.move_velocity(-200);
+        } else {
+            lever.move_velocity(0);
         }
     }
 

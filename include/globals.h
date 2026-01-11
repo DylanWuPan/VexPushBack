@@ -18,12 +18,14 @@ namespace devices {
     extern pros::MotorGroup rightDrive;
 
     extern pros::Motor intake;
+    extern pros::Motor lever;
     extern pros::Motor hopper;
     extern pros::Motor topScore;
 
     extern pros::adi::DigitalOut matchLoader;
-    extern pros::adi::DigitalOut topAligner;
-    extern pros::adi::DigitalOut wing;    
+    extern pros::adi::DigitalOut lift;
+    extern pros::adi::DigitalOut wing;  
+    extern pros::adi::DigitalOut topAligner;  
 
     extern pros::Optical colorSensor;
 

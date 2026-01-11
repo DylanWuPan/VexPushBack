@@ -14,18 +14,22 @@ namespace devices {
     pros::Controller controller{pros::E_CONTROLLER_MASTER};
 
     // TODO: Check port order
-    pros::MotorGroup leftDrive({-1, -2, -3}, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees); // Left Motors, declared back-middle-front
-    pros::MotorGroup rightDrive({8, 9, 10}, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);  // Right Motors, declared back-middle-front
+    pros::MotorGroup leftDrive({-17, -16, -15}, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees); // Left Motors, declared back-middle-front
+    pros::MotorGroup rightDrive({20, 19, 18}, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);  // Right Motors, declared back-middle-front
 
-    pros::Motor intake(-11, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
-    pros::Motor hopper(-20, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
-    pros::Motor topScore(-13, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
+    pros::Motor intake(14, pros::v5::MotorGears::blue, pros::v5::MotorUnits::degrees);
+    pros::Motor lever(10, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
 
-    pros::adi::DigitalOut matchLoader{'H', false};
-    pros::adi::DigitalOut topAligner{'G', false};
+    pros::Motor hopper(12, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
+    pros::Motor topScore(13, pros::v5::MotorGears::green, pros::v5::MotorUnits::degrees);
+
+    pros::adi::DigitalOut lift{'H', false};
+    pros::adi::DigitalOut matchLoader{'G', false};
     pros::adi::DigitalOut wing{'F', false};
 
-    pros::Optical colorSensor{17};
+    pros::adi::DigitalOut topAligner{'E', false};
+
+    pros::Optical colorSensor{12};
 
     // -------------------- LEMLIB --------------------
     lemlib::Drivetrain drivetrain(

@@ -18,9 +18,9 @@ namespace driverControl {
     // ---------- Variables ----------
 
     extern bool matchLoaderDown;
-    extern bool topAlignerDown;
     extern bool isAutoIntaking;
     extern bool wingDown;
+    extern bool liftUp;
 
     // ---------- Functions ----------
 

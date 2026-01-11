@@ -26,35 +26,35 @@ namespace intakeController {
         switch (state) {
             case intakeState::Intake: {
                 intake.move_velocity(intakeController::INTAKE_VELOCITY_MAX);
-                hopper.move_velocity(intakeController::HOPPER_VELOCITY_MAX);
-                topScore.move_velocity(-intakeController::TOPSCORE_VELOCITY_MAX);
+                // hopper.move_velocity(intakeController::HOPPER_VELOCITY_MAX);
+                // topScore.move_velocity(-intakeController::TOPSCORE_VELOCITY_MAX);
                 antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
                 break;
             }
             case intakeState::TopScore: {
-                topScore.move_velocity(intakeController::TOPSCORE_VELOCITY_MAX);
-                hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
+                // topScore.move_velocity(intakeController::TOPSCORE_VELOCITY_MAX);
+                // hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
                 intake.move_velocity(intakeController::INTAKE_VELOCITY_MAX);
                 antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
                 break;
             }
             case intakeState::MiddleScore: {
-                topScore.move_velocity(-0.5 * intakeController::TOPSCORE_VELOCITY_MAX);
-                hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
+                // topScore.move_velocity(-0.5 * intakeController::TOPSCORE_VELOCITY_MAX);
+                // hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
                 intake.move_velocity(1 * intakeController::INTAKE_VELOCITY_MAX);
                 antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
                 break;
             }
             case intakeState::BottomScore: {
-                hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
+                // hopper.move_velocity(-0.67 * intakeController::HOPPER_VELOCITY_MAX);
                 intake.move_velocity(-1 * intakeController::INTAKE_VELOCITY_MAX);
                 antiJamPauseEndTime = pros::millis() + ANTI_JAM_PAUSE_DURATION;
                 break;
             }
             case intakeState::Stop: {
                 intake.move_velocity(0);
-                hopper.move_velocity(0);
-                topScore.move_velocity(0);
+                // hopper.move_velocity(0);
+                // topScore.move_velocity(0);
                 break;
             }
         }
